@@ -1,0 +1,10 @@
+a, a:link { color: #0b0; }
+a:visited { color: #060; }
+a:hover, a:active { color: #0c0; text-decoration: none; }
+h1, h2, h3, h4, h5, h6 { color: #006; }
+#header { background-color: #3a4; color: #fff; }
+#header a { color: #fff; }
+#header .menu>ul>li:hover { border-left: solid #fff 1px; }
+#header .submenu { border-color: #fff; background-color: #3a4; }
+#footer { background-color: #3a4; color: #fff; }
+#footer a { color: #fff; }

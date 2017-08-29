@@ -1,0 +1,139 @@
+/* Общие стили */
+body { margin: 0px; }
+body, p, div, th, td, ul, ol, li { font-family: Tahoma; font-size: 12px; }
+input,select { font-size: 11px; }
+h1 { margin-top: 0px; font-size: 14px; padding-bottom: 5px; /*border-bottom: solid #666 1px; */margin-bottom: 10px; }
+h1 a { margin-left: 10px; font-size: 13px; font-weight: normal; text-decoration: none; color: #999; border-bottom: solid #999 1px; border-left: solid #999 1px; padding-left: 10px; padding-right: 10px; }
+h1 a:hover, h1 a.current { color: #333; border-color: #333; }
+
+.clear { clear: both; }
+span.left { float: left; }
+span.right { float: right; }
+span.info { margin-left: 5px; line-height: 10px; font-size: 10px; font-weight: normal; padding: 0px 5px; border: solid #999 1px; border-radius: 5px; cursor: default; }
+.close { float: right; display: inline-block; width: 15px; height: 15px; border: solid #999 1px; border-radius: 10px; font-family: Tahoma; font-size: 11px; text-align: center; cursor: pointer; }
+
+#frameleft { position: absolute; top: 0; bottom: 0; left: 0; width: 215px; overflow: auto; background-color: #ccc; }
+#frameleft .framewrap { margin: 5px 0px 5px 0px; }
+#clop { position: absolute; top: 0; bottom: 0; left: 215px; z-index: 9; width: 15px; background-color: #ccc; }
+#clop a { display: block; height: 80%; padding-top: 61px; font-size: 18px; font-family: 'Courier New'; cursor: default; }
+#clop a:hover { background-color: #eee; }
+#framemain { position: fixed; top: 0; left: 230px; right: 0; bottom: 0; overflow: auto; }
+#framemain .framewrap { margin: 5px 10px 5px 10px; }
+
+/* Дерево разделов */
+.sections { padding: 0; clear: both; width: 100%; margin: 5px 0px; border-top: dashed #999 1px; border-bottom: dashed #999 1px; }
+.sections * { font-size: 12px; }
+.sections ul { overflow: hidden; width: 100%; margin: 0; padding: 0 0 1.5em 0; list-style-type: none; }
+.sections ul ul { overflow: visible; width: auto; margin: 0 0 0 0; padding: 0 0 0 0.75em; }
+/* класс для ul после которых нет li в родительских ветках */
+.sections ul.l { border-left: 1px #fff solid; margin-left: -1px; }
+.sections li.cl ul { display: none; }
+.sections li { margin: 0; padding: 0; }
+.sections li li { margin: 0 0 0 0.5em; border-left: 1px dotted; padding: 0; }
+.sections li div { position: relative; height: 1.5em; min-height: 16px; //height: 1.3em; }
+.sections li li div { border-bottom: 1px dotted; }
+.sections li p { position: absolute; z-index: 1; top: 0.8em; //top: 0.65em; left: 1.75em; width: 100%; margin: 0; padding: 0; }
+.sections a { padding: 0.1em 0.2em; white-space: nowrap; //height: 1px; text-decoration: none; }
+.sections img.i { border-right: 2px solid; border-bottom: 0.5em solid; margin-bottom: -0.5em; vertical-align: middle; }
+.sections a.oc { position: absolute; top: 0.06em; margin-left: -1em; padding: 0; text-decoration: none; }
+/* colors */
+.sections li p, .sections img.i, .sections .oc { background-color: #ccc; }
+.sections li p, .sections img.i { border-color: #f5f5ea; }
+.sections ul li li, .sections ul li li div { border-color: #999999; }
+.sections a, .sections a.oc, .sections a.oc:hover { color: #000000; background-color: #ccc; }
+.sections a:hover { color: #cc0000; }
+.core { }
+.core a { display: block; width: 206px; line-height: 28px; color: #000000; text-decoration: none; padding-left: 9px; }
+.core a span { margin-left: 10px; line-height: 10px; font-size: 10px; padding: 0px 5px; border: solid #999 1px; border-radius: 5px; cursor: default; }
+.core:hover { background-color: #eee; }
+
+/* Списки элементов */
+.items .funcs { background-color: #eee; }
+.items .funcs { font-size: 11px; }
+.items .funcs a { color: #33c; background-color: #ddd; padding: 2px; border: dotted #999 1px; min-width: 15px; max-width: 80px; height: 14px; display: inline-block; overflow: hidden; text-overflow: ellipsis; text-decoration: none; text-align: center; }
+.items .funcs a:hover { background-color: #fff; }
+.items .levelpadding { color: #ccc; }
+.items .subtext { border-top: dashed #ccc 1px; font-size: 11px; color: #666; text-align: right; }
+.items .disabled { color: #999; }
+
+table.items { border: solid #999 1px; border-collapse: collapse; width: 100%; margin-bottom: 10px; }
+table.items tr:nth-child(2n) { background-color: #eef; }
+table.items tr:nth-child(2n)>td.funcs { background-color: #dde; }
+table.items th { border-right: solid #999 1px; border-bottom: solid #999 1px; padding: 2px; white-space: nowrap; background-color: #ccc; font-weight: normal; }
+table.items th a { color: #666; text-decoration: none; }
+table.items th b { color: #f00; }
+table.items td { border-right: solid #999 1px; padding: 2px; }
+table.items td span.info { margin-left: 5px; line-height: 10px; font-size: 10px; padding: 0px 5px; border: solid #999 1px; border-radius: 5px; cursor: default; }
+table.items td.type-int, table.items td.type-float, table.items td.type-datetime { text-align: right; padding-right: 5px; }
+table.items td.type-bool { text-align: center; }
+table.items td.xsmall { font-size: 10px; }
+table.items td.small { font-size: 11px; }
+table.items td.large { font-size: 13px; }
+table.items td.xlarge { font-size: 14px; }
+table.items td.funcs { text-align: center; }
+table.items caption { padding: 4px 4px 2px 4px; }
+
+div.items div.item { border: solid #999 1px; margin-bottom: 20px; }
+div.items div.empty { border: solid #999 1px; padding: 2px; background-color: #ccc; text-align: center; }
+div.items div.itemhead { background-color: #eef; }
+div.items div.itemhead div.itemfield { display: inline-block; padding: 5px; margin-right: 20px; }
+div.items div.itemhead div.itemfield span.fieldname { font-weight: bold; padding-right: 5px; }
+div.items div.itemhead div.funcs { float: right; width: 120px; padding: 5px; text-align: center; border-left: dashed #999 1px; border-bottom: dashed #999 1px; }
+div.items div.itembody { border-top: solid #999 1px; padding: 5px; }
+div.items div.itembody div.itemfield { margin-top: 20px; }
+div.items div.itembody div.itemfield:first-child { margin-top: 0px; }
+div.items div.itembody div.itemfield div.fieldname { padding: 2px 5px; background-color: #eee; font-weight: bold; }
+div.items div.itembody div.itemfield div.fieldvalue { padding: 5px; }
+div.items div.itemfoot { border-top: dashed #999 1px; }
+div.items div.itemfoot div.itemfield { display: inline-block; padding: 5px; margin-right: 20px; font-size: 11px; }
+div.items div.itemfoot div.itemfield span.fieldname { font-weight: bold; padding-right: 5px; }
+
+div.widget { display: inline-block; width: 365px; height: 200px; overflow: hidden; border: solid #999 1px; padding: 5px; margin-right: 10px; margin-bottom: 10px; }
+div.widget div.caption { display: block; width: 200px; overflow: hidden; background-color: #ccc; margin-top: -5px; margin-left: -5px; padding: 2px; }
+div.widget div.items { width: 365px; height: 190px; overflow: auto; }
+div.widget div.item { width: 335px; margin-top: 4px; margin-bottom: 0px; border-style: none; background-color: #eee; padding: 5px; font-size: 11px; }
+div.widget div.item div.itemhead { padding-bottom: 2px; }
+div.widget div.item div.itemhead div.fieldvalue { font-size: 11px; }
+div.widget div.item div.itembody { border-top: solid #fff 1px; padding: 2px 0px 0px 0px; }
+div.widget div.item div.itembody div.fieldvalue { }
+div.widget div.item div.itembody div.fieldvalue pre { height: 130px; overflow: auto; }
+div.widget div.item div.itembody div.fieldvalue div.subfields { border-top: dashed #999 1px; }
+div.widget div.item div.itembody div.fieldvalue div.subfields:first-child { border-top: none; }
+div.widget div.item div.itembody div.fieldvalue div.subfields span { display: inline-block; float: right; margin-left: 20px; }
+
+table.pages { border-collapse: collapse; width: 100%; margin-bottom: 10px; }
+
+table.filters { border-collapse: collapse; width: 100%; margin-bottom: 10px; background-color: #eee; }
+table.filters td { border-width: 0px; padding: 5px; vertical-align: bottom; }
+table.filters td form { margin: 0px; white-space: nowrap; }
+table.filters td form div { font-size: 11px; color: #666; white-space: normal; }
+table.filters td select { max-width: 300px; height: 18px; }
+table.filters td input { min-width: 30px; width: 80%; }
+table.filters td form input[type="submit"] { font-family: Tahoma; font-size: 11px; min-width: 20px; width: 20px; padding: 1px; }
+table.filters td form input.reset { width: 38px; }
+
+table.form { border: solid #999 1px; border-collapse: collapse; width: 100%; }
+table.form>tbody>tr>td { border-bottom: solid #fff 1px; padding: 4px; background-color: #eee; vertical-align: top; }
+table.form>tbody>tr>td:first-child { border-left: solid #999 1px; }
+table.form>tbody>tr>td:last-child { border-right: solid #999 1px; }
+table.form>tbody>tr:last-child>td { border-bottom: solid #999 1px; }
+table.form>tbody>tr>td label span { margin-left: 20px; line-height: 10px; font-size: 10px; padding: 0px 5px; border: solid #999 1px; border-radius: 5px; cursor: default; }
+table.form input[size="50"], .form textarea, .form select { width: 99%; }
+table.form tr.type-image>td>input[type="text"] { width: 84%; }
+table.form tr.type-rlist>td>div { padding-top: 5px; border-bottom: dashed #666 1px; padding-bottom: 5px; }
+table.form tr.type-rlist>td>div:hover { background-color: #fff; }
+table.form tr.type-rlist>td>div>label>span { margin-left: 10px; border: none; color: #666; }
+table.form tr.type-rlist>td>div:last-child { border-bottom: none; }
+table.form tr.type-rlist>td>div>div { margin-left: 21px; margin-top: 5px; color: #666; }
+table.form .note { font-size: 11px; color: #999; }
+table.form .selector { margin-bottom: 5px; }
+table.form .selector label { margin-right: 20px; }
+table.form .selector label input { vertical-align: text-bottom; }
+
+.result { height: 20px; overflow: auto; margin-bottom: 10px; padding: 5px; text-align: center; border: dashed #999 1px; background-color: #eee; }
+
+.debug { margin-top: 20px; border: solid 1px #933; background-color: #fee; }
+.debug div { margin-bottom: 10px; padding: 5px; }
+.debug pre { height: 100px; overflow: auto; padding: 5px; margin: 0px; border-top: dashed #999 1px; }
+.debug span { float: right; cursor: pointer; margin-left: 10px; border: dashed #999 1px; padding: 2px 5px; }
+.debugfloat { position: absolute; top: 0px; left: 0px; z-index: 999999; border: solid 1px #933; background-color: #fee; padding: 5px; }

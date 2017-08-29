@@ -1,0 +1,3 @@
+RewriteEngine off
+Options None
+deny from all

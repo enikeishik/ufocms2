@@ -1,0 +1,145 @@
+<?php
+/**
+ * @copyright
+ */
+
+namespace Ufocms\AdminModules;
+
+use Ufocms\Frontend\DIObject;
+
+/**
+ * Base Configurable class, have attribute fields - array of some configurable data and methods for work with it.
+ */
+abstract class Configurable extends DIObject
+{
+    /**
+     * @var array
+     */
+    protected $fields = null;
+    
+    /**
+     * @var null
+     */
+    protected $nullField = null;
+    
+    /**
+     * Инициализация объекта. Переобпределяется в потомках по необходимости.
+     */
+    protected function init()
+    {
+        $this->setFields();
+    }
+    
+    /**
+     * Определение списка полей.
+     */
+    protected function setFields()
+    {
+        $this->fields = array(
+            
+        );
+    }
+    
+    /**
+     * Получение списка полей.
+     * @return array
+     */
+    public function getFields()
+    {
+        return $this->fields;
+    }
+    
+    /**
+     * Получение ссылки на поле по полю или его имени.
+     * @param string|array $field
+     * @return &array|null
+     */
+    public function &getFieldRef($field)
+    {
+        if (is_string($field)) {
+            $fieldName = $field;
+        } else if (is_array($field) && array_key_exists('Name', $field)) {
+            $fieldName = $field['Name'];
+        } else {
+            return $this->nullField;
+        }
+        //make link on field, it is necessary to change Items value 
+        //from method name to array of field items
+        $field = null;
+        $finded = false;
+        foreach ($this->fields as &$field) {
+            if ($field['Name'] == $fieldName) {
+                $finded = true;
+                break;
+            }
+        }
+        if (!$finded || !is_array($field)) {
+            return $this->nullField;
+        }
+        return $field;
+    }
+    
+    /**
+     * Получение данных поля по полю или его имени.
+     * @param string|array $field
+     * @return array|null
+     */
+    public function getField($field)
+    {
+        if (is_array($field)) {
+            return $field;
+        } else if (is_string($field)) {
+            $fieldName = $field;
+            foreach ($this->fields as $field) {
+                if ($field['Name'] == $fieldName) {
+                    return $field;
+                }
+            }
+        }
+        return null;
+    }
+    
+    /**
+     * Выполнение метода, указанного в атрибуте поля и возвращение его результата.
+     * @param string|array $field
+     * @param string $attribute
+     * @return mixed
+     */
+    public function getFieldMethodResult($field, $attribute)
+    {
+        $field = $this->getField($field);
+        if (!array_key_exists($attribute, $field)) {
+            return null;
+        }
+        if (method_exists($this, $attribute)) {
+            return $this->$attribute();
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * Выполнение метода, указанного в атрибуте поля и возвращение его результата.
+     * @param string|array $field
+     * @param string $attribute
+     * @return mixed
+     */
+    public function getFieldMethodStoredResult($field, $attribute)
+    {
+        $field =& $this->getFieldRef($field);
+        if (is_null($field) || !array_key_exists($attribute, $field)) {
+            return null;
+        }
+        if (!is_string($field[$attribute])) {
+            return $field[$attribute];
+        }
+        $method = $field[$attribute];
+        if (method_exists($this, $method)) {
+            $result = $this->$method();
+            $field[$attribute] = $result;
+            return $result;
+        } else {
+            return null;
+        }
+    }
+}
