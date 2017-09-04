@@ -117,9 +117,6 @@ class Model extends \Ufocms\AdminModules\Model
         return $items;
     }
     
-    /**
-     * @todo: make implementation
-     */
     public function remove()
     {
         $this->disable();

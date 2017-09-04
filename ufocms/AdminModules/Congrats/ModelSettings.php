@@ -37,7 +37,7 @@ class ModelSettings extends \Ufocms\AdminModules\Model
     }
     
     /**
-     * @todo проверить необходимость создания индекса для ViewedCnt
+     * @return array
      */
     protected function getOrderItems()
     {

@@ -53,9 +53,18 @@ html, body { margin: 0px; padding: 0px; height: 100%; background-color: #ccc; fo
 .news .date { font-size: 11px; color: #666; }
 .news .title { font-weight: bold; }
 .news .none { color: #666; }
-
 .newsone {}
 .newsone h1 { margin: 5px 0px; }
+
+.tales .items .item { margin-bottom: 30px; }
+.tales .items .item .date { color: #999; font-size: 11px; float: right; }
+.tales .items .item .title { font-size: 16px; }
+.tales .items .item .image { float: left; }
+.tales .items .item .image img { width: 180px; height: 120px; margin-right: 10px; }
+.talesone .date { color: #999; font-size: 11px; float: right; }
+.talesone .image img { margin-top: 10px; width: 100%; }
+.talesone .views { color: #999; font-size: 12px; }
+.talesone .all { margin: 10px 0px; text-align: center; }
 
 .shopmenu { padding: 2px 5px; background-color: #eee; }
 .shopmenu>div { display: inline-block; margin-right: 10px; }

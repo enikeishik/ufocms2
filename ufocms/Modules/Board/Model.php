@@ -129,7 +129,7 @@ class Model extends \Ufocms\Modules\Model //implements IModel
                 "'" . $this->db->addEscape($item[3]) . "'," . 
                 "'" . $this->db->addEscape($item[4]) . "'," . 
                 "'" . $this->db->addEscape($item[5]) . "')";
-        $this->actionResult['db'] = $this->db->execQuery($sql);
+        $this->actionResult['db'] = $this->db->query($sql);
         
         //отправляем уведомление на email, если задан
         if ('' != $this->settings['AlertEmail']) {

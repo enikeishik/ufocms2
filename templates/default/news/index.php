@@ -16,9 +16,9 @@
     <div class="items">
     <?php foreach ($items as $item) { ?>
         <div class="item">
-            <div class="date"><?=date('d.m.Y H:i', strtotime($item['DateCreate']));?></div>
+            <div class="date"><?=date('d.m.Y H:i', strtotime($item['DateCreate']))?></div>
             <?php if ('' != $item['Icon']) { ?>
-                <div class="icon"><?=$item['Icon'];?></div>
+                <div class="icon"><?=$item['Icon']?></div>
             <?php } ?>
             <div class="title"><a href="<?=$section['path']?><?=$item['Id']?>"><?=$item['Title']?></a></div>
             <div class="announce"><?=$this->getAnnounce($item, $settings)?></div>

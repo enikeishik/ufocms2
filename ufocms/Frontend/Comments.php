@@ -309,7 +309,7 @@ class Comments
                 "'" . $this->db->addEscape(nl2br(htmlspecialchars(substr($item['url'], 0, 255)), false)) . "'," . 
                 $rate . ',' . 
                 (int) $this->settings['premoderated'] . ')';
-        if (!$this->db->execQuery($sql)) {
+        if (!$this->db->query($sql)) {
             return;
         }
         $this->actionResult['db'] = true;
@@ -350,7 +350,7 @@ class Comments
                     '(url,val,cnt) ' . 
                     "VALUES('" . $this->db->addEscape($this->url) . "','" . $rate ."',1)";
         }
-        $this->actionResult['dbrating'] = $this->db->execQuery($sql);
+        $this->actionResult['dbrating'] = $this->db->query($sql);
     }
     
     /**

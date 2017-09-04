@@ -16,7 +16,7 @@ class View extends \Ufocms\Modules\View //implements IView
     protected $category = null;
     
     /**
-     * @return array
+     * @see parent
      */
     protected function getModuleContext()
     {
@@ -82,6 +82,9 @@ class View extends \Ufocms\Modules\View //implements IView
         }
     }
     
+    /**
+     * @see parent
+     */
     protected function getLayout()
     {
         if ($this->moduleParams['isRss']) {
@@ -97,6 +100,9 @@ class View extends \Ufocms\Modules\View //implements IView
         }
     }
     
+    /**
+     * @see parent
+     */
     protected function renderHead()
     {
         if (0 == $this->params->itemId) {
@@ -104,6 +110,9 @@ class View extends \Ufocms\Modules\View //implements IView
         }
     }
     
+    /**
+     * @see parent
+     */
     protected function getHeadTitle()
     {
         $title = parent::getHeadTitle();
@@ -113,6 +122,44 @@ class View extends \Ufocms\Modules\View //implements IView
         return $title;
     }
     
+    /**
+     * @see parent
+     */
+    protected function getMetaDesc()
+    {
+        if (0 != $this->params->itemId) {
+            $settings = $this->model->getSettings();
+            $item = $this->model->getItem();
+            if ($settings['InheritMeta']) {
+                return htmlspecialchars($item['MetaDesc'] . ' ' . $this->context['section']['metadesc'] . ' ' . $this->context['site']['SiteMetaDescription']);
+            } else {
+                return htmlspecialchars($item['MetaDesc']);
+            }
+        }
+        return parent::getMetaDesc();
+    }
+    
+    /**
+     * @see parent
+     */
+    protected function getMetaKeys()
+    {
+        if (0 != $this->params->itemId) {
+            $item = $this->model->getItem();
+            $settings = $this->model->getSettings();
+            $item = $this->model->getItem();
+            if ($settings['InheritMeta']) {
+                return htmlspecialchars($item['MetaKeys'] . ' ' . $this->context['section']['metakeys'] . ' ' . $this->context['site']['SiteMetaKeywords']);
+            } else {
+                return htmlspecialchars($item['MetaKeys']);
+            }
+        }
+        return parent::getMetaKeys();
+    }
+    
+    /**
+     * @see parent
+     */
     protected function getModuleTemplateEntry()
     {
         if (null !== $this->moduleParams['order']) {
@@ -133,6 +180,9 @@ class View extends \Ufocms\Modules\View //implements IView
         return parent::getModuleTemplateEntry();
     }
     
+    /**
+     * @see parent
+     */
     protected function getPaginationContext()
     {
         if (0 != $this->moduleParams['categoryId']) {
@@ -145,6 +195,9 @@ class View extends \Ufocms\Modules\View //implements IView
         }
     }
     
+    /**
+     * Генерация списка категорий.
+     */
     protected function renderCategories()
     {
         if (0 == $this->moduleParams['categoryId']) {

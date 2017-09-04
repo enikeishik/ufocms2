@@ -324,7 +324,7 @@ class Model extends \Ufocms\Modules\Model //implements IModel
     {
         if (null === $formDataFormatted) {
             $sql = 'UPDATE SET Status=1 WHERE Id=' . $this->formId;
-            return $this->db->execQuery($sql);
+            return $this->db->query($sql);
         } else {
             $sql =  'INSERT INTO ' . C_DB_TABLE_PREFIX . 'sendforms' .
                     ' (DateCreate,Status,Url,IP,Form)' . 
@@ -335,7 +335,7 @@ class Model extends \Ufocms\Modules\Model //implements IModel
                         "'" . $this->db->addEscape($_SERVER['REMOTE_ADDR']) . "'," . 
                         "'" . $this->db->addEscape($formDataFormatted) . "'" . 
                     ')';
-            if ($this->db->execQuery($sql)) {
+            if ($this->db->query($sql)) {
                 $this->formId = $this->db->getLastInsertedId();
                 return true;
             } else {

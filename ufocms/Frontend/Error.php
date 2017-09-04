@@ -124,6 +124,9 @@ class Error extends DIObject
         }
         @ob_end_clean();
         
+        //log
+        $this->writeLog($errNum, $errMsg, $options);
+        
         //ouput
         $template = $this->getTemplate($errNum);
         if (null !== $template) {
@@ -133,6 +136,41 @@ class Error extends DIObject
             exit($errMsg);
         } else {
             exit();
+        }
+    }
+    
+    /**
+     * Write log.
+     * @param int $errNum
+     * @param string $errMsg
+     * @param mixed $options
+     */
+    protected function writeLog($errNum, $errMsg, $options)
+    {
+        $timestamp = date('Y.m.d H:i:s') . "\t" . microtime() . "\t";
+        $systemInfo =   $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . "\t" .
+                        $_SERVER['REMOTE_ADDR'] . ':' . $_SERVER['REMOTE_PORT'] . "\t" .
+                        (isset($_SERVER['HTTP_CONNECTION']) ? $_SERVER['HTTP_CONNECTION'] : '') . "\t" . 
+                        $_SERVER['REQUEST_METHOD'] . "\t" . 
+                        $_SERVER['PHP_SELF'] . "\t" . 
+                        $_SERVER['SCRIPT_NAME'] . "\t" . 
+                        (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '') . "\t" . 
+                        $_SERVER['QUERY_STRING'] . "\t" . 
+                        $_SERVER['HTTP_USER_AGENT'] . "\t" . 
+                        $_SERVER['HTTP_ACCEPT_LANGUAGE'] . "\t" . 
+                        (isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '');
+        
+        $data = $timestamp . "info\tsystem\t\t" . $systemInfo . "\r\n" . 
+                $timestamp . "info\tufocms\t\t" . $errNum . "\t" . $errMsg . "\t" . (is_scalar($options) ? $options : 'options structured') . "\r\n";
+        
+        if (500 > $errNum) {
+            $logType = $this->config->logWarnings;
+        } else {
+            $logType = $this->config->logError;
+        }
+        
+        if($fhnd = fopen($this->config->rootPath . $logType . date('ymd') . '.log', 'a')) {
+            return @fwrite($fhnd, $data);
         }
     }
 }

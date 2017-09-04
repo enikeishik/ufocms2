@@ -151,7 +151,7 @@ class ModelOrder extends DIObject
                     ' (SectionId, UserToken, DateInit)' . 
                     " VALUES(" . $this->params->sectionId . ", '" . $this->user . "', NOW())";
         }
-        if ($this->db->execQuery($sql)) {
+        if ($this->db->query($sql)) {
             $sql = 'SELECT * FROM ' . C_DB_TABLE_PREFIX . 'shop_orders WHERE Id=' . $this->db->getLastInsertedId();
             $this->order = $this->db->getItem($sql);
         }
@@ -254,7 +254,7 @@ class ModelOrder extends DIObject
                     ' AND OrderId=' . $this->order['Id'] . 
                     ' AND ItemId=' . $itemId;
         }
-        $this->setActionResult('add', $this->db->execQuery($sql));
+        $this->setActionResult('add', $this->db->query($sql));
     }
     
     /**
@@ -283,7 +283,7 @@ class ModelOrder extends DIObject
                     ' AND OrderId=' . $this->order['Id'] . 
                     ' AND ItemId=' . $itemId;
         }
-        $this->setActionResult('remove', $this->db->execQuery($sql));
+        $this->setActionResult('remove', $this->db->query($sql));
     }
     
     /**
@@ -307,7 +307,7 @@ class ModelOrder extends DIObject
                 ' WHERE SectionId=' . $this->params->sectionId . 
                 ' AND Id=' . $this->order['Id'];
         $this->expired = true;
-        $this->setActionResult('confirm', $this->db->execQuery($sql));
+        $this->setActionResult('confirm', $this->db->query($sql));
     }
     
     /**
@@ -325,7 +325,7 @@ class ModelOrder extends DIObject
                 ' WHERE SectionId=' . $this->params->sectionId . 
                 ' AND Id=' . $this->order['Id'];
         $this->expired = true;
-        if ($this->db->execQuery($sql)) {
+        if ($this->db->query($sql)) {
             $this->sendNotify();
             $this->actionResult = true;
             $this->setActionResult('send', true);
@@ -364,7 +364,7 @@ class ModelOrder extends DIObject
         $sql2 = 'DELETE FROM ' . C_DB_TABLE_PREFIX . 'shop_orders' . 
                 ' WHERE SectionId=' . $this->params->sectionId . 
                 ' AND Id=' . $this->order['Id'];
-        $this->setActionResult('clear', $this->db->execQuery($sql1) && $this->db->execQuery($sql2));
+        $this->setActionResult('clear', $this->db->query($sql1) && $this->db->query($sql2));
         setcookie('token', $this->user, time() - self::ORDER_LIFETIME, rtrim($this->params->sectionPath, '/'));
     }
     

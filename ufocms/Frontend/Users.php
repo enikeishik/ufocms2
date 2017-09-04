@@ -155,7 +155,7 @@ class Users
         $sql =  'UPDATE ' . C_DB_TABLE_PREFIX . 'users' . 
                 ' SET EntryCounter=EntryCounter+1' . 
                 ' WHERE Id=' . $userId;
-        if ($this->db->execQuery($sql)) {
+        if ($this->db->query($sql)) {
             setcookie($this->cookieEntry['name'], '1', time() + $this->cookieEntry['lifetime'], '/');
         }
     }
@@ -204,7 +204,7 @@ class Users
         $sql =  'UPDATE ' . C_DB_TABLE_PREFIX . 'users' . 
                 " SET DateLogin=NOW(), Ticket='" . $ticket . "'" . 
                 ' WHERE Id=' . $userId;
-        if (!$this->db->execQuery($sql)) {
+        if (!$this->db->query($sql)) {
             return false;
         }
         
@@ -232,7 +232,7 @@ class Users
         $sql =  'UPDATE ' . C_DB_TABLE_PREFIX . 'users' . 
                 " SET Ticket=''" . 
                 ' WHERE Id=' . $userId;
-        if (!$this->db->execQuery($sql)) {
+        if (!$this->db->query($sql)) {
             return false;
         }
         
@@ -274,7 +274,7 @@ class Users
                 ' (DateCreate,IsDisabled' . $addFields . ')' . 
                 ' VALUES(NOW(),' . (int) $this->settings['IsModerated'] . 
                 $addValues . ')';
-        return $this->db->execQuery($sql);
+        return $this->db->query($sql);
     }
     
     /**
@@ -297,7 +297,7 @@ class Users
         $sql =  'UPDATE ' . C_DB_TABLE_PREFIX . 'users' . 
                 ' SET ' . substr($sql, 1) . 
                 ' WHERE Id=' . $id;
-        return $this->db->execQuery($sql);
+        return $this->db->query($sql);
     }
     
     /**

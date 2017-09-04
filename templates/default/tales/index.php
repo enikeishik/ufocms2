@@ -9,19 +9,20 @@
  * @var int|null $itemsCount
  */
 ?>
-<div class="news">
+<div class="tales">
 <h1><?=$section['indic']?></h1>
 <?=$settings['BodyHead']?>
 <?php if (0 < $itemsCount) { ?>
     <div class="items">
     <?php foreach ($items as $item) { ?>
         <div class="item">
-            <div class="date"><?=date('d.m.Y H:i', strtotime($item['DateCreate']))?></div>
+            <div class="date"><?=date('d.m.Y', strtotime($item['DateCreate']))?></div>
             <?php if ('' != $item['Icon']) { ?>
-                <div class="icon"><?=$item['Icon']?></div>
+                <div class="image"><?=$item['Icon']?></div>
             <?php } ?>
-            <div class="title"><a href="<?=$item['path']?><?=$item['Id']?>"><?=$item['Title']?></a></div>
+            <div class="title"><a href="<?=$item['path']?><?=$item['Url']?>"><?=$item['Title']?></a></div>
             <div class="announce"><?=$this->getAnnounce($item, $settings)?></div>
+            <div class="clear"></div>
         </div>
     <?php } ?>
     </div>
@@ -29,7 +30,7 @@
         <div class="pagination"><?php $this->renderPagination(); ?></div>
     <?php } ?>
 <?php } else { ?>
-    <div class="none">Новостей пока нет</div>
+    <div class="none">Материалов пока нет</div>
 <?php } ?>
 <?=$settings['BodyFoot']?>
 </div>

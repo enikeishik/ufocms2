@@ -61,6 +61,8 @@ h6 { font-size: 14px; font-weight: normal; }
 
 .menu { margin-bottom: 10px; }
 .menu a { color: #2266dd; }
+.breadcrumbs a:link, .breadcrumbs a:visited { color: #2266dd; }
+.breadcrumbs a { color: #999; }
 .pagination { margin-top: 10px; font-size: 14px; color: #333; }
 
 .widget { padding: 5px; margin-bottom: 10px; }
@@ -80,6 +82,8 @@ h6 { font-size: 14px; font-weight: normal; }
 
 .widgetdocuments .more { font-size: 11px; color: #666; }
 
+.section { margin-top: 5px; }
+
 .news {}
 .news .item { margin-bottom: 20px; }
 .news .date { font-size: 11px; color: #666; }
@@ -94,6 +98,16 @@ h6 { font-size: 14px; font-weight: normal; }
 .widgetnews .title a { color: #000; font-size: 18px; text-decoration: none; }
 .widgetnews .title a:hover { text-decoration: underline; }
 .widgetnews .announce { text-align: justify; }
+
+.tales .items .item { margin-bottom: 30px; }
+.tales .items .item .date { color: #999; font-size: 11px; float: right; }
+.tales .items .item .title { font-size: 16px; }
+.tales .items .item .image { float: left; }
+.tales .items .item .image img { width: 180px; height: 120px; margin-right: 10px; }
+.talesone .date { color: #999; font-size: 11px; float: right; }
+.talesone .image img { margin-top: 10px; width: 100%; }
+.talesone .views { color: #999; font-size: 12px; }
+.talesone .all { margin: 10px 0px; text-align: center; }
 
 .faq dl { margin-bottom: 20px; }
 .faq dt { padding: 2px; background-color: #eee; }

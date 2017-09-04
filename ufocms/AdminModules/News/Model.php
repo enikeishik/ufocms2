@@ -27,7 +27,7 @@ class Model extends \Ufocms\AdminModules\Model
         $sectionPath = $section['path'];
         unset($section);
         foreach ($this->items as &$item) {
-            $item['path'] = $sectionPath . $item['Id'] . '/';
+            $item['path'] = $sectionPath . $item['Id'];
         }
         unset($item);
     }

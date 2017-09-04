@@ -62,14 +62,25 @@ class Model extends \Ufocms\AdminModules\Model
     /**
      * @param int $widgetId
      * @return array<int>
-     * @todo: make one SQL for all widgetId, cache it in static var ($arr[$widgetId] = array(...)) and return part of it
      */
     public function getLinkedTrgSectionsIds($widgetId)
     {
-        $sql =  'SELECT SectionId' . 
-                ' FROM ' . C_DB_TABLE_PREFIX . 'widgets_targets' . 
-                ' WHERE WidgetId=' . $widgetId;
-        return $this->db->getValues($sql, 'SectionId');
+        static $items = null;
+        if (null === $items) {
+            $sql =  'SELECT WidgetId, SectionId' . 
+                    ' FROM ' . C_DB_TABLE_PREFIX . 'widgets_targets' . 
+                    ' ORDER BY WidgetId';
+            $itms = $this->db->getItems($sql);
+            foreach ($itms as $itm) {
+                $items[$itm['WidgetId']][] = $itm['SectionId'];
+            }
+            unset($itms);
+        }
+        if (isset($items[$widgetId])) {
+            return $items[$widgetId];
+        } else {
+            return array();
+        }
     }
     
     public function getTypes()

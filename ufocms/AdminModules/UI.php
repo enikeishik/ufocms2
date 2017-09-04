@@ -1078,7 +1078,6 @@ class UI extends DIObject
      * @param array $field <Type,Name,Title,Value,Constraints>
      * @param mixed $value
      * @return string
-     * @todo: refactoring - separate methods for each type
      */
     protected function formFieldElement(array $field, $value)
     {

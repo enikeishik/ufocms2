@@ -345,7 +345,7 @@ class Model extends \Ufocms\Modules\Model //implements IModel
                 "'" . $this->db->addEscape($password) . "'," . 
                 "'" . $this->db->addEscape($title) . "'," . 
                 "'" . $email . "'" . ')';
-        if (!$this->db->execQuery($sql)) {
+        if (!$this->db->query($sql)) {
             $this->error = 'DB error';
             return;
         }

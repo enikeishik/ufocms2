@@ -20,7 +20,7 @@ trait Tools
         if ('' != $item['Announce']) {
             return strip_tags($item['Announce']);
         } else if (false !== $pos = strpos($item['Body'], C_SITE_PAGEBREAK_SEPERATOR)) {
-            return $tols->getTextPartBySeparator($item['Body'], C_SITE_PAGEBREAK_SEPERATOR);
+            return $this->tools->getTextPartBySeparator($item['Body'], C_SITE_PAGEBREAK_SEPERATOR);
         } else {
             if (array_key_exists('AnnounceLength', $settings)) {
                 $cutLen = (int) $settings['AnnounceLength'];

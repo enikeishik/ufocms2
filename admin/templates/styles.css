@@ -41,7 +41,9 @@ span.info { margin-left: 5px; line-height: 10px; font-size: 10px; font-weight: n
 .sections li p, .sections img.i { border-color: #f5f5ea; }
 .sections ul li li, .sections ul li li div { border-color: #999999; }
 .sections a, .sections a.oc, .sections a.oc:hover { color: #000000; background-color: #ccc; }
-.sections a:hover { color: #cc0000; }
+.sections a { width: 100%; display: inline-block; }
+.sections a.oc { width: 12px; }
+.sections a:hover { background-color: #eee; }
 .core { }
 .core a { display: block; width: 206px; line-height: 28px; color: #000000; text-decoration: none; padding-left: 9px; }
 .core a span { margin-left: 10px; line-height: 10px; font-size: 10px; padding: 0px 5px; border: solid #999 1px; border-radius: 5px; cursor: default; }

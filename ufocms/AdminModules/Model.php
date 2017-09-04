@@ -481,12 +481,13 @@ class Model extends Configurable
      */
     protected function checkFormFieldRequired(array $field)
     {
-        return  !array_key_exists('Required', $field) 
-                || (
-                    $field['Required'] 
-                    && isset($_POST[$field['Name']]) 
-                    && '' != $_POST[$field['Name']]
-                );
+        if (!array_key_exists('Required', $field)) {
+            return true;
+        }
+        if (!$field['Required']) {
+            return true;
+        }
+        return isset($_POST[$field['Name']]) && '' != $_POST[$field['Name']];
     }
     
     /**

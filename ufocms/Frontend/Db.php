@@ -132,11 +132,6 @@ class Db extends \mysqli
         return $items;
     }
     
-    public function execQuery(string $sql)
-    {
-        return $this->query($sql);
-    }
-    
     public function getLastInsertedId()
     {
         return $this->insert_id;

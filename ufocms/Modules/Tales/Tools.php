@@ -3,7 +3,7 @@
  * @copyright
  */
 
-namespace Ufocms\Modules\News;
+namespace Ufocms\Modules\Tales;
 
 /**
  * Module helpful functionality, append to View, Insertion and Widget

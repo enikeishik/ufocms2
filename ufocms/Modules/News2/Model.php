@@ -153,7 +153,7 @@ class Model extends \Ufocms\Modules\Model //implements IModel
         $sql = 'UPDATE ' . C_DB_TABLE_PREFIX . 'news2' . 
                ' SET DateView=NOW(), ViewedCnt=ViewedCnt+1' . 
                ' WHERE Id=' . $itemId;
-        $this->db->execQuery($sql);
+        $this->db->query($sql);
     }
     
     /**

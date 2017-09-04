@@ -19,15 +19,15 @@
 <?php } else { ?>
 <div class="section"><?=$section['indic']?></div>
 <?php } ?>
-<h1><?=$item['Title'];?></h1>
-<div class="date"><?=date('d.m.Y H:i', strtotime($item['DateCreate']));?></div>
+<h1><?=$item['Title']?></h1>
+<div class="date"><?=date('d.m.Y H:i', strtotime($item['DateCreate']))?></div>
 <?php if ('' != $item['Icon']) { ?>
-    <div class="icon"><?=$item['Icon'];?></div>
+    <div class="icon"><?=$item['Icon']?></div>
 <?php } ?>
-<div><?=$item['Body'];?></div>
-<div>Просмотров: <?=$item['ViewedCnt'];?></div>
+<div><?=$item['Body']?></div>
+<div>Просмотров: <?=$item['ViewedCnt']?></div>
 <?php if ('' != $item['Author']) { ?>
-    <div class="author"><?=$item['Author'];?></div>
+    <div class="author"><?=$item['Author']?></div>
 <?php } ?>
 <?php $tags = $this->getItemTags(); if (0 < count($tags)) { ?>
     <div class="tags">Тэги:
