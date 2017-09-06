@@ -152,14 +152,18 @@ class Error extends DIObject
                         $_SERVER['REMOTE_ADDR'] . ':' . $_SERVER['REMOTE_PORT'] . "\t" .
                         (isset($_SERVER['HTTP_CONNECTION']) ? $_SERVER['HTTP_CONNECTION'] : '') . "\t" . 
                         $_SERVER['REQUEST_METHOD'] . "\t" . 
+                        $_SERVER['REQUEST_URI'] . "\t" . 
+                        (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '') . "\t" . 
                         $_SERVER['PHP_SELF'] . "\t" . 
                         $_SERVER['SCRIPT_NAME'] . "\t" . 
-                        (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '') . "\t" . 
                         $_SERVER['QUERY_STRING'] . "\t" . 
                         $_SERVER['HTTP_USER_AGENT'] . "\t" . 
                         $_SERVER['HTTP_ACCEPT_LANGUAGE'] . "\t" . 
                         (isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '');
         
+        if (null === $options) {
+            $options = '';
+        }
         $data = $timestamp . "info\tsystem\t\t" . $systemInfo . "\r\n" . 
                 $timestamp . "info\tufocms\t\t" . $errNum . "\t" . $errMsg . "\t" . (is_scalar($options) ? $options : 'options structured') . "\r\n";
         
@@ -168,9 +172,12 @@ class Error extends DIObject
         } else {
             $logType = $this->config->logError;
         }
+        if ('' == $logType) {
+            return;
+        }
         
-        if($fhnd = fopen($this->config->rootPath . $logType . date('ymd') . '.log', 'a')) {
-            return @fwrite($fhnd, $data);
+        if($fhnd = @fopen($this->config->rootPath . $logType . date('ymd') . '.log', 'a')) {
+            @fwrite($fhnd, $data);
         }
     }
 }

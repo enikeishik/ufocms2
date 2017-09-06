@@ -349,8 +349,9 @@ class Model extends \Ufocms\Modules\Model //implements IModel
     protected function getCategoryItemIdsByAlias($categoryAlias, $itemAlias) {
         $sql =  'SELECT Id' . 
                 ' FROM ' . C_DB_TABLE_PREFIX . 'shop_items' . 
-                ' WHERE IsHidden=0' . 
-                " AND Alias='" . $itemAlias . "'";
+                ' WHERE SectionId=' . $this->params->sectionId . 
+                ' AND IsHidden=0' . 
+                " AND Alias='" . $this->db->addEscape($itemAlias) . "'";
         return array($this->getCategoryIdByAlias($categoryAlias), $this->db->getValue($sql, 'Id'));
     }
     
@@ -361,8 +362,9 @@ class Model extends \Ufocms\Modules\Model //implements IModel
     protected function getCategoryIdByAlias($alias) {
         $sql =  'SELECT Id' . 
                 ' FROM ' . C_DB_TABLE_PREFIX . 'shop_categories' . 
-                ' WHERE IsHidden=0' . 
-                " AND Alias='" . $alias . "'";
+                ' WHERE SectionId=' . $this->params->sectionId . 
+                ' AND IsHidden=0' . 
+                " AND Alias='" . $this->db->addEscape($alias) . "'";
         return $this->db->getValue($sql, 'Id');
     }
     

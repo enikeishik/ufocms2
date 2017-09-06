@@ -3,7 +3,7 @@
  * @copyright
  */
 
-namespace Ufocms\Modules\Tales;
+namespace Ufocms\Modules\Oldurls;
 
 /**
  * Main module model
@@ -26,7 +26,7 @@ class Model extends \Ufocms\Modules\Model //implements IModel
             $this->core->riseError(301, 'Use alias', $this->params->$sectionPath . $itemAlias);
         }
         
-        if (null !== $this->moduleParams['alias']) {
+        if (null !== $this->moduleParams['alias'] && '' != $this->moduleParams['alias']) {
             $this->moduleParams['itemId'] = $this->getItemIdByAlias($this->moduleParams['alias']);
             if (null === $this->moduleParams['itemId']) {
                 $this->core->riseError(404, 'Item not exists');
@@ -41,7 +41,7 @@ class Model extends \Ufocms\Modules\Model //implements IModel
             return $this->settings;
         }
         $sql =  'SELECT *' . 
-                ' FROM ' . C_DB_TABLE_PREFIX . 'tales_sections' . 
+                ' FROM ' . C_DB_TABLE_PREFIX . 'oldurls_sections' . 
                 ' WHERE SectionId=' . $this->params->sectionId;
         $this->settings = $this->db->getItem($sql);
         if (null === $this->moduleParams['pageSize']) {
@@ -57,7 +57,7 @@ class Model extends \Ufocms\Modules\Model //implements IModel
     
     public function getItems()
     {
-        $sqlBase =  ' FROM ' . C_DB_TABLE_PREFIX . 'tales AS i' . 
+        $sqlBase =  ' FROM ' . C_DB_TABLE_PREFIX . 'oldurls AS i' . 
                     ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'sections AS s ON i.SectionId=s.id' . 
                     ' WHERE i.SectionId=' . $this->params->sectionId . 
                     ' AND i.IsHidden=0';
@@ -84,7 +84,7 @@ class Model extends \Ufocms\Modules\Model //implements IModel
         }
         
         $sql =  'SELECT *' . 
-                ' FROM ' . C_DB_TABLE_PREFIX . 'tales' . 
+                ' FROM ' . C_DB_TABLE_PREFIX . 'oldurls' . 
                 ' WHERE Id=' . $this->params->itemId . 
                 ' AND IsHidden=0';
         $this->item = $this->db->getItem($sql);
@@ -97,17 +97,7 @@ class Model extends \Ufocms\Modules\Model //implements IModel
     
     protected function updateViewCount($itemId, $itemUserId)
     {
-        /*
-        //если у элемента UserId=0 то увеличиваем счетчик просмотров независимо от смотрящего
-        if (0 != $itemUserId) {
-            //если смотрящий является владельцем элемента, выходим без увеличения счетчика
-            $currentUser = $this->core->getUsers()->getCurrent();
-            if (null !== $currentUser && $itemUserId == $currentUser['Id']) {
-                return;
-            }
-        }
-        */
-        $sql = 'UPDATE ' . C_DB_TABLE_PREFIX . 'tales' . 
+        $sql = 'UPDATE ' . C_DB_TABLE_PREFIX . 'oldurls' . 
                ' SET DateView=NOW(), ViewedCnt=ViewedCnt+1' . 
                ' WHERE Id=' . $itemId;
         $this->db->query($sql);
@@ -120,7 +110,7 @@ class Model extends \Ufocms\Modules\Model //implements IModel
     protected function getItemAlias($itemId)
     {
         $sql =  'SELECT Url AS Alias' . 
-                ' FROM ' . C_DB_TABLE_PREFIX . 'tales' . 
+                ' FROM ' . C_DB_TABLE_PREFIX . 'oldurls' . 
                 ' WHERE IsHidden=0' . 
                 ' AND Id=' . $itemId;
         return $this->db->getValue($sql, 'Alias');
@@ -132,7 +122,7 @@ class Model extends \Ufocms\Modules\Model //implements IModel
      */
     protected function getItemIdByAlias($alias) {
         $sql =  'SELECT Id' . 
-                ' FROM ' . C_DB_TABLE_PREFIX . 'tales' . 
+                ' FROM ' . C_DB_TABLE_PREFIX . 'oldurls' . 
                 ' WHERE SectionId=' . $this->params->sectionId . 
                 ' AND IsHidden=0' . 
                 " AND Url='" . $this->db->addEscape($alias) . "'";

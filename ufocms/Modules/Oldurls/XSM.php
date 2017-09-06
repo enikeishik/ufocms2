@@ -3,7 +3,7 @@
  * @copyright
  */
 
-namespace Ufocms\Modules\Tales;
+namespace Ufocms\Modules\Oldurls;
 
 /**
  * Module level XmlSitemap generate base class
@@ -13,7 +13,7 @@ class XSM extends \Ufocms\Modules\XSM //implements IXSM
     protected function getItems()
     {
         $sql =  'SELECT Url' . 
-                ' FROM ' . C_DB_TABLE_PREFIX . 'tales' . 
+                ' FROM ' . C_DB_TABLE_PREFIX . 'oldurls' . 
                 ' WHERE SectionId=' . $this->section['id'] . ' AND IsHidden=0' . 
                 ' ORDER BY OrderNumber';
         if (null !== $items = $this->db->getItems($sql)) {
@@ -29,10 +29,6 @@ class XSM extends \Ufocms\Modules\XSM //implements IXSM
     
     protected function getPageLength()
     {
-        $sql =  'SELECT PageLength' . 
-                ' FROM ' . C_DB_TABLE_PREFIX . 'tales_sections' . 
-                ' WHERE SectionId=' . $this->section['id'];
-        $pageLength = $this->db->getValue($sql, 'PageLength');
-        return null !== $pageLength ? $pageLength : 1;
+        return 0;
     }
 }

@@ -61,6 +61,14 @@ html, body { margin: 0px; padding: 0px; height: 100%; background-color: #ccc; fo
 .tales .items .item .title { font-size: 16px; }
 .tales .items .item .image { float: left; }
 .tales .items .item .image img { width: 180px; height: 120px; margin-right: 10px; }
+.widgettales { margin-top: 10px; }
+.widgettales .item { margin-bottom: 20px; }
+.widgettales .item .date { color: #999; font-size: 11px; float: right; }
+.widgettales .item .title { font-size: 14px; }
+.widgettales .item .image { float: left; }
+.widgettales .item .image img { width: 180px; height: 120px; margin-right: 10px; }
+.widgettales .item .views { float: right; color: #999; font-size: 11px; }
+.widgettales .item .more { clear: both; float: right; }
 .talesone .date { color: #999; font-size: 11px; float: right; }
 .talesone .image img { margin-top: 10px; width: 100%; }
 .talesone .views { color: #999; font-size: 12px; }
@@ -182,3 +190,5 @@ html, body { margin: 0px; padding: 0px; height: 100%; background-color: #ccc; fo
 .auctionsitem .views { color: #999; font-size: 12px; }
 .auctionsitem .all { margin: 10px 0px; text-align: center; }
 .iframe .informer { border: 0px; padding: 0px; }
+
+.oldurls .items .item { margin-bottom: 20px; }

@@ -9,20 +9,14 @@
  * @var int|null $itemsCount
  */
 ?>
-<div class="tales">
+<div class="oldurls">
 <h1><?=$section['indic']?></h1>
 <?=$settings['BodyHead']?>
 <?php if (0 < $itemsCount) { ?>
     <div class="items">
     <?php foreach ($items as $item) { ?>
         <div class="item">
-            <div class="date"><?=date('d.m.Y', strtotime($item['DateCreate']))?></div>
-            <?php if ('' != $item['Icon']) { ?>
-                <div class="image"><?=$item['Icon']?></div>
-            <?php } ?>
             <div class="title"><a href="<?=$item['path']?><?=$item['Url']?>"><?=$item['Title']?></a></div>
-            <div class="info"><?=$this->getAnnounce($item, $settings)?></div>
-            <div class="clear"></div>
         </div>
     <?php } ?>
     </div>
