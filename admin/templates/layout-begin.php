@@ -13,10 +13,6 @@ $this->ui->headers();
 <title><?=$this->ui->headTitle()?></title>
 <link rel="stylesheet" type="text/css" href="templates/styles.css" />
 <script type="text/javascript" src="scripts.js"></script>
-<?php if ((false !== stripos($layout, 'form') && !isset($_GET['code'])) || isset($_GET['wysiwyg'])) { ?>
-<script type="text/javascript" src="extensions/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="extensions/tiny_mce_init.php"></script>
-<?php } ?>
 <?=$this->ui->headCode()?>
 </head>
 <body>

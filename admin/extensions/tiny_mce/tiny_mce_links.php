@@ -3,12 +3,13 @@ namespace Ufocms\Backend;
 
 ini_set('display_errors', '1');
 ini_set('error_reporting', E_ALL);
+ini_set('scream.enabled', true);
 date_default_timezone_set('Europe/Moscow');
 setlocale(LC_ALL, 'ru_RU.utf-8', 'rus_RUS.utf-8', 'ru_RU.utf8');
 mb_internal_encoding('UTF-8');
 
-require_once '../../config.php';
-require_once '../autoload.php';
+require_once '../../../config.php';
+require_once '../../autoload.php';
 
 function ShowLinks()
 {
@@ -25,7 +26,7 @@ function ShowLinks()
             ' WHERE isenabled!=0' . 
             ' ORDER BY mask';
     $items = $db->getItems($sql);
-    $db->close;
+    $db->close();
     unset($db);
     foreach ($items as $item) {
         $indent = '';

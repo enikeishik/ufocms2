@@ -15,34 +15,27 @@ class View extends \Ufocms\AdminModules\View
      */
     public function render($layout = null, $ui = null, $uiParams = null, $uiParamsAppend = false)
     {
-        //UI
-        $container = new \Ufocms\Frontend\Container([
-            'debug'     => &$this->debug, 
-            'config'    => &$this->config, 
-            'params'    => &$this->params, 
-            'core'      => &$this->core, 
-            'tools'     => &$this->tools, 
-            'model'     => &$this->model, 
-            'basePath'  => '?' . (is_null($this->params->coreModule) ? '' : $this->config->paramsNames['coreModule'] .  '=' . $this->params->coreModule), 
-        ]);
-        $this->ui = new \Ufocms\AdminModules\CoreSections\UI($container);
-        
         //Layout
         if (is_null($layout)) {
             if (in_array($this->params->action, $this->config->actionsForm)) {
-                require_once 'templates/form.php';
+                $this->layout = 'templates/form.php';
             } else {
-                require_once 'templates/tree.php';
+                $this->layout = 'templates/tree.php';
             }
         } else {
             if (false === strpos($layout, '.php')) {
                 $layoutPath = 'templates/' . $layout . '.php';
             }
             if (file_exists($layoutPath)) {
-                require_once $layoutPath;
+                $this->layout = $layoutPath;
             } else {
-                require_once 'templates/empty.php';
+                $this->layout = 'templates/empty.php';
             }
         }
+        
+        //UI
+        $this->ui = $this->getUI('', '?' . (is_null($this->params->coreModule) ? '' : $this->config->paramsNames['coreModule'] .  '=' . $this->params->coreModule));
+        
+        require_once $this->layout;
     }
 }

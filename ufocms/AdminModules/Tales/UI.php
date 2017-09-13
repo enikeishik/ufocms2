@@ -51,6 +51,9 @@ class UI extends \Ufocms\AdminModules\UI
                 parent::form();
     }
     
+    /**
+     * @see parent
+     */
     protected function setMainTabs()
     {
         parent::setMainTabs();

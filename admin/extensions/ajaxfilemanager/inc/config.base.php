@@ -1,4 +1,5 @@
 <?php
+//TODO: gets it from Config
 define('C_UPLOAD_ROOT_FOLDER', '/files');
 define('C_UPLOAD_FILE_MODE', 0666);
 define('C_UPLOAD_MAXFILESIZE', 3000000);
@@ -78,11 +79,10 @@ error_reporting(E_ALL);
 	define('CONFIG_EDITABLE_VALID_EXTS', 'txt,htm,html,xml,js,css'); //make you include all these extension in CONFIG_UPLOAD_VALID_EXTS if you want all valid
 	
 	define('CONFIG_OVERWRITTEN', false); //overwirte when processing paste
-	//define('CONFIG_UPLOAD_VALID_EXTS', 'gif,jpg,png,txt'); // 
-	define('CONFIG_UPLOAD_VALID_EXTS', 'gif,jpg,png,bmp,tif,zip,sit,rar,gz,tar,htm,html,mov,mpg,avi,asf,mpeg,wmv,aif,aiff,wav,mp3,swf,ppt,rtf,doc,pdf,xls,txt,xml,xsl,dtd');
-	define("CONFIG_VIEWABLE_VALID_EXTS", 'gif,bmp,txt,jpg,png,tif,html,htm,js,css,xml,xsl,dtd,mp3,wav,wmv,wma,rm,rmvb,mov,swf');
+	define('CONFIG_UPLOAD_VALID_EXTS', 'gif,jpg,jpeg,png,bmp,tif,tiff,zip,sit,rar,gz,tar,txt,xml,xsl,dtd,htm,html,js,css,mov,mpg,mpeg,avi,asf,wmv,wma,aif,aiff,rm,rmvb,wav,mp3,ogg,swf,ppt,pptx,rtf,doc,docx,pdf,xls,xlsx');
+	define('CONFIG_VIEWABLE_VALID_EXTS', 'gif,bmp,txt,jpg,jpeg,png,tif,tiff,html,htm,js,css,xml,xsl,dtd,mp3,wav,wmv,wma,rm,rmvb,mov,swf');
 	define('CONFIG_UPLOAD_INVALID_EXTS', '');
-
+    
 	//Preview
 	define('CONFIG_IMG_THUMBNAIL_MAX_X', 100);
 	define('CONFIG_IMG_THUMBNAIL_MAX_Y', 100);

@@ -15,7 +15,7 @@ span.info { margin-left: 5px; line-height: 10px; font-size: 10px; font-weight: n
 #frameleft { position: absolute; top: 0; bottom: 0; left: 0; width: 215px; overflow: auto; background-color: #ccc; }
 #frameleft .framewrap { margin: 5px 0px 5px 0px; }
 #clop { position: absolute; top: 0; bottom: 0; left: 215px; z-index: 9; width: 15px; background-color: #ccc; }
-#clop a { display: block; height: 80%; padding-top: 61px; font-size: 18px; font-family: 'Courier New'; cursor: default; }
+#clop a { display: block; position: absolute; top: 0; bottom: 0; width: 15px; /*height: 80%;*/ padding-top: 61px; font-size: 18px; font-family: 'Courier New'; cursor: default; }
 #clop a:hover { background-color: #eee; }
 #framemain { position: fixed; top: 0; left: 230px; right: 0; bottom: 0; overflow: auto; }
 #framemain .framewrap { margin: 5px 10px 5px 10px; }

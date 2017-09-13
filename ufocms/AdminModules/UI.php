@@ -53,6 +53,12 @@ class UI extends DIObject
      * @var Model
      */
     protected $model  = null;
+    
+    /**
+     * @var string
+     */
+    protected $layout = '';
+    
     /**
      * @var string
      */
@@ -91,6 +97,7 @@ class UI extends DIObject
         $this->module =& $this->container->getRef('module');
         $this->moduleParams =& $this->container->getRef('moduleParams');
         $this->model =& $this->container->getRef('model');
+        $this->layout = $this->container->get('layout');
         $this->basePath = $this->container->get('basePath');
         //TODO: remove to init and make parent::init() in children
         parse_str(('' != $this->basePath && '?' == $this->basePath[0] ? substr($this->basePath, 1) : $this->basePath), $this->basePathItems);
@@ -1003,13 +1010,22 @@ class UI extends DIObject
      */
     protected function formFieldImageElement(array $field, $value)
     {
-        return  '<input type="text" maxlength="255" size="40"' . $this->getFormFieldAttributes($field, $value) . '>' . 
+        $s =    '<input type="text" maxlength="255" size="40"' . $this->getFormFieldAttributes($field, $value) . '>' . 
                 '<input type="button" value="i"' . 
                     ' onclick="window.open(\'extensions/ajaxfilemanager/ajaxfilemanager.php?editor=ufocms_image&elementId=' . strtolower($field['Name']) . '\', \'FM\', \'top=\' + (screen.availHeight / 2 - 235) + \',left=\' + (screen.availWidth / 2 - 380) + \',width=760,height=470,scrollbars=yes,resizable=yes,border=no,status=no\')"' . 
                     ' style="width: 20px;" title="Указать картинку">' . 
                 '<input type="button" value="X"' . 
                     ' onclick="this.parentNode.firstChild.value = \'\'" style="width: 20px;"' . 
                     ' title="Убрать картинку">';
+        //Image adjuster
+        $s .=   ' | ' . 
+                '<input type="button"' . 
+                ' name="' . strtolower($field['Name']) . 'adjust" id="' . strtolower($field['Name']) . 'adjust"' . 
+                ' value="a" style="width: 20px;" title="Изменить картинку"' . 
+                ' onclick=""' . 
+                '>' . 
+                '<script type="text/javascript">addImageAdjuster("' . strtolower($field['Name']) . '")</script>';
+        return $s;
     }
     
     /**
@@ -1388,7 +1404,44 @@ class UI extends DIObject
      */
     public function headCode()
     {
-        return '';
+        $s = '';
+        
+        //WYSIWYG
+        if ((false !== stripos($this->layout, 'form') && !isset($_GET['code'])) || isset($_GET['wysiwyg'])) {
+            $s .=   '<script type="text/javascript" src="extensions/tiny_mce/tiny_mce.js"></script>' . PHP_EOL . 
+                    '<script type="text/javascript" src="extensions/tiny_mce/tiny_mce_init.php"></script>' . PHP_EOL;
+        }
+        
+        //Image adjuster
+        if (false !== stripos($this->layout, 'form')) {
+$s .= <<<'EOD'
+<script type="text/javascript" src="extensions/imageadjust/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="extensions/imageadjust/jquery.imgareaselect.min.js"></script>
+<link type="text/css" rel="stylesheet" href="extensions/imageadjust/imgareaselect-animated.css">
+<script type="text/javascript" src="extensions/imageadjust/imageadjuster.js"></script>
+<script type="text/javascript">
+var imageAdjusters = [];
+function addImageAdjuster(id)
+{
+    imageAdjusters[id] = new ImageAdjuster("extensions/imageadjust/", id);
+    imageAdjusters[id].drawUI();
+    var elm = document.getElementById(id + "adjust");
+    elm.onclick = function() {
+        var wrap = document.getElementById(id + "adjustwrap");
+        if ("none" == wrap.style.display) {
+            imageAdjusters[id].init();
+            wrap.style.display = "";
+        } else {
+            imageAdjusters[id].clear();
+            wrap.style.display = "none";
+        }
+    };
+}
+</script>
+EOD;
+            }
+        
+        return $s;
     }
     
     /**

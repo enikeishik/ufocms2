@@ -60,6 +60,11 @@ class View extends DIObject
     protected $model  = null;
     
     /**
+     * @var string
+     */
+    protected $layout = '';
+    
+    /**
      * @var UI
      */
     protected $ui = null;
@@ -162,6 +167,7 @@ class View extends DIObject
             'module'        => &$this->module, 
             'moduleParams'  => &$this->moduleParams, 
             'model'         => &$this->model, 
+            'layout'        => $this->layout, 
             'basePath'      => $this->getUIParams($uiParams, $uiParamsAppend), 
         ]);
         return new $uiClass($container);
@@ -222,16 +228,17 @@ class View extends DIObject
         if (null !== $this->debug) {
             $idx = $this->debug->trace('Render preparation');
         }
-        //UI
+        
+        $this->layout = $this->getLayout($layout);
+        
         $this->ui = $this->getUI($ui, $uiParams, $uiParamsAppend);
         
-        //Layout
-        $layout = $this->getLayout($layout);
         if (null !== $this->debug) {
             $this->debug->trace($idx);
             $idx = $this->debug->trace('Render');
         }
-        require_once $layout;
+        
+        require_once $this->layout;
     }
     
     /**

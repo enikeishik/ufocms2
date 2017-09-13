@@ -3,12 +3,14 @@ namespace Ufocms\Backend;
 
 ini_set('display_errors', '1');
 ini_set('error_reporting', E_ALL);
+ini_set('scream.enabled', true);
 date_default_timezone_set('Europe/Moscow');
 setlocale(LC_ALL, 'ru_RU.utf-8', 'rus_RUS.utf-8', 'ru_RU.utf8');
 mb_internal_encoding('UTF-8');
 
-require_once '../../config.php';
-require_once '../autoload.php';
+require_once '../../../config.php';
+require_once '../../autoload.php';
+
 $config = new Config();
 if (defined('C_THEME') && '' != C_THEME) {
     $siteCssPath = $config->templatesDir . '/' . C_THEME;
@@ -63,7 +65,7 @@ tinyMCE.init({
     
     // Drop lists for link/image/media/template dialogs
     //template_external_list_url : "lists/template_list.js",
-    external_link_list_url : "extensions/tiny_mce_links.php",
+    external_link_list_url : "extensions/tiny_mce/tiny_mce_links.php",
     //external_image_list_url : "lists/image_list.js",
     //media_external_list_url : "lists/media_list.js",
     

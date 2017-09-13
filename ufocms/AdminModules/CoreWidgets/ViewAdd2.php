@@ -15,6 +15,9 @@ class ViewAdd2 extends \Ufocms\AdminModules\View
      */
     public function render($layout = null, $ui = null, $uiParams = null, $append = false)
     {
+        //Layout
+        $this->layout = $this->getLayout($layout);
+        
         //UI
         $typeId = $this->moduleParams['TypeId'];
         $moduleId = $this->model->getTypeModuleId($typeId);
@@ -42,8 +45,6 @@ class ViewAdd2 extends \Ufocms\AdminModules\View
             );
         }
         
-        //Layout
-        $layout = $this->getLayout($layout);
-        require_once $layout;
+        require_once $this->layout;
     }
 }

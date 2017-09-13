@@ -33,18 +33,18 @@ class manager
 	var $calculateSubdir = true;
 	var $fileTypes = array(
 			array(array("exe", "com"), "fileExe", SEARCH_TYPE_EXE, 0),
-			array(array("gif", "jpg", "png", "bmp", "tif"), "filePicture", SEARCH_TYPE_IMG, 1),
+			array(array("gif", "jpg", "jpeg", "png", "bmp", "tif", "tiff"), "filePicture", SEARCH_TYPE_IMG, 1),
 			array(array("zip", "sit", "rar", "gz", "tar"), "fileZip", SEARCH_TYPE_ARCHIVE, 0),
 			array(array("htm", "html", "php", "jsp", "asp", 'js', 'css'), "fileCode", SEARCH_TYPE_HTML, 1),
 			array(array("mov", "ram", "rm", "asx", "dcr", "wmv"), "fileVideo", SEARCH_TYPE_VIDEO, 1),
-			array(array("mpg", "avi", "asf", "mpeg"), "fileVideo", SEARCH_TYPE_MOVIE, 1),
+			array(array("mpg", "avi", "asf", "mpeg", "mp4"), "fileVideo", SEARCH_TYPE_MOVIE, 1),
 			array(array("aif", "aiff", "wav", "mp3", "wma"), "fileMusic", SEARCH_TYPE_MUSIC, 1),
 			array(array("swf", 'flv'), "fileFlash", SEARCH_TYPE_FLASH, 1),
-			array(array("ppt"), "filePPT", SEARCH_TYPE_PPT, 0),
+			array(array("ppt", "pptx"), "filePPT", SEARCH_TYPE_PPT, 0),
 			array(array("rtf"), "fileRTF", SEARCH_TYPE_DOC, 0),
-			array(array("doc"), "fileWord", SEARCH_TYPE_WORD, 0),
+			array(array("doc", "docx"), "fileWord", SEARCH_TYPE_WORD, 0),
 			array(array("pdf"), "fileAcrobat", SEARCH_TYPE_PDF, 0),
-			array(array("xls", "csv"), "fileExcel", SEARCH_TYPE_EXCEL, 0),
+			array(array("xls", "xlsx", "csv"), "fileExcel", SEARCH_TYPE_EXCEL, 0),
 			array(array("txt"), "fileText", SEARCH_TYPE_TEXT, 1),
 			array(array("xml", "xsl", "dtd"), "fileXml", SEARCH_TYPE_XML, 1)
 	);
