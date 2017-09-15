@@ -50,8 +50,7 @@ span.info { margin-left: 5px; line-height: 10px; font-size: 10px; font-weight: n
 .core:hover { background-color: #eee; }
 
 /* Списки элементов */
-.items .funcs { background-color: #eee; }
-.items .funcs { font-size: 11px; }
+.items .funcs { background-color: #eee; font-size: 11px; text-align: center; padding: 4px 4px 2px 4px; }
 .items .funcs a { color: #33c; background-color: #ddd; padding: 2px; border: dotted #999 1px; min-width: 15px; max-width: 80px; height: 14px; display: inline-block; overflow: hidden; text-overflow: ellipsis; text-decoration: none; text-align: center; }
 .items .funcs a:hover { background-color: #fff; }
 .items .levelpadding { color: #ccc; }
@@ -75,6 +74,7 @@ table.items td.xlarge { font-size: 14px; }
 table.items td.funcs { text-align: center; }
 table.items caption { padding: 4px 4px 2px 4px; }
 
+div.items div.funcs { margin-bottom: 10px; }
 div.items div.item { border: solid #999 1px; margin-bottom: 20px; }
 div.items div.empty { border: solid #999 1px; padding: 2px; background-color: #ccc; text-align: center; }
 div.items div.itemhead { background-color: #eef; }

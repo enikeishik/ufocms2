@@ -77,6 +77,36 @@ class Config
     public $cacheForbidden = false;
     
     /**
+     * Папка статичного контента.
+     * @var string
+     */
+    public $staticDir = '/files';
+    
+    /**
+     * Папка статичного контента для URL, формируется из staticDir.
+     * @var string
+     */
+    public $staticUrl = '';
+    
+    /**
+     * Маска создаваемых папок для статичного контента.
+     * @var int
+     */
+    public $staticDirMode = 0777;
+    
+    /**
+     * Маска создаваемых файлов статичного контента.
+     * @var int
+     */
+    public $staticFileMode = 0666;
+    
+    /**
+     * Максимальный размер загружаемого (статичного) файла.
+     * @var int|float
+     */
+    public $uploadFileMaxSize = 10000000;
+    
+    /**
      * Путь к файлу XmlSitemap.
      * @var string
      */
@@ -314,6 +344,8 @@ class Config
     {
         $this->rootUrl = $this->rootPath;
         $this->rootPath = $_SERVER['DOCUMENT_ROOT'] . $this->rootPath;
+        $this->staticUrl = $this->staticDir;
+        $this->staticDir = $_SERVER['DOCUMENT_ROOT'] . $this->staticDir;
         if (!is_null($overrides)) {
             foreach ($overrides as $name => $value) {
                 if (property_exists($this, $name)) {

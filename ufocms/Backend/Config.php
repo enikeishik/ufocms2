@@ -48,6 +48,7 @@ class Config extends \Ufocms\Frontend\Config
         'interaction'   => ['Menu' => true,  'Title' => 'Интерактив',                'Description' => 'Комментарии и рейтинги'], 
         'comments'      => ['Menu' => true,  'Title' => 'Комментарии<sup>old</sup>', 'Description' => 'Комментарии и рейтинги, старый функционал'], 
         'sendform'      => ['Menu' => true,  'Title' => 'Результаты форм',           'Description' => 'Результаты форм, отпраленных со страниц сайта'], 
+        'users'         => ['Menu' => true,  'Title' => 'Пользователи',              'Description' => 'Зарегистрированные пользователи сайта'], 
         'filemanager'   => ['Menu' => true,  'Title' => 'Файловый менеджер',         'Description' => 'Управление загруженными файлами и загрузка новых файлов на сайт'], 
         'sections'      => ['Menu' => true,  'Title' => 'Структура сайта',           'Description' => 'Управление структурой сайта, созданиеи и редактирование разделов сайта'], 
         'site'          => ['Menu' => true,  'Title' => 'Параметры сайта',           'Description' => 'Общие параметры сайта (название, заголовок, мета тэги и пр.)'], 

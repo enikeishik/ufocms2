@@ -380,9 +380,17 @@ class UI extends DIObject
                     return '';
                 }
             case 'add':
-                return '<a href="' . $this->basePath . '&' . $this->config->paramsNames['action'] . '=add&' . $this->config->paramsNames['itemId'] . '=0" title="Создать">Создать</a>';
+                if ($this->model->isCanCreateItems()) {
+                    return '<a href="' . $this->basePath . '&' . $this->config->paramsNames['action'] . '=add&' . $this->config->paramsNames['itemId'] . '=0" title="Создать">Создать</a>';
+                } else {
+                    return '';
+                }
             case 'edit':
-                return ' <a href="' . $this->basePath . '&' . $this->config->paramsNames['action'] . '=edit&' . $this->config->paramsNames['itemId'] . '=' . $item['itemid'] . '" title="Редактировать">Редактировать</a>';
+                if ($this->model->isCanUpdateItems()) {
+                    return ' <a href="' . $this->basePath . '&' . $this->config->paramsNames['action'] . '=edit&' . $this->config->paramsNames['itemId'] . '=' . $item['itemid'] . '" title="Редактировать">Редактировать</a>';
+                } else {
+                    return '';
+                }
             case 'html':
                 return ' <a href="' . $this->basePath . '&' . $this->config->paramsNames['action'] . '=edit&' . $this->config->paramsNames['itemId'] . '=' . $item['itemid'] . '&code=1" title="Редактировать в HTML редакторе">HTML</a>';
             case 'disable':
@@ -397,9 +405,17 @@ class UI extends DIObject
                     return '';
                 }
             case 'delete':
-                return ' <a href="' . $this->basePath . '&' . $this->config->paramsNames['action'] . '=delete&' . $this->config->paramsNames['itemId'] . '=' . $item['itemid'] . '" title="Удалить">&#8252;</a>';
+                if ($this->model->isCanDeleteItems()) {
+                    return ' <a href="' . $this->basePath . '&' . $this->config->paramsNames['action'] . '=delete&' . $this->config->paramsNames['itemId'] . '=' . $item['itemid'] . '" title="Удалить">&#8252;</a>';
+                } else {
+                    return '';
+                }
             case 'delconfirm':
-                return ' <a href="' . $this->basePath . '&' . $this->config->paramsNames['action'] . '=delete&' . $this->config->paramsNames['itemId'] . '=' . $item['itemid'] . '" title="Удалить" onclick="return confirm(\'Удалить запись?\')">&#8252;</a>';
+                if ($this->model->isCanDeleteItems()) {
+                    return ' <a href="' . $this->basePath . '&' . $this->config->paramsNames['action'] . '=delete&' . $this->config->paramsNames['itemId'] . '=' . $item['itemid'] . '" title="Удалить" onclick="return confirm(\'Удалить запись?\')">&#8252;</a>';
+                } else {
+                    return '';
+                }
             case 'up':
                 return ' <a href="' . $this->basePath . '&' . $this->config->paramsNames['action'] . '=up&' . $this->config->paramsNames['itemId'] . '=' . $item['itemid'] . '" title="Переместить вверх">&#8593;</a>';
             case 'down':
@@ -453,6 +469,9 @@ class UI extends DIObject
      */
     protected function appendItemFunc($funcId, $funcHtml, $afterFuncId = null)
     {
+        if ('' == $funcHtml) {
+            return;
+        }
         if (is_null($afterFuncId)) {
             $this->itemFuncs[$funcId] = $funcHtml;
         } else if ('' == $afterFuncId) {
@@ -735,6 +754,14 @@ class UI extends DIObject
      */
     protected function singleItemHeadField(array $field, array $item)
     {
+        if ((isset($field['External']) && $field['External'])) {
+            $s =    '<div class="itemfield type-' . $field['Type'] . '">' . 
+                        '<span class="fieldname">' . $field['Title'] . '</span>' . 
+                        '<span class="fieldvalue">' . $this->getExternalFieldContent($field, $item) . '</span>' . 
+                    '</div>';
+            return $s;
+        }
+            
         $value = $item[$field['Name']];
         if ('list' == $field['Type']) {
             $fieldItems = $this->model->getFieldItems($field); //$field['Items']
@@ -1171,6 +1198,16 @@ class UI extends DIObject
     }
     
     /**
+     * Получение установленных значений для внешнего поля.
+     * @param array $field <Type,Name,Title,Value,Constraints>
+     * @return mixed
+     */
+    protected function getItemExternalFieldValue($field)
+    {
+        return $this->model->getItemExternalFieldValue($field);
+    }
+    
+    /**
      * Формирование обработчика формы.
      * @param array $item = null
      * @return string
@@ -1264,6 +1301,8 @@ class UI extends DIObject
                 $s .= $this->formSubform($field, $item);
             } else if (array_key_exists($field['Name'], $item)) { //some old databases may not contain all declared fields
                 $s .= $this->formField($field, $item[$field['Name']]);
+            } else if (isset($field['External']) && $field['External']) {
+                $s .= $this->formField($field, $this->getItemExternalFieldValue($field));
             }
         }
         return $s;

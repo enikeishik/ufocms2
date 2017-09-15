@@ -105,14 +105,19 @@ abstract class Configurable extends DIObject
      * @param string $attribute
      * @return mixed
      */
-    public function getFieldMethodResult($field, $attribute)
+    public function getFieldMethodResult($field, $attribute, $argument = null)
     {
         $field = $this->getField($field);
         if (!array_key_exists($attribute, $field)) {
             return null;
         }
-        if (method_exists($this, $attribute)) {
-            return $this->$attribute();
+        $method = $field[$attribute];
+        if (method_exists($this, $method)) {
+            if (null === $argument) {
+                return $this->$method();
+            } else {
+                return $this->$method($argument);
+            }
         } else {
             return null;
         }

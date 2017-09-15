@@ -360,6 +360,17 @@ class Model extends Configurable
     }
     
     /**
+     * Get value for external field.
+     * @param string|array $field
+     * @return mixed
+     */
+    public function getItemExternalFieldValue($field)
+    {
+        //not store result, because this method calls once for edit form.
+        return $this->getFieldMethodResult($field, 'Value', $this->params->itemId);
+    }
+    
+    /**
      * @return array
      */
     public function getItems()

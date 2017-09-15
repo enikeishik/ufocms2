@@ -21,19 +21,20 @@ class Model extends \Ufocms\AdminModules\Model
         $this->itemDisabledField = '';
         $this->primaryFilter = '';
         $this->defaultSort = 'PGroup,POrder,PName';
+        $this->canDeleteItems = false;
     }
     
     protected function setFields()
     {
         $this->fields = array(
-            array('Type' => 'int',          'Name' => 'Id',             'Value' => 0,       'Title' => 'id',            'Filter' => false,  'Show' => true,     'Sort' => true,     'Edit' => false),
-            array('Type' => 'int',          'Name' => 'POrder',         'Value' => 0,       'Title' => 'Порядок',       'Filter' => false,  'Show' => false,    'Sort' => false,    'Edit' => false),
-            array('Type' => 'int',          'Name' => 'PType',          'Value' => 202,     'Title' => 'Тип',           'Filter' => false,  'Show' => false,    'Sort' => false,    'Edit' => false),
-            array('Type' => 'combo',        'Name' => 'PGroup',         'Value' => '',      'Title' => 'Группа',        'Filter' => true,   'Show' => true,     'Sort' => true,     'Edit' => true,     'Unchange' => true,     'Items' => 'getGroups'),
-            array('Type' => 'text',         'Name' => 'PName',          'Value' => '',      'Title' => 'Название',      'Filter' => false,  'Show' => true,     'Sort' => true,     'Edit' => true,     'Unchange' => true),
-            array('Type' => 'text',         'Name' => 'PValue',         'Value' => '',      'Title' => 'Значение',      'Filter' => false,  'Show' => true,     'Sort' => false,    'Edit' => true),
-            array('Type' => 'text',         'Name' => 'PDefault',       'Value' => '',      'Title' => 'По-умолчанию',  'Filter' => false,  'Show' => true,     'Sort' => false,    'Edit' => true,     'Unchange' => true),
-            array('Type' => 'text',         'Name' => 'PDescription',   'Value' => '',      'Title' => 'Описание',      'Filter' => false,  'Show' => true,     'Sort' => false,    'Edit' => true,     'Unchange' => true),
+            array('Type' => 'int',      'Name' => 'Id',             'Value' => 0,       'Title' => 'id',            'Filter' => false,  'Show' => true,     'Sort' => true,     'Edit' => false),
+            array('Type' => 'int',      'Name' => 'POrder',         'Value' => 0,       'Title' => 'Порядок',       'Filter' => false,  'Show' => false,    'Sort' => false,    'Edit' => false),
+            array('Type' => 'int',      'Name' => 'PType',          'Value' => 202,     'Title' => 'Тип',           'Filter' => false,  'Show' => false,    'Sort' => false,    'Edit' => false),
+            array('Type' => 'combo',    'Name' => 'PGroup',         'Value' => '',      'Title' => 'Группа',        'Filter' => true,   'Show' => true,     'Sort' => true,     'Edit' => true,     'Unchange' => true,     'Items' => 'getGroups'),
+            array('Type' => 'text',     'Name' => 'PName',          'Value' => '',      'Title' => 'Название',      'Filter' => true,   'Show' => true,     'Sort' => true,     'Edit' => true,     'Unchange' => true),
+            array('Type' => 'text',     'Name' => 'PValue',         'Value' => '',      'Title' => 'Значение',      'Filter' => false,  'Show' => true,     'Sort' => false,    'Edit' => true),
+            array('Type' => 'text',     'Name' => 'PDefault',       'Value' => '',      'Title' => 'По-умолчанию',  'Filter' => false,  'Show' => true,     'Sort' => false,    'Edit' => true,     'Unchange' => true),
+            array('Type' => 'text',     'Name' => 'PDescription',   'Value' => '',      'Title' => 'Описание',      'Filter' => true,   'Show' => true,     'Sort' => false,    'Edit' => true,     'Unchange' => true),
         );
     }
     
@@ -88,10 +89,5 @@ class Model extends \Ufocms\AdminModules\Model
         } else {
             $this->result = 'DB error: ' . $this->db->getError();
         }
-    }
-    
-    public function delete()
-    {
-        $this->result = 'Not implemented yet';
     }
 }

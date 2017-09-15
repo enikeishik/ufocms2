@@ -108,7 +108,9 @@ function ImageAdjuster(extensionPath, imageFieldId, width, height)
             $("#" + this.imageFieldId + "adjustminheight").html(val);
         }
         //change preview
-        this.iasObj.cancelSelection();
+        if (null != this.iasObj) {
+            this.iasObj.cancelSelection();
+        }
         $("#" + this.imageFieldId + "adjustpreviewdiv").attr("style", "width: " + this.adjustWidth + "px; height: " + this.adjustHeight + "px; overflow: hidden;");
         $("#" + this.imageFieldId + "adjustpreviewimg").attr("style", "width: " + this.adjustWidth + "px; height: " + this.adjustHeight + "px;");
     };

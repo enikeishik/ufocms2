@@ -109,11 +109,10 @@ class Model extends \Ufocms\Modules\Model //implements IModel
         if (null !== $this->settings) {
             return $this->settings;
         }
-        //BOOKMARK: site params
+        //TODO: use site params
         $this->settings = array(
             'captcha'               => false, 
-            'maxInput'              => 1048576, 
-            'maxFileSize'           => 1048576, 
+            'maxFileSize'           => $this->config->uploadFileMaxSize, 
             'ignoreFieldMark'       => '!', 
             'mailToParam'           => 'SiteEMail', 
             'mailFromParam'         => 'SiteEMailFrom', 
@@ -125,8 +124,8 @@ class Model extends \Ufocms\Modules\Model //implements IModel
             'markReferer'           => '{REFERER}', 
             'markIp'                => '{IP}', 
             'formatterTemplate'     => 'formatter.php', 
-            'uploadPath'            => '/files/.sendform', 
-            'uploadFileMode'        => 0666, 
+            'uploadPath'            => '/.sendform', 
+            'uploadFileMode'        => $this->config->staticFileMode, 
         );
         return $this->settings;
     }
@@ -302,7 +301,7 @@ class Model extends \Ufocms\Modules\Model //implements IModel
                 list($msec, $sec) = explode(' ', microtime());
                 $filePath = $this->settings['uploadPath'] . '/' . date('YmdHis') . '_' . ($msec * 100000000) . '.' . $fileExt;
                 if (@move_uploaded_file($_FILES[$key]['tmp_name'], $this->config->rootPath . $filePath)) {
-                    if (!@chmod($this->config->rootPath . $filePath, $this->settings['uploadFileMode'])) {
+                    if (!@chmod($this->config->staticDir . $filePath, $this->settings['uploadFileMode'])) {
                         $data['form'][$key] .= ' (error while changing mode on file `' . $file . '` to `' . $this->settings['uploadFileMode'] . '`)';
                     }
                     $data['form'][$key] .= ' (' . $filePath . ')';
