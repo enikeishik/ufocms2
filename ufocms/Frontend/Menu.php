@@ -106,7 +106,7 @@ class Menu extends DIObject
             array_merge(
                 $this->getApplicationContext(), 
                 array(
-                    'items' => $this->core->getSections('id, path, indic', 'parentid=0')
+                    'items' => $this->core->getSections('id, path, indic', 'inmenu!=0 AND parentid=0')
                 )
             )
         );
@@ -134,7 +134,7 @@ class Menu extends DIObject
                 array(
                     'items' => $this->core->getSections(
                         'id, path, indic', 
-                        'parentid=' . (null === $this->params->sectionId || -1 == $this->params->sectionId ? 0 : $this->params->sectionId)
+                        'inmenu!=0 AND parentid=' . (null === $this->params->sectionId || -1 == $this->params->sectionId ? 0 : $this->params->sectionId)
                     )
                 )
             )
@@ -154,7 +154,7 @@ class Menu extends DIObject
                 array(
                     'items' => $this->core->getSections(
                         'id, path, indic', 
-                        'parentid=' . $itemId
+                        'inmenu!=0 AND parentid=' . $itemId
                     )
                 )
             )
@@ -174,7 +174,7 @@ class Menu extends DIObject
                 array(
                     'items' => $this->core->getSections(
                         'id, path, indic', 
-                        'parentid=' . (null === $section ? 0 : $section['parentid'])
+                        'inmenu!=0 AND parentid=' . (null === $section ? 0 : $section['parentid'])
                     )
                 )
             )

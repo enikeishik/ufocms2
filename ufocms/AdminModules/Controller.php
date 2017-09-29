@@ -141,6 +141,12 @@ abstract class Controller extends DIObject //implements IController
                 case 'bool':
                     $this->moduleParamsStruct[$paramName]['Value'] = true;
                     break;
+                case 'arrint':
+                    if (is_array($param)) {
+                        $this->moduleParamsStruct[$paramName]['Value'] = $this->tools->getArrayOfIntegers($param);
+                    } else {
+                        $this->moduleParamsStruct[$paramName]['Value'] = (int) $param;
+                    }
                 default:
                     $this->moduleParamsStruct[$paramName]['Value'] = $param;
             }

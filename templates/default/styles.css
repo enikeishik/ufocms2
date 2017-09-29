@@ -192,3 +192,44 @@ html, body { margin: 0px; padding: 0px; height: 100%; background-color: #ccc; fo
 .iframe .informer { border: 0px; padding: 0px; }
 
 .oldurls .items .item { margin-bottom: 20px; }
+
+.votings .items .item { margin-bottom: 20px; border: solid #ccc 1px; padding: 10px; }
+.votings .items .closed { background-color: #eee; }
+.votings .items .item .date { color: #999; font-size: 11px; float: right; }
+.votings .items .item .views { color: #999; font-size: 11px; float: left; }
+.votings .items .item .title { margin-top: 10px; font-size: 16px; }
+.votings .items .item .image { text-align: center; margin: 10px 0px; }
+.votingsitem .section { margin-bottom: 10px; }
+.votingsitem .date { color: #999; font-size: 11px; }
+.votingsitem .date .start { float: left; }
+.votingsitem .date .stop { float: right; }
+.votingsitem .votingsanswerstogether .votingsanswer { width: 480px; margin: 0px auto; border-bottom: dashed #ccc 1px; }
+.votingsitem .votingsanswerstogether .votingsanswer label { display: block; width: 100%; padding: 10px 0px; cursor: pointer; }
+.votingsitem .votingsanswerstogether .votingsanswer label:hover { background-color: #eef; }
+.votingsitem .votingsanswersseparate .votingsanswer { width: 480px; margin: 10px auto; border: dashed #ccc 1px; padding: 10px; }
+.votingsitem .votingsanswersseparate .votingsanswertitle { font-size: 16px; font-weight: normal; margin: 0px; } 
+.votingsitem .votingscaptcha  { margin-top: 20px; text-align: center; }
+.votingsitem .votingssubmit { text-align: center; margin-top: 20px; }
+.votingsitem .votingsshowresults { text-align: center; margin-top: 20px; }
+.votingsitem .votingsresults .votingsanswer { width: 480px; margin: 20px auto; border-bottom: dashed #ccc 1px; }
+.votingsitem .votingsresults .label { display: inline-block; width: 180px; }
+.votingsitem .votingsresults .graph { display: inline-block; background-color: #999; border: solid #666 1px; height: 14px; overflow: hidden; }
+.votingsitem .votingsresults .graph>span { display: block; width: 200px; height: 14px; background: linear-gradient(to right, #66f, #f33); }
+.votingsitem .votingsresults .value { display: inline-block; color: #666; font-size: 11px; }
+.votingsitem .all { margin: 20px 0px; text-align: center; }
+.widgetvotings .date { color: #999; font-size: 11px; margin: 10px 0px; }
+.widgetvotings .date .start { float: left; }
+.widgetvotings .date .stop { float: right; }
+.widgetvotings h4 { margin: 10px 0px; }
+.widgetvotings .votingsanswer { width: 480px; margin: 0px auto; border-bottom: dashed #ccc 1px; }
+.widgetvotings .votingsanswer label { display: block; width: 100%; padding: 10px 0px; cursor: pointer; }
+.widgetvotings .votingsanswer label:hover { background-color: #eef; }
+.widgetvotings .votingscaptcha  { margin-top: 20px; text-align: center; }
+.widgetvotings .votingssubmit { text-align: center; margin-top: 20px; }
+.widgetvotings .votingsshowresults { text-align: center; margin-top: 10px; }
+.widgetvotings .votingsresults .votingsanswer { width: 480px; margin: 20px auto; border-bottom: dashed #ccc 1px; }
+.widgetvotings .votingsresults .label { display: inline-block; width: 180px; }
+.widgetvotings .votingsresults .graph { display: inline-block; background-color: #999; border: solid #666 1px; height: 14px; overflow: hidden; }
+.widgetvotings .votingsresults .graph>span { display: block; width: 200px; height: 14px; background: linear-gradient(to right, #66f, #f33); }
+.widgetvotings .votingsresults .value { display: inline-block; color: #666; font-size: 11px; }
+.widgetvotings .all { margin: 10px 0px; text-align: center; }

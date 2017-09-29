@@ -19,12 +19,12 @@ class UIAdd22 extends UIAdd2
             $items = $this->model->getFieldItems($field); //$field['Items']
             $moduleId = $this->model->getTypeModuleId($this->basePathItems['TypeId']);
             
-            if ($this->model->getWidgetSourceDepends()) {
+            if ($this->model->getWidgetSingleSource() && $this->model->getWidgetSourceDepends()) {
                 //set JS handler for reload page on SrcSections change with SrcSections id as parameter
                 //only for sourceDepend widgets
                 $jsHandler = '';
                 
-                //if SrcSections not set, find first first item with required type
+                //if SrcSections not set, find first item with required type
                 //and set it as SrcSections, for sourceDepends widgets
                 if (0 == $this->basePathItems['SrcSections']) {
                     foreach ($items as $item) {
@@ -37,22 +37,42 @@ class UIAdd22 extends UIAdd2
                 }
                 
                 $qstring = '?';
-                foreach ($this->basePathItems as $name => $value) {
+                foreach ($this->basePathItems as $name => $val) {
                     if ('SrcSections' != $name) {
-                        $qstring .= $name . '=' . $value . '&';
+                        $qstring .= $name . '=' . $val . '&';
                     }
                 }
                 $jsHandler = ' onchange="location.href=\'' . htmlspecialchars($qstring, ENT_QUOTES) . 'SrcSections=\' + this.options[this.options.selectedIndex].value"';
                 
-                //for sourceDepend widgets select can be only non multiselect
                 $s = '<select name="SrcSections"' . $jsHandler . ' required>';
+            } else if ($this->model->getWidgetSourceDepends()) {
+                $qstring = '?';
+                foreach ($this->basePathItems as $name => $val) {
+                    if ('SrcSections' != $name) {
+                        $qstring .= $name . '=' . $val . '&';
+                    }
+                }
+                $jsHandler = ' onchange="location.href=\'' . htmlspecialchars($qstring, ENT_QUOTES) . '\' + getSrcSectionsSelected(this)"';
+                $s =    '<script type="text/javascript">' . 
+                        'function getSrcSectionsSelected(s) { var r = ""; for (var i = 0; i < s.options.length; i++) { if (s.options[i].selected) { r += "&SrcSections[]=" + s.options[i].value; } } return "" != r ? r.substr(1) : r; }' . 
+                        '</script>' . 
+                        '<select name="SrcSections[]" multiple size="10"' . $jsHandler . ' required>';
+            } else if ($this->model->getWidgetSingleSource()) {
+                $s = '<select name="SrcSections" required>';
             } else {
                 $s = '<select name="SrcSections' . ('mlist' == $field['Type'] ? '[]" multiple size="10"' : '"') . ' required>';
             }
             
             foreach ($items as $item) {
+                if (is_array($value)) {
+                    $selected = in_array($item['Value'], $value);
+                } else if (is_string($value) && $this->tools->isStringOfIntegers($value)) {
+                    $selected = in_array($item['Value'], $this->tools->getArrayOfIntegersFromString($value));
+                } else {
+                    $selected = $value == $item['Value'];
+                }
                 if ($item['IsEnabled'] && $moduleId == $item['ModuleId']) {
-                    $s .=   '<option value="' . $item['Value'] . '"' . ($item['Value'] == $this->basePathItems['SrcSections'] ? ' selected' : '') . '>' . 
+                    $s .=   '<option value="' . $item['Value'] . '"' . ($selected ? ' selected' : '') . '>' . 
                             htmlspecialchars($item['Title']) . 
                             '</option>';
                 } else {

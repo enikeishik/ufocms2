@@ -87,6 +87,21 @@ class Tools
     }
     
     /**
+     * Получение массива целых чисел из массива содержащего строки с числами.
+     * 
+     * @param array $arr массив значений, которые будут приведены к целому
+     *
+     * @return array<int>
+     */
+    public function getArrayOfIntegers(array $arr)
+    {
+        return array_map(
+            function($str) { return (int) trim($str); }, 
+            $arr
+        );
+    }
+    
+    /**
      * Проверяет содержит ли строка значения типа int разделенные разделителем.
      *
      * @param string $str    строка значений, разделенных разделителем
@@ -112,12 +127,9 @@ class Tools
      *
      * @return array<int>
      */
-    public function getArrayOfIntegers($str, $sep = ',')
+    public function getArrayOfIntegersFromString($str, $sep = ',')
     {
-        return array_map(
-                function($str) { return (int) trim($str); }, 
-                explode($sep, $str)
-        );
+        return $this->getArrayOfIntegers(explode($sep, $str));
     }
     
     /**

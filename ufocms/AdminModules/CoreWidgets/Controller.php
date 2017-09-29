@@ -13,9 +13,9 @@ class Controller extends \Ufocms\AdminModules\Controller //implements IControlle
     protected function setModuleParamsStruct()
     {
         $this->moduleParamsStruct = array(
-            ['Type' => 'int',   'Name' => 'step',           'Value' => 0,  'Default' => 0], 
-            ['Type' => 'int',   'Name' => 'TypeId',         'Value' => 0,  'Default' => 0], 
-            ['Type' => 'int',   'Name' => 'SrcSections',    'Value' => 0,  'Default' => 0], 
+            ['Type' => 'int',       'Name' => 'step',           'Value' => 0,       'Default' => 0], 
+            ['Type' => 'int',       'Name' => 'TypeId',         'Value' => 0,       'Default' => 0], 
+            ['Type' => 'arrint',    'Name' => 'SrcSections',    'Value' => null,    'Default' => null], 
         );
     }
     
@@ -41,6 +41,14 @@ class Controller extends \Ufocms\AdminModules\Controller //implements IControlle
             $this->setView();
             $item = $this->model->getItem();
             $moduleId = $this->model->getTypeModuleId($item['TypeId']);
+            if (is_array($this->moduleParams['SrcSections'])) {
+                $srcSections = '';
+                foreach ($this->moduleParams['SrcSections'] as $srcSection) {
+                    $srcSections .= '&SrcSections[]=' . $srcSection;
+                }
+            } else {
+                $srcSections = '&SrcSections=' . $this->moduleParams['SrcSections'];
+            }
             $this->renderView(
                 null, 
                 'UIEdit', 
@@ -48,7 +56,7 @@ class Controller extends \Ufocms\AdminModules\Controller //implements IControlle
                     '&' . $this->config->paramsNames['itemId'] . '=' . $this->params->itemId . 
                     '&useSources=' . (0 != $moduleId ? 1 : 0) . 
                     '&useContent=' . $this->model->getWidgetUseContent() . 
-                    '&SrcSections=' . $this->moduleParams['SrcSections'], 
+                    $srcSections, 
                 true
             );
             

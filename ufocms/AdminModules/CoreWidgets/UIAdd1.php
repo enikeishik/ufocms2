@@ -70,7 +70,7 @@ class UIAdd1 extends UI
             if (is_array($value)) {
                 $selected = in_array($item['Value'], $value);
             } else if (is_string($value) && $this->tools->isStringOfIntegers($value)) {
-                $selected = in_array($item['Value'], $this->tools->getArrayOfIntegers($value));
+                $selected = in_array($item['Value'], $this->tools->getArrayOfIntegersFromString($value));
             } else {
                 $selected = $value == $item['Value'];
             }

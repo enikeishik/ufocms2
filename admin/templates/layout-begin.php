@@ -22,6 +22,7 @@ $this->ui->headers();
 <div id="clop"><a>&lt;</a></div>
 <div id="framemain"><div class="framewrap">
 <?=$this->ui->frameMainHeader()?>
+<?=$this->ui->masterHeader()?>
 <?php if (!is_null($result = $this->model->getResult())) { ?>
 <div class="result"><?=$result?><span class="close" title="Скрыть" onclick="this.parentNode.style.display='none'">X</span></div>
 <?php } ?>

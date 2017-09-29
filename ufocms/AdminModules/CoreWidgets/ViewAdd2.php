@@ -33,6 +33,14 @@ class ViewAdd2 extends \Ufocms\AdminModules\View
                 true
             );
         } else {
+            if (is_array($this->moduleParams['SrcSections'])) {
+                $srcSections = '';
+                foreach ($this->moduleParams['SrcSections'] as $srcSection) {
+                    $srcSections .= '&SrcSections[]=' . $srcSection;
+                }
+            } else {
+                $srcSections = '&SrcSections=' . $this->moduleParams['SrcSections'];
+            }
             $this->ui = $this->getUI(
                 'UIAdd22', 
                 $uiParams . 
@@ -40,7 +48,7 @@ class ViewAdd2 extends \Ufocms\AdminModules\View
                     '&' . $this->config->paramsNames['itemId'] . '=0' . 
                     '&step=2' . 
                     '&TypeId=' . $typeId . 
-                    '&SrcSections=' . $this->moduleParams['SrcSections'], 
+                    $srcSections, 
                 true
             );
         }

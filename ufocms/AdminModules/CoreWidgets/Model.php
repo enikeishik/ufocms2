@@ -181,8 +181,17 @@ class Model extends \Ufocms\AdminModules\Model
         if (null === $item) {
             return;
         }
-        
         $itemId = (int) $item['Id'];
+        
+        //set moduleParams for source-dependent widgets
+        if (0 != $itemId && !isset($this->moduleParams['SrcSections'])) {
+            if (false !== strpos($item['SrcSections'], ',')) {
+                $this->moduleParams['SrcSections'] = $this->tools->getArrayOfIntegersFromString($item['SrcSections']);
+            } else {
+                $this->moduleParams['SrcSections'] = (int) $item['SrcSections'];
+            }
+        }
+        
         if (0 == $itemId && 0 != $this->moduleParams['TypeId']) {
             $typeId = $this->moduleParams['TypeId'];
         } else {

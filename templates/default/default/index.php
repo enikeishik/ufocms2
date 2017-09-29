@@ -17,7 +17,11 @@
         <div class="item">
             <?php foreach ($item as $key => $val) { ?>
                 <?php if (0 === stripos($key, 'passw')) { $val = '******'; } ?>
+                <?php if (is_scalar($val)) { ?>
                 <div><b><?=$key?>:</b> <?=$val?></div>
+                <?php } else { ?>
+                <div><b><?=$key?>:</b> <?=gettype($val)?></div>
+                <?php } ?>
             <?php } ?>
             <div><a href="<?=$section['path']?><?=$item['Id']?>">Просмотр элемента</a></div>
         </div>

@@ -7,7 +7,7 @@
     $trace = $this->debug->getTrace();
     foreach ($trace as $traceItem) {
         echo    $traceItem['time'] . "\t" . 
-                htmlspecialchars($traceItem['operation']) . 
+                str_replace(' FROM ', ' <b>FROM</b> ', htmlspecialchars($traceItem['operation'])) . 
                 (null !== $traceItem['stack'] ? "\t" . implode('\\', (function ($stack) { $arr = []; foreach ($stack as $s) { $arr[] = array_pop(explode('\\', $s['class'])) . '::' . $s['function']; } array_shift($arr); array_shift($arr); array_shift($arr); return array_reverse($arr); })($sql['stack'])) : '') . 
                 "\r\n";
     }

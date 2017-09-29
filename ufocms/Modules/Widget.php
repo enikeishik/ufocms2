@@ -165,7 +165,14 @@ abstract class Widget extends DIObject
         if (file_exists($template)) {
             return $template;
         }
-        return '';
+        if (null !== $this->debug) {
+            return  $this->config->rootPath . 
+                    $this->config->templatesDir . $this->config->themeDefault . 
+                    $this->config->templateDefault . 
+                    '/widget.php';
+        } else {
+            return '';
+        }
     }
     
     /**

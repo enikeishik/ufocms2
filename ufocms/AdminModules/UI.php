@@ -951,7 +951,7 @@ class UI extends DIObject
             if (is_array($value)) {
                 $selected = in_array($item['Value'], $value);
             } else if (is_string($value) && $this->tools->isStringOfIntegers($value)) {
-                $selected = in_array($item['Value'], $this->tools->getArrayOfIntegers($value));
+                $selected = in_array($item['Value'], $this->tools->getArrayOfIntegersFromString($value));
             } else {
                 $selected = $value == $item['Value'];
             }
@@ -979,7 +979,7 @@ class UI extends DIObject
             if (is_array($value)) {
                 $selected = in_array($item['Value'], $value);
             } else if (is_string($value) && $this->tools->isStringOfIntegers($value)) {
-                $selected = in_array($item['Value'], $this->tools->getArrayOfIntegers($value));
+                $selected = in_array($item['Value'], $this->tools->getArrayOfIntegersFromString($value));
             } else {
                 $selected = $value == $item['Value'];
             }
@@ -1191,8 +1191,14 @@ class UI extends DIObject
         if (isset($field['Info'])) {
             $description = '<span title="' . htmlspecialchars($field['Info']) . '">i</span>';
         }
+        
+        $required = '';
+        if (isset($field['Required']) && $field['Required']) {
+            $required = '<sup>*</sup>';
+        }
+        
         return  '<tr class="type-' . $field['Type'] . '">' . 
-                '<td><label>' . $field['Title'] . $description . '</label></td>' . 
+                '<td><label>' . $field['Title'] . $description . $required . '</label></td>' . 
                 '<td>' . $this->formFieldElement($field, $value) . '</td>' . 
                 '</tr>';
     }
@@ -1208,15 +1214,15 @@ class UI extends DIObject
     }
     
     /**
-     * Формирование обработчика формы.
-     * @param array $item = null
+     * Формирование начала формы.
+     * @param array $attributes
      * @return string
      */
-    protected function formHandler(array $item = null)
+    protected function formBegin(array $attributes)
     {
-        return  $this->basePath . 
-                '&' . $this->config->paramsNames['action'] . '=update' . 
-                (null !== $item ? '&' . $this->config->paramsNames['itemId'] . '=' . $item['itemid'] : '');
+        $s =    $this->formElement($attributes) . 
+                '<table class="form">';
+        return $s;
     }
     
     /**
@@ -1234,29 +1240,26 @@ class UI extends DIObject
     }
     
     /**
-     * Формирование тэга отправки формы.
-     * @param array $attributes
-     * @return string
+     * Формирует набор атрибутов тэга формы.
      */
-    protected function formSubmitElement(array $attributes)
+    protected function formElementAttributes($handler)
     {
-        $s = '<input type="submit"';
-        foreach ($attributes as $name => $value) {
-            $s .= ' ' . $name . '="' . $value . '"';
-        }
-        return $s . '>';
+        return array(
+            'action' => $handler, 
+            'method' => 'post'
+        );
     }
     
     /**
-     * Формирование начала формы.
-     * @param array $attributes
+     * Формирование обработчика формы.
+     * @param array $item = null
      * @return string
      */
-    protected function formBegin(array $attributes)
+    protected function formHandler(array $item = null)
     {
-        $s =    $this->formElement($attributes) . 
-                '<table class="form">';
-        return $s;
+        return  $this->basePath . 
+                '&' . $this->config->paramsNames['action'] . '=update' . 
+                (null !== $item ? '&' . $this->config->paramsNames['itemId'] . '=' . $item['itemid'] : '');
     }
     
     /**
@@ -1273,7 +1276,7 @@ class UI extends DIObject
             return '';
         }
         $values = json_decode($item[$field['Name']], true);
-        if (null === $values) {
+        if (null === $values || count($values) != count($fields)) {
             $values = array('itemid' => 0);
             foreach ($fields as $f) {
                 $values[$f['Name']] = $f['Value'];
@@ -1310,34 +1313,65 @@ class UI extends DIObject
     
     /**
      * Формирование окончания формы.
-     * @param array $attributes
+     * @param array $submitAttributes
+     * @param array $cancelAttributes = null
      * @return string
      */
-    protected function formEnd(array $attributes)
+    protected function formEnd(array $submitAttributes, array $cancelAttributes = null)
     {
-        $s =    '<tr><td colspan="2" align="center">' . $this->formSubmitElement($attributes) . '</td></tr>' . 
+        $s =    '<tr><td colspan="2" align="center">' . 
+                (null !== $cancelAttributes ? $this->formCancelElement($cancelAttributes) . '&nbsp;' : '') . 
+                $this->formSubmitElement($submitAttributes) . 
+                '</td></tr>' . 
                 '</table></form>';
         return $s;
     }
     
     /**
-     * Формирует набор атрибутов тэга формы.
+     * Формирование тэга отправки формы.
+     * @param array $attributes
+     * @return string
      */
-    protected function formElementAttributes($handler)
+    protected function formSubmitElement(array $attributes)
     {
-        return array(
-            'action' => $handler, 
-            'method' => 'post'
-        );
+        $s = '<input type="submit"';
+        foreach ($attributes as $name => $value) {
+            $s .= ' ' . $name . '="' . $value . '"';
+        }
+        return $s . '>';
     }
     
     /**
-     * Формирует набор атрибутов тэга формы.
+     * Формирование тэга отправки формы.
+     * @param array $attributes
+     * @return string
+     */
+    protected function formCancelElement(array $attributes)
+    {
+        $s = '<input type="button"';
+        foreach ($attributes as $name => $value) {
+            $s .= ' ' . $name . '="' . $value . '"';
+        }
+        return $s . ' onclick="history.back()">';
+    }
+    
+    /**
+     * Формирует набор атрибутов тэга кнопки отправки формы.
      */
     protected function formSubmitElementAttributes()
     {
         return array(
             'value' => 'Сохранить'
+        );
+    }
+    
+    /**
+     * Формирует набор атрибутов тэга кнопки отмены формы.
+     */
+    protected function formCancelElementAttributes()
+    {
+        return array(
+            'value' => 'Назад'
         );
     }
     
@@ -1355,7 +1389,7 @@ class UI extends DIObject
         
         $s = $this->formBegin($this->formElementAttributes($this->formHandler($item)));
         $s .= $this->formFields($fields, $item);
-        $s .= $this->formEnd($this->formSubmitElementAttributes());
+        $s .= $this->formEnd($this->formSubmitElementAttributes(), $this->formCancelElementAttributes());
         return $s;
     }
     
@@ -1426,6 +1460,45 @@ class UI extends DIObject
             $tab = '<a href="' . $this->section['path'] . '" target="_blank" title="открыть страницу сайта">посмотреть</a>';
             $this->appendMainTab('SitePage', $tab);
         }
+    }
+    
+    /**
+     * Generating master (if master exists) header.
+     * @return string
+     */
+    public function masterHeader()
+    {
+        $title = $this->getMasterTitle();
+        if ('' == $title) {
+            return '';
+        }
+        return '<h2>' . $title . '</h2>';
+    }
+    
+    /**
+     * Extract title value from master object.
+     * @return string
+     */
+    protected function getMasterTitle()
+    {
+        //TODO: moveto config
+        $arr = array('Title', 'title', 'Caption', 'caption', 'Indic', 'indic', 'Name', 'name');
+        
+        $master = $this->model->getMaster();
+        if (null === $master) {
+            return '';
+        }
+        $item = $master->getItem();
+        if (null === $item) {
+            return '';
+        }
+        
+        foreach ($arr as $a) {
+            if (isset($item[$a])) {
+                return $item[$a];
+            }
+        }
+        return '';
     }
     
     /**

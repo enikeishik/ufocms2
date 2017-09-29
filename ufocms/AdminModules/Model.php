@@ -53,6 +53,11 @@ class Model extends Configurable
     protected $tools = null;
     
     /**
+     * @var Model
+     */
+    protected $master = null;
+    
+    /**
      * @var string
      */
     protected $itemsTable = null;
@@ -172,6 +177,14 @@ class Model extends Configurable
     public function getParams()
     {
         return $this->params;
+    }
+    
+    /**
+     * @return Model
+     */
+    public function getMaster()
+    {
+        return $this->master;
     }
     
     /**

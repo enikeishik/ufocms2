@@ -71,7 +71,7 @@ class Cache
             return false;
         }
         $written = false;
-        if (flock($handle, LOCK_EX)) {
+        if (flock($handle, LOCK_EX | LOCK_NB)) {
             fwrite($handle, $data);
             fflush($handle);
             flock($handle, LOCK_UN);
