@@ -38,7 +38,7 @@ class Model extends \Ufocms\AdminModules\Model
             array('Type' => 'text',         'Name' => 'Title',          'Value' => '',          'Title' => 'Заголовок',             'Filter' => false,  'Show' => true,     'Sort' => true,     'Edit' => true,     'Required' => true,     'Autofocus' => true),
             array('Type' => 'text',         'Name' => 'Description',    'Value' => '',          'Title' => 'Описание',              'Filter' => false,  'Show' => true,     'Sort' => false,    'Edit' => true),
             array('Type' => 'bigtext',      'Name' => 'Content',        'Value' => '',          'Title' => 'Содержимое',            'Filter' => false,  'Show' => false,    'Sort' => false,    'Edit' => true),
-            array('Type' => 'subform',      'Name' => 'Params',         'Value' => '',          'Title' => 'Параметры',             'Filter' => false,  'Show' => false,    'Sort' => false,    'Edit' => true,     'Model' => 'getWidget'),
+            array('Type' => 'subform',      'Name' => 'Params',         'Value' => '',          'Title' => 'Параметры',             'Filter' => false,  'Show' => false,    'Sort' => false,    'Edit' => true,     'Schema' => 'getWidget'),
         );
     }
     

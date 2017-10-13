@@ -10,7 +10,7 @@ use Ufocms\Frontend\DIObject;
 /**
  * Base Widget class
  */
-class Widget extends Configurable
+class Widget extends Schema
 {
     /**
      * @var \Ufocms\Frontend\Debug

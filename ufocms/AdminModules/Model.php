@@ -8,7 +8,7 @@ namespace Ufocms\AdminModules;
 /**
  * Base model class
  */
-class Model extends Configurable
+class Model extends Schema
 {
     /**
      * @var \Ufocms\Frontend\Debug
@@ -172,19 +172,54 @@ class Model extends Configurable
     }
     
     /**
-     * @return \Ufocms\Backend\Params
-     */
-    public function getParams()
-    {
-        return $this->params;
-    }
-    
-    /**
+     * Get model of master (when this model is slave).
      * @return Model
      */
     public function getMaster()
     {
         return $this->master;
+    }
+    
+    /**
+     * Get field model (when field contains link to structured external data) by demand.
+     * @param string|array $field
+     * @param mixed $value = null
+     * @return object|null
+     */
+    public function getFieldModel($field, $value = null)
+    {
+        return $this->getFieldMethodStoredResult($field, 'Model', $value);
+    }
+    
+    /**
+     * Get field schema (when field value contains structured data itself, as JSON for example, and schema is external) by demand.
+     * @param string|array $field
+     * @return array|null
+     */
+    public function getFieldSchema($field)
+    {
+        return $this->getFieldMethodStoredResult($field, 'Schema');
+    }
+    
+    /**
+     * Get field items (when field value is item of list) by demand.
+     * @param string|array $field
+     * @return array|null
+     */
+    public function getFieldItems($field)
+    {
+        return $this->getFieldMethodStoredResult($field, 'Items');
+    }
+    
+    /**
+     * Get value for external field (field contains data in another table).
+     * @param string|array $field
+     * @return mixed
+     */
+    public function getItemExternalFieldValue($field)
+    {
+        //not store result, because this method calls once for edit form.
+        return $this->getFieldMethodResult($field, 'Value', $this->params->itemId);
     }
     
     /**
@@ -221,6 +256,46 @@ class Model extends Configurable
     }
     
     /**
+     * @param string $name
+     * @param mixed $value
+     * @return string
+     */
+    protected function getSqlConditionInt($name, $value)
+    {
+        return '`' . $name . '`=' . (int) $value;
+    }
+    
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return string
+     */
+    protected function getSqlConditionBool($name, $value)
+    {
+        return '`' . $name . '`=' . (int) (bool) $value;
+    }
+    
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return string
+     */
+    protected function getSqlConditionSlist($name, $value)
+    {
+        return '`' . $name . "`='" . $this->db->addEscape($value) . "'";
+    }
+    
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return string
+     */
+    protected function getSqlConditionText($name, $value)
+    {
+        return '`' . $name . "` LIKE '%" . $this->db->addEscape($value) . "%'";
+    }
+    
+    /**
      * @param string $table = ''
      * @return string
      */
@@ -238,23 +313,32 @@ class Model extends Configurable
                 case 'list':
                 case 'mlist':
                     if ('' != $this->params->filterValue) {
-                        $sql .= '`' . $this->params->filterName . '`=' . (int) $this->params->filterValue;
+                        $sql .= $this->getSqlConditionInt($this->params->filterName, $this->params->filterValue);
                     } else {
                         $sql = ('' != $this->primaryFilter ? substr($sql, 0, -5) : '');
                     }
                     break;
                 case 'bool':
-                    $sql .= '`' . $this->params->filterName . '`=' . (int) $this->params->filterValue;
+                    if ('' != $this->params->filterValue) {
+                        $sql .= $this->getSqlConditionBool($this->params->filterName, $this->params->filterValue);
+                    } else {
+                        $sql = ('' != $this->primaryFilter ? substr($sql, 0, -5) : '');
+                    }
                     break;
                 case 'slist':
-                    $sql .= '`' . $this->params->filterName . "`='" . $this->db->addEscape($this->params->filterValue) . "'";
+                    $sql .= $this->getSqlConditionSlist($this->params->filterName, $this->params->filterValue);
                     break;
                 case 'text':
                 case 'mediumtext':
                 case 'bigtext':
                 case 'combo':
                 default:
-                    $sql .= '`' . $this->params->filterName . "` LIKE '%" . $this->db->addEscape($this->params->filterValue) . "%'";
+                    $method = 'getSqlCondition' . ucfirst($field['Type']);
+                    if (method_exists($this, $method)) {
+                        $sql .= $this->$method($this->params->filterName, $this->params->filterValue);
+                    } else {
+                        $sql .= $this->getSqlConditionText($this->params->filterName, $this->params->filterValue);
+                    }
             }
         } else if ('' != $this->primaryFilter) {
             $sql = ' WHERE ' . $this->primaryFilter;
@@ -350,37 +434,6 @@ class Model extends Configurable
             }
         }
         */
-    }
-    
-    /**
-     * Get field model by demand
-     * @param string|array $field
-     * @return object|null
-     */
-    public function getFieldModel($field)
-    {
-        return $this->getFieldMethodStoredResult($field, 'Model');
-    }
-    
-    /**
-     * Get field items by demand
-     * @param string|array $field
-     * @return array|null
-     */
-    public function getFieldItems($field)
-    {
-        return $this->getFieldMethodStoredResult($field, 'Items');
-    }
-    
-    /**
-     * Get value for external field.
-     * @param string|array $field
-     * @return mixed
-     */
-    public function getItemExternalFieldValue($field)
-    {
-        //not store result, because this method calls once for edit form.
-        return $this->getFieldMethodResult($field, 'Value', $this->params->itemId);
     }
     
     /**
@@ -545,6 +598,7 @@ class Model extends Configurable
         switch ($field['Type']) {
             case 'int':
             case 'list':
+            case 'rlist':
                 if (!$this->checkFormFieldRequired($field)) {
                     $this->result = 'Required field `' . $field['Name'] . '` not set';
                     return null;
@@ -570,6 +624,8 @@ class Model extends Configurable
                 } else {
                     return array('Type' => $field['Type'], 'Value' => 0);
                 }
+            //case 'slist':
+            //case 'mslist':
             default:
                 if (!$this->checkFormFieldRequired($field)) {
                     $this->result = 'Required field `' . $field['Name'] . '` not set';
@@ -603,9 +659,15 @@ class Model extends Configurable
                 }
                 $data[$field['Name']] = $fieldData;
             } else {
-                $model = $this->getFieldModel($field);
-                $subFields = $model->getFields();
-                unset($model);
+                if (isset($field['Schema'])) {
+                    $obj = $this->getFieldSchema($field);
+                } else if (isset($field['Model'])) {
+                    $obj = $this->getFieldModel($field);
+                } else {
+                    continue;
+                }
+                $subFields = $obj->getFields();
+                unset($obj);
                 if (is_array($subFields) && 0 < count($subFields)) {
                     $subData = $this->collectFormData($subFields, $update);
                     $subDataSimple = array();
@@ -932,8 +994,16 @@ class Model extends Configurable
             return false;
         }
         
-        if (!$this->checkBeforeUpdate()) {
-            return false;
+        if (0 == $this->params->itemId) {
+            if (!$this->checkBeforeInsert()) {
+                $this->result = 'Action check failed';
+                return false;
+            }
+        } else {
+            if (!$this->checkBeforeUpdate()) {
+                $this->result = 'Action check failed';
+                return false;
+            }
         }
         
         $data = $this->collectFormData($this->fields, 0 != $this->params->itemId);
@@ -975,6 +1045,7 @@ class Model extends Configurable
             return false;
         }
         if (!$this->checkBeforeDelete()) {
+            $this->result = 'Action check failed';
             return false;
         }
         $this->actionBeforeDelete();
@@ -1002,6 +1073,7 @@ class Model extends Configurable
             return false;
         }
         if (!$this->checkBeforeDisable()) {
+            $this->result = 'Action check failed';
             return false;
         }
         $this->actionBeforeDisable();
@@ -1029,6 +1101,7 @@ class Model extends Configurable
             return false;
         }
         if (!$this->checkBeforeEnable()) {
+            $this->result = 'Action check failed';
             return false;
         }
         $this->actionBeforeEnable();

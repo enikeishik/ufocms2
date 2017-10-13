@@ -256,13 +256,17 @@ class UI extends DIObject
      * @param array $field
      * @param string $basePathFields
      * @return string
+     * @todo make seperate methods for each type
      */
     protected function filterByType(array $field, $basePathFields)
     {
         switch ($field['Type']) {
             case 'combo':
             case 'list':
+            case 'rlist':
             case 'slist':
+            case 'mlist':
+            case 'mslist':
             case 'bool':
                 $items = $this->model->getFieldItems($field); //$field['Items']
                 if (is_null($items) && 'bool' == $field['Type']) {
@@ -312,11 +316,16 @@ class UI extends DIObject
                 return $s;
                 
             default:
-                $items = $this->model->getFieldItems($field); //$field['Items']
-                if (!is_null($items)) {
-                    return $this->filterByFieldItems($field, $items, $basePathFields);
+                $method = 'filterByType' . ucfirst($field['Type']);
+                if (method_exists($this, $method)) {
+                    return $this->$method($field, $basePathFields);
                 } else {
-                    return '<form><div>Not implemented yet</div></form>';
+                    $items = $this->model->getFieldItems($field); //$field['Items']
+                    if (!is_null($items)) {
+                        return $this->filterByFieldItems($field, $items, $basePathFields);
+                    } else {
+                        return '<form><div>Not implemented yet</div></form>';
+                    }
                 }
         }
     }
@@ -642,7 +651,7 @@ class UI extends DIObject
         } else if ((isset($field['External']) && $field['External'])) {
             return $this->listItemsItemFieldExternal($field, $item);
         } else {
-            if ('list' == $field['Type'] || 'rlist' == $field['Type']) {
+            if ('list' == $field['Type'] || 'rlist' == $field['Type'] || 'slist' == $field['Type']) {
                 return $this->listItemsItemFieldList($field, $item);
             } else if ('bool' == $field['Type']) {
                 return $this->listItemsItemFieldBool($field, $item);
@@ -883,6 +892,8 @@ class UI extends DIObject
             case 'bigtext':
                 $value = '';
                 break;
+            //case 'slist':
+            //case 'mslist':
             default:
                 $value = ' value="' . htmlspecialchars($value) . '"';
         }
@@ -993,6 +1004,34 @@ class UI extends DIObject
                         (isset($item['Description']) ? '<div>' . htmlspecialchars($item['Description']) . '</div>' : '') . 
                     '</div>';
         }
+        return $s;
+    }
+    
+    /**
+     * Формирование управляющего элемента поля типа список.
+     * @param array $field <Type,Name,Title,Value,Constraints>
+     * @param mixed $value
+     * @return string
+     */
+    protected function formFieldStringListElement(array $field, $value)
+    {
+        $s = '<select' . $this->getFormFieldAttributes($field, $value) . ('mslist' == $field['Type'] ? ' multiple size="10"' : '') . '>';
+        $items = $this->model->getFieldItems($field); //$field['Items']
+        foreach ($items as $item) {
+            if (is_array($value)) {
+                $selected = in_array($item['Value'], $value);
+            } else if (is_string($value) && false !== strpos($value, ',')) {
+                $selected = in_array($item['Value'], explode(',', $value));
+            } else {
+                $selected = $value == $item['Value'];
+            }
+            if ($selected) {
+                $s .= '<option value="' . htmlspecialchars($item['Value']) . '" selected>' . htmlspecialchars($item['Title']) . '</option>';
+            } else {
+                $s .= '<option value="' . htmlspecialchars($item['Value']) . '">' . htmlspecialchars($item['Title']) . '</option>';
+            }
+        }
+        $s .= '</select>';
         return $s;
     }
     
@@ -1142,6 +1181,10 @@ class UI extends DIObject
             case 'rlist':
                 $s = $this->formFieldRadioListElement($field, $value);
                 break;
+            case 'slist':
+            case 'mslist':
+                $s = $this->formFieldStringListElement($field, $value);
+                break;
             case 'combo':
                 $s = $this->formFieldComboElement($field, $value);
                 break;
@@ -1270,17 +1313,29 @@ class UI extends DIObject
      */
     protected function formSubform(array $field, array $item)
     {
-        $this->model = $this->model->getFieldModel($field);
-        $fields = $this->model->getFields();
-        if (0 == count($fields)) {
-            return '';
-        }
-        $values = json_decode($item[$field['Name']], true);
-        if (null === $values || count($values) != count($fields)) {
-            $values = array('itemid' => 0);
-            foreach ($fields as $f) {
-                $values[$f['Name']] = $f['Value'];
+        if (isset($field['Schema'])) {
+            //schema contains only structure, not data
+            $this->model = $this->model->getFieldSchema($field);
+            $fields = $this->model->getFields();
+            if (0 == count($fields)) {
+                return '';
             }
+            //data gets from $item and assign to structure fields
+            $values = json_decode($item[$field['Name']], true);
+            if (null === $values || count($values) != count($fields)) {
+                $values = array('itemid' => 0);
+                foreach ($fields as $f) {
+                    $values[$f['Name']] = $f['Value'];
+                }
+            }
+        } else if (isset($field['Model'])) {
+            //model initialized by $field['Model'] method with data from $item[$field['Name']]
+            $this->model = $this->model->getFieldModel($field, $item[$field['Name']]);
+            $fields = $this->model->getFields();
+            $values = $this->model->getItem();
+        } else {
+            $fields = array();
+            $values = array();
         }
         $s = '<tr><th colspan="2">' . htmlspecialchars($field['Title']) . '</th></tr>';
         $s .= $this->formFields($fields, $values);

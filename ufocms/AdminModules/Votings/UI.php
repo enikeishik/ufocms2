@@ -17,8 +17,10 @@ class UI extends \Ufocms\AdminModules\UI
     {
         parent::setItemFuncs($item, $funcs);
         if (__CLASS__ == get_class($this) && isset($item['Id'])) {
-            $s = '<div><a href="' . $this->basePath . '&' . $this->config->paramsNames['subModule'] . '=answers&votingid=' . $item['Id'] . '" title="Редактировать ответы" style="padding: 2px 15px;">Ответы</a></div><br>';
+            $s = '<a href="' . $this->basePath . '&' . $this->config->paramsNames['subModule'] . '=answers&votingid=' . $item['Id'] . '" title="Редактировать ответы" style="padding: 2px 15px;">Ответы</a> ';
             $this->appendItemFunc('answers', $s, '');
+            $s = '<a href="' . $this->basePath . '&' . $this->config->paramsNames['subModule'] . '=votes&votingid=' . $item['Id'] . '" title="Просмотр лога голосов" style="padding: 2px 15px;">Голоса</a> <br><br>';
+            $this->appendItemFunc('votes', $s, 'answers');
         }
     }
     

@@ -6,7 +6,7 @@
 namespace Ufocms\AdminModules\CoreInteraction;
 
 /**
- * Core module model class
+ * Core interaction rates model class
  */
 class ModelRates extends \Ufocms\AdminModules\Model
 {

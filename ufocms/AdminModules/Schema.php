@@ -8,9 +8,9 @@ namespace Ufocms\AdminModules;
 use Ufocms\Frontend\DIObject;
 
 /**
- * Base Configurable class, have attribute fields - array of some configurable data and methods for work with it.
+ * Base class for structured data, have property $fields - array of some configurable fields and methods for work with it.
  */
-abstract class Configurable extends DIObject
+abstract class Schema extends DIObject
 {
     /**
      * @var array
@@ -103,6 +103,7 @@ abstract class Configurable extends DIObject
      * Выполнение метода, указанного в атрибуте поля и возвращение его результата.
      * @param string|array $field
      * @param string $attribute
+     * @param mixed $argument = null
      * @return mixed
      */
     public function getFieldMethodResult($field, $attribute, $argument = null)
@@ -124,12 +125,13 @@ abstract class Configurable extends DIObject
     }
     
     /**
-     * Выполнение метода, указанного в атрибуте поля и возвращение его результата.
+     * Выполнение метода, указанного в атрибуте поля и возвращение его результата, с сохранением результата в атрибуте поля.
      * @param string|array $field
      * @param string $attribute
+     * @param mixed $argument = null
      * @return mixed
      */
-    public function getFieldMethodStoredResult($field, $attribute)
+    public function getFieldMethodStoredResult($field, $attribute, $argument = null)
     {
         $field =& $this->getFieldRef($field);
         if (is_null($field) || !array_key_exists($attribute, $field)) {
@@ -140,7 +142,11 @@ abstract class Configurable extends DIObject
         }
         $method = $field[$attribute];
         if (method_exists($this, $method)) {
-            $result = $this->$method();
+            if (null === $argument) {
+                $result = $this->$method();
+            } else {
+                $result = $this->$method($argument);
+            }
             $field[$attribute] = $result;
             return $result;
         } else {

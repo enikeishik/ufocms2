@@ -6,7 +6,7 @@
 namespace Ufocms\AdminModules\CoreQuotes;
 
 /**
- * Core insertions mechanism model class
+ * Core quots mechanism model class
  */
 class Model extends \Ufocms\AdminModules\Model
 {

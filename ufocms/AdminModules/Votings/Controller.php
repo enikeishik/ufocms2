@@ -30,6 +30,14 @@ class Controller extends \Ufocms\AdminModules\Controller //implements IControlle
                     $this->renderView();
                 }
                 
+            } else if ('votes' == $this->params->subModule) {
+                
+                $votingId = isset($_GET['votingid']) ? (int) $_GET['votingid'] : 0;
+                $this->setModel('ModelVotes');
+                $this->modelAction();
+                $this->setView();
+                $this->renderView('', 'UIVotes', '&' . $this->config->paramsNames['subModule'] . '=votes&votingid=' . $votingId, true);
+                
             } else if ('settings' == $this->params->subModule) {
                 
                 $this->setModel('ModelSettings');

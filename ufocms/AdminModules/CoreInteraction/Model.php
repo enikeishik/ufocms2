@@ -6,7 +6,7 @@
 namespace Ufocms\AdminModules\CoreInteraction;
 
 /**
- * Core module model class
+ * Core interaction model class
  */
 class Model extends \Ufocms\AdminModules\Model
 {

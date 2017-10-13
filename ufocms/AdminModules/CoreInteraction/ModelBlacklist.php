@@ -6,7 +6,7 @@
 namespace Ufocms\AdminModules\CoreInteraction;
 
 /**
- * Core sendform model class
+ * Core interaction blacklist model class
  */
 class ModelBlacklist extends \Ufocms\AdminModules\Model
 {

@@ -6,7 +6,7 @@
 namespace Ufocms\AdminModules\CoreUsers;
 
 /**
- * Core site model class
+ * Core users groups model class
  */
 class ModelGroups extends \Ufocms\AdminModules\Model
 {

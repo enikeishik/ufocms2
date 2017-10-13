@@ -83,6 +83,10 @@ class View extends \Ufocms\Modules\View //implements IView
             return  $this->templatePath . 
                     '/' . strtolower($this->module['Name']) . 
                     '/yadzen.php';
+        } else if ($this->moduleParams['isRambler']) {
+            return  $this->templatePath . 
+                    '/' . strtolower($this->module['Name']) . 
+                    '/rambler.php';
         } else {
             return parent::getLayout();
         }

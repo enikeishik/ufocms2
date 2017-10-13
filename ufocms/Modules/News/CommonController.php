@@ -20,6 +20,7 @@ class CommonController extends \Ufocms\Modules\Controller //implements IControll
             array(
                 'isYandex'  => ['type' => 'bool',   'from' => 'path',   'prefix' => 'yandex',   'additional' => false,  'value' => null, 'default' => false], 
                 'isYaDzen'  => ['type' => 'bool',   'from' => 'path',   'prefix' => 'yadzen',   'additional' => false,  'value' => null, 'default' => false], 
+                'isRambler' => ['type' => 'bool',   'from' => 'path',   'prefix' => 'rambler',  'additional' => false,  'value' => null, 'default' => false], 
                 'authors'   => ['type' => 'string', 'from' => 'path',   'prefix' => 'authors',  'additional' => false,  'value' => null, 'default' => ''], 
                 'author'    => ['type' => 'string', 'from' => 'get',    'prefix' => 'author',   'additional' => false,  'value' => null, 'default' => ''], 
             )
