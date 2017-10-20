@@ -37,3 +37,8 @@ CREATE TABLE IF NOT EXISTS `/* TABLE_PREFIX */board` (
 
 INSERT INTO `/* TABLE_PREFIX */modules` (`id`, `muid`, `mname`, `mfile`, `mfileins`, `mfileinc`, `mfilexsm`, `mtable`, `mtableitems`, `madmin`, `issingle`, `isinsertion`, `isinclusion`, `isenabled`) 
 VALUES (4, 4, 'Доска объявлений', 'mod_board.php', 'ins_board.php', 'inc_board.php', 'xsm_board.php', 'board_sections', 'board', 'mod_board', 0, 1, 1, 1);
+
+INSERT INTO `/* TABLE_PREFIX */widgets_types`
+(ModuleId, Name, Title, Description) VALUES
+(4, '', 'Объявления', 'Вывод элементов из разделов типа Доска объявлений'),
+(4, 'Form', 'Форма подачи объявления', 'Вывод формы для подачи объявления в разделы типа Доска объявлений');

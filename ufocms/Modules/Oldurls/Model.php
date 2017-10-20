@@ -61,8 +61,40 @@ class Model extends \Ufocms\Modules\Model //implements IModel
                     ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'sections AS s ON i.SectionId=s.id' . 
                     ' WHERE i.SectionId=' . $this->params->sectionId . 
                     ' AND i.IsHidden=0';
-        //TODO: switch ($this->params['SortOrder']) {
-        $sqlOrder = 'OrderNumber';
+        switch ($this->settings['Orderby']) {
+            case 0:
+                $sqlOrder = 'OrderNumber';
+                break;
+            case 1:
+                $sqlOrder = 'OrderNumber DESC';
+                break;
+            case 2:
+                $sqlOrder = 'Title';
+                break;
+            case 3:
+                $sqlOrder = 'Title DESC';
+                break;
+            case 4:
+                $sqlOrder = 'DateCreate';
+                break;
+            case 5:
+                $sqlOrder = 'DateCreate DESC';
+                break;
+            case 6:
+                $sqlOrder = 'Url';
+                break;
+            case 7:
+                $sqlOrder = 'Url DESC';
+                break;
+            case 8:
+                $sqlOrder = 'ViewedCnt';
+                break;
+            case 9:
+                $sqlOrder = 'ViewedCnt DESC';
+                break;
+            default:
+                $sqlOrder = 'OrderNumber';
+        }
         $sql =  'SELECT i.*,s.path,s.indic' . 
                 $sqlBase . 
                 ' ORDER BY ' . $sqlOrder . 

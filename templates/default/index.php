@@ -60,6 +60,7 @@ if (null === $this->debug) {
         <?php $this->renderModule(); ?>
         <?php $this->renderInsertions(); ?>
         <?php $this->renderWidgets(); ?>
+        <?php $this->renderLinks(); ?>
         <div class="quotes"><script type='text/javascript'>var quote7='';</script><script type='text/javascript' src='/quotes.php?groupid=7'></script><script type='text/javascript'>document.write(quote7.replace(/<!/g,'<'));</script></div>
     </div></div></div>
     <div id="left"><div id="leftinner">

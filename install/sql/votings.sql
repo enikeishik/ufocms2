@@ -64,3 +64,6 @@ CREATE TABLE IF NOT EXISTS `/* TABLE_PREFIX */votings_log` (
 INSERT INTO `/* TABLE_PREFIX */modules` (`id`, `muid`, `mname`, `mfile`, `mfileins`, `mfileinc`, `mtable`, `mtableitems`, `madmin`, `issingle`, `isinsertion`, `isinclusion`, `isenabled`) 
 VALUES (5, 5, 'Голосования', 'mod_votings.php', '', '', 'votings_settings', 'votings,votings_questions,votings_answers', 'mod_votings', 0, 0, 0, 1);
 
+INSERT INTO `/* TABLE_PREFIX */widgets_types`
+(ModuleId, Name, Title, Description) VALUES
+(5, '', 'Голосования', 'Вывод формы или результатов голосования');

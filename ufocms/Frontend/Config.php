@@ -209,6 +209,12 @@ class Config
     public $templatesMenuEntry = '/menu.php';
     
     /**
+     * Точка входа шаблона для отображения ссылок текущего раздела
+     * @var string
+     */
+    public $templatesLinksEntry = '/links.php';
+    
+    /**
      * Точка входа шаблона для отображения постраничного вывода
      * @var string
      */

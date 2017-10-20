@@ -117,6 +117,7 @@ class View extends DIObject
         return array(
             'debug'         => &$this->debug, 
             'config'        => &$this->config, 
+            'params'        => &$this->params, 
             'core'          => &$this->core, 
             'tools'         => &$this->tools, 
             'site'          => $this->core->getSite(), 
@@ -295,6 +296,22 @@ class View extends DIObject
     }
     
     /**
+     * @return Menu
+     */
+    protected function getMenu()
+    {
+        $container = $this->core->getContainer([
+            'debug'         => &$this->debug, 
+            'config'        => &$this->config, 
+            'params'        => &$this->params, 
+            'db'            => &$this->db, 
+            'core'          => &$this->core, 
+            'templateUrl'   => $this->templateUrl, 
+        ]);
+        return new Menu($container);
+    }
+    
+    /**
      * Генерация страницы.
      */
     public function render()
@@ -304,17 +321,9 @@ class View extends DIObject
         }
         $this->setTheme();
         $this->setContext();
-        $container = $this->core->getContainer([
-            'debug'         => &$this->debug, 
-            'config'        => &$this->config, 
-            'params'        => &$this->params, 
-            'db'            => &$this->db, 
-            'core'          => &$this->core, 
-            'templateUrl'   => $this->templateUrl, 
-        ]);
         extract(
             array_merge(
-                array('menu' => new Menu($container)), 
+                array('menu' => $this->getMenu()), 
                 $this->context, 
                 array(
                     'headTitle'     => $this->getHeadTitle(), 
@@ -361,6 +370,48 @@ class View extends DIObject
             $this->templatePath, 
             '/' . strtolower($this->module['Name']), 
             $this->getModuleTemplateEntry()
+        );
+        require_once $template;
+    }
+    
+    /**
+     * Генерация ссылок текущего раздела.
+     * @param array $options = null
+     */
+    protected function renderLinks(array $options = null)
+    {
+        $section = $this->core->getCurrentSection();
+        $menu = $this->getMenu();
+        $menu->filterLinks();
+        switch ($section['shlinks']) {
+            case 1:
+                $items = $menu->getChildren();
+                break;
+            case 2:
+                $items = $menu->getSiblings();
+                break;
+            case 3:
+                $items = $menu->getItemParent($this->params->sectionId);
+                break;
+            default:
+                $items = array();
+        }
+        unset($section);
+        extract(
+            array_merge(
+                $this->context, 
+                array(
+                    'items' => $items, 
+                    'tools' => &$this->tools, 
+                )
+            ), 
+            EXTR_PREFIX_SAME, 'links'
+        );
+        
+        $template = $this->findTemplate(
+            $this->templatePath, 
+            null, 
+            $this->config->templatesLinksEntry
         );
         require_once $template;
     }

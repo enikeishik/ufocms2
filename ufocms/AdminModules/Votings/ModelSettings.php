@@ -38,12 +38,12 @@ class ModelSettings extends \Ufocms\AdminModules\Model
     protected function getOrders()
     {
         return array(
-            array('Value' => '0', 'Title' => 'по дате, по возрастанию'), 
-            array('Value' => '1', 'Title' => 'по дате, по убыванию'), 
-            array('Value' => '2', 'Title' => 'по названию, по возрастанию'), 
-            array('Value' => '3', 'Title' => 'по названию, по убыванию'), 
-            array('Value' => '4', 'Title' => 'по количеству голосов, по возрастанию'), 
-            array('Value' => '5', 'Title' => 'по количеству голосов, по убыванию'), 
+            array('Value' => '0', 'Title' => 'по дате начала, по убыванию'), 
+            array('Value' => '1', 'Title' => 'по дате начала, по возрастанию'), 
+            array('Value' => '2', 'Title' => 'по дате окончания, по убыванию'), 
+            array('Value' => '3', 'Title' => 'по дате окончания, по возрастанию'), 
+            array('Value' => '4', 'Title' => 'по названию, по возрастанию'), 
+            array('Value' => '5', 'Title' => 'по названию, по убыванию'), 
         );
     }
 }

@@ -69,7 +69,28 @@ class Model extends \Ufocms\Modules\Model //implements IModel
                     ' AND IsDisabled=0' . 
                     ' AND IsClosed=0' . 
                     " AND DateStart<='" . $now . "'";
-        //TODO
+        switch ($this->settings['Orderby']) {
+            case 0:
+                $sqlOrder = 'DateStart DESC';
+                break;
+            case 1:
+                $sqlOrder = 'DateStart DESC';
+                break;
+            case 2:
+                $sqlOrder = 'DateStop';
+                break;
+            case 3:
+                $sqlOrder = 'DateStop DESC';
+                break;
+            case 4:
+                $sqlOrder = 'Title';
+                break;
+            case 5:
+                $sqlOrder = 'Title DESC';
+                break;
+            default:
+                $sqlOrder = 'DateStart DESC';
+        }
         $sqlOrder = 'DateStart DESC';
         $sql =  'SELECT *' . 
                 $sqlBase;

@@ -57,6 +57,7 @@ header('Content-type: text/html; charset=utf-8');
         <?php $this->renderModule(); ?>
         <?php $this->renderInsertions(); ?>
         <?php $this->renderWidgets(); ?>
+        <?php $this->renderLinks(); ?>
     </div></div></div>
     <div id="left"><div id="leftinner">
         <?php $this->renderQuotes(['GroupId' => 1]); ?>

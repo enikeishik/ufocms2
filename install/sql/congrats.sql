@@ -34,3 +34,7 @@ CREATE TABLE IF NOT EXISTS `/* TABLE_PREFIX */congrats_items` (
 
 INSERT INTO `/* TABLE_PREFIX */modules` (`id`, `muid`, `mname`, `mfile`, `mfileins`, `mfileinc`, `mfilexsm`, `mtable`, `mtableitems`, `madmin`, `issingle`, `isinsertion`, `isinclusion`, `isenabled`) 
 VALUES (25, 25, 'Поздравления', 'mod_congrats.php', '', '', 'xsm_congrats.php', 'congrats_settings', 'congrats_items', 'mod_congrats', 0, 0, 0, 1);
+
+INSERT INTO `/* TABLE_PREFIX */widgets_types`
+(ModuleId, Name, Title, Description) VALUES
+(25, '', 'Поздравления', 'Вывод элементов из раздела типа Поздравления');

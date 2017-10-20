@@ -43,3 +43,8 @@ CREATE TABLE IF NOT EXISTS `/* TABLE_PREFIX */faq` (
 
 INSERT INTO `/* TABLE_PREFIX */modules` (`id`, `muid`, `mname`, `mfile`, `mfileins`, `mfileinc`, `mtable`, `mtableitems`, `madmin`, `issingle`, `isinsertion`, `isinclusion`, `isenabled`) 
 VALUES (6, 6, 'Вопрос-ответ', 'mod_faq.php', 'ins_faq.php', 'inc_faq.php', 'faq_sections', 'faq', 'mod_faq', 0, 1, 1, 1);
+
+INSERT INTO `/* TABLE_PREFIX */widgets_types`
+(ModuleId, Name, Title, Description) VALUES
+(6, '', 'Вопрос-ответ', 'Вывод элементов из разделов типа Вопрос-ответ'),
+(6, 'Form', 'Форма подачи вопроса', 'Вывод формы для подачи вопроса в разделы типа Вопрос-ответ');

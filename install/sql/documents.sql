@@ -9,3 +9,7 @@ CREATE TABLE IF NOT EXISTS `/* TABLE_PREFIX */documents` (
 
 INSERT INTO `/* TABLE_PREFIX */modules` (`id`, `muid`, `mname`, `mfile`, `mfileins`, `mfileinc`, `mfilexsm`, `mtable`, `mtableitems`, `madmin`, `issingle`, `isinsertion`, `isinclusion`, `isenabled`) 
 VALUES (1, 1, 'Документы', 'mod_documents.php', 'ins_documents.php', '', 'xsm_documents.php', 'documents', 'documents', 'mod_documents', 0, 1, 0, 1);
+
+INSERT INTO `/* TABLE_PREFIX */widgets_types`
+(ModuleId, Name, Title, Description) VALUES
+(1, '', 'Документы', 'Вывод части содержимого текстовых разделов');

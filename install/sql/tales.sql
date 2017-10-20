@@ -39,3 +39,6 @@ CREATE TABLE IF NOT EXISTS `/* TABLE_PREFIX */tales_sections` (
 INSERT INTO `/* TABLE_PREFIX */modules` (`id`, `muid`, `mname`, `mfile`, `mfileins`, `mfileinc`, `mfilexsm`, `mtable`, `mtableitems`, `madmin`, `issingle`, `isinsertion`, `isinclusion`, `isenabled`) 
 VALUES (16, 16, 'Лента документов', 'mod_tales.php', '', '', 'xsm_tales.php', 'tales_sections', 'tales', 'mod_tales', 0, 0, 0, 1);
 
+INSERT INTO `/* TABLE_PREFIX */widgets_types`
+(ModuleId, Name, Title, Description) VALUES
+(16, '', 'Статьи', 'Вывод элементов из раздела типа Лента документов');

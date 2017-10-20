@@ -42,6 +42,12 @@ class Menu extends DIObject
     protected $templateUrl = null;
     
     /**
+     * Filter sections with inmenu (false) or inlinks (true) flag.
+     * @var bool
+     */
+    protected $filterLinks = false;
+    
+    /**
      * Распаковка контейнера.
      */
     protected function unpackContainer()
@@ -60,6 +66,30 @@ class Menu extends DIObject
     protected function init()
     {
         
+    }
+    
+    /**
+     * Change filter sections to inlinks flag.
+     */
+    public function filterLinks()
+    {
+        $this->filterLinks = true;
+    }
+    
+    /**
+     * Change filter sections to inmenu flag.
+     */
+    public function filterMenu()
+    {
+        $this->filterLinks = false;
+    }
+    
+    /**
+     * @return string
+     */
+    protected function getFilter()
+    {
+        return $this->filterLinks ? 'inlinks!=0' : 'inmenu!=0';
     }
     
     /**
@@ -98,6 +128,14 @@ class Menu extends DIObject
     }
     
     /**
+     * @return array
+     */
+    public function getTopSections()
+    {
+        return $this->core->getSections('id, path, indic', $this->getFilter() . ' AND parentid=0');
+    }
+    
+    /**
      * @param string $entry = null
      */
     public function topSections($entry = null)
@@ -106,7 +144,7 @@ class Menu extends DIObject
             array_merge(
                 $this->getApplicationContext(), 
                 array(
-                    'items' => $this->core->getSections('id, path, indic', 'inmenu!=0 AND parentid=0')
+                    'items' => $this->getTopSections()
                 )
             )
         );
@@ -124,6 +162,17 @@ class Menu extends DIObject
     }
     
     /**
+     * @return array
+     */
+    public function getChildren()
+    {
+        return $this->core->getSections(
+            'id, path, indic', 
+            $this->getFilter() . ' AND parentid=' . (null === $this->params->sectionId || -1 == $this->params->sectionId ? 0 : $this->params->sectionId)
+        );
+    }
+    
+    /**
      * @param string $entry = null
      */
     public function children($entry = null)
@@ -132,14 +181,23 @@ class Menu extends DIObject
             array_merge(
                 $this->getApplicationContext(), 
                 array(
-                    'items' => $this->core->getSections(
-                        'id, path, indic', 
-                        'inmenu!=0 AND parentid=' . (null === $this->params->sectionId || -1 == $this->params->sectionId ? 0 : $this->params->sectionId)
-                    )
+                    'items' => $this->getChildren()
                 )
             )
         );
         include $this->getTemplatePath() . $this->getEntryPoint($entry);
+    }
+    
+    /**
+     * @param int $itemId
+     * @return array
+     */
+    public function getItemChildren($itemId)
+    {
+        return $this->core->getSections(
+            'id, path, indic', 
+            $this->getFilter() . ' AND parentid=' . $itemId
+        );
     }
     
     /**
@@ -152,10 +210,7 @@ class Menu extends DIObject
             array_merge(
                 $this->getApplicationContext(), 
                 array(
-                    'items' => $this->core->getSections(
-                        'id, path, indic', 
-                        'inmenu!=0 AND parentid=' . $itemId
-                    )
+                    'items' => $this->getItemChildren($itemId)
                 )
             )
         );
@@ -163,23 +218,55 @@ class Menu extends DIObject
     }
     
     /**
+     * @return array
+     * @param int $itemId
+     */
+    public function getItemParent($itemId)
+    {
+        $parents = $this->core->getSections('parentid', 'id=' . $itemId);
+        if (null === $parents || 0 == count($parents)) {
+            return array();
+        }
+        return $this->core->getSections(
+            'id, path, indic', 
+            $this->getFilter() . ' AND id=' . $parents[0]['parentid']
+        );
+    }
+    
+    /**
+     * @return array
+     */
+    public function getSiblings()
+    {
+        $section = $this->core->getCurrentSection();
+        return $this->core->getSections(
+            'id, path, indic', 
+            $this->getFilter() . ' AND parentid=' . (null === $section ? 0 : $section['parentid'])
+        );
+    }
+    
+    /**
      * @param string $entry = null
      */
     public function siblings($entry = null)
     {
-        $section = $this->core->getCurrentSection();
         extract(
             array_merge(
                 $this->getApplicationContext(), 
                 array(
-                    'items' => $this->core->getSections(
-                        'id, path, indic', 
-                        'inmenu!=0 AND parentid=' . (null === $section ? 0 : $section['parentid'])
-                    )
+                    'items' => $this->getSiblings()
                 )
             )
         );
         include $this->getTemplatePath() . $this->getEntryPoint($entry);
+    }
+    
+    /**
+     * @return array
+     */
+    public function getBreadcrumbs()
+    {
+        return $this->core->getSectionParents('id, path, indic');
     }
     
     /**
@@ -190,7 +277,7 @@ class Menu extends DIObject
         extract(
             array_merge(
                 $this->getApplicationContext(), 
-                array('items' => $this->core->getSectionParents('id, path, indic'))
+                array('items' => $this->getBreadcrumbs())
             )
         );
         include $this->getTemplatePath() . $this->getEntryPoint($entry);

@@ -65,9 +65,9 @@ class Model extends \Ufocms\AdminModules\Model
             array('Type' => 'bool',         'Name' => 'inmenu',         'Value' => true,    'Title' => 'В меню',                'Filter' => false,  'Show' => false,    'Sort' => true,     'Edit' => true),
             array('Type' => 'bool',         'Name' => 'inlinks',        'Value' => true,    'Title' => 'В ссылках',             'Filter' => false,  'Show' => false,    'Sort' => true,     'Edit' => true),
             array('Type' => 'bool',         'Name' => 'inmap',          'Value' => true,    'Title' => 'На карте сайта',        'Filter' => false,  'Show' => false,    'Sort' => true,     'Edit' => true),
-            array('Type' => 'bool',         'Name' => 'shtitle',        'Value' => true,    'Title' => 'Отобр.заголовок',       'Filter' => false,  'Show' => false,    'Sort' => true,     'Edit' => true),
+            array('Type' => 'list',         'Name' => 'shtitle',        'Value' => true,    'Title' => 'Отобр.заголовок',       'Filter' => false,  'Show' => false,    'Sort' => true,     'Edit' => true,     'Items' => 'getShowTitleItems'),
             array('Type' => 'bool',         'Name' => 'shmenu',         'Value' => true,    'Title' => 'Отобр.меню',            'Filter' => false,  'Show' => false,    'Sort' => true,     'Edit' => true),
-            array('Type' => 'bool',         'Name' => 'shlinks',        'Value' => true,    'Title' => 'Отобр.ссылки',          'Filter' => false,  'Show' => false,    'Sort' => true,     'Edit' => true),
+            array('Type' => 'list',         'Name' => 'shlinks',        'Value' => true,    'Title' => 'Отобр.ссылки',          'Filter' => false,  'Show' => false,    'Sort' => true,     'Edit' => true,     'Items' => 'getShowLinksItems'),
             array('Type' => 'bool',         'Name' => 'shcomments',     'Value' => false,   'Title' => 'Вкл.комментарии',       'Filter' => false,  'Show' => false,    'Sort' => true,     'Edit' => true),
             array('Type' => 'bool',         'Name' => 'shrating',       'Value' => false,   'Title' => 'Вкл.рейтинг',           'Filter' => false,  'Show' => false,    'Sort' => true,     'Edit' => true),
             array('Type' => 'int',          'Name' => 'flsearch',       'Value' => 0,       'Title' => 'Группа поиска',         'Filter' => true,   'Show' => false,    'Sort' => true,     'Edit' => true),
@@ -75,6 +75,35 @@ class Model extends \Ufocms\AdminModules\Model
         );
     }
     
+    /**
+     * @return array
+     */
+    protected function getShowTitleItems()
+    {
+        return [
+            ['Value' => '0', 'Title' => 'нет'], 
+            ['Value' => '1', 'Title' => 'название'], 
+            ['Value' => '2', 'Title' => 'заголовок'], 
+            ['Value' => '3', 'Title' => 'описание'], 
+        ];
+    }
+    
+    /**
+     * @return array
+     */
+    protected function getShowLinksItems()
+    {
+        return [
+            ['Value' => '0', 'Title' => 'нет'], 
+            ['Value' => '1', 'Title' => 'дочерние'], 
+            ['Value' => '2', 'Title' => 'смежные'], 
+            ['Value' => '3', 'Title' => 'родительский'], 
+        ];
+    }
+    
+    /**
+     * @see parent
+     */
     public function getSections($nc = false)
     {
         $sections = array(array('Value' => 0, 'Title' => 'Главная страница'));
@@ -127,6 +156,7 @@ class Model extends \Ufocms\AdminModules\Model
     }
     
     /**
+     * Update section.
      * @todo: refactoring
      */
     public function update()
@@ -178,6 +208,10 @@ class Model extends \Ufocms\AdminModules\Model
         }
     }
     
+    /**
+     * Add section.
+     * @todo: refactoring
+     */
     protected function add()
     {
         foreach ($this->fields as $field) {
@@ -283,6 +317,10 @@ class Model extends \Ufocms\AdminModules\Model
         return $this->db->getItem($sql);
     }
     
+    /**
+     * @param int $parentId
+     * @return string
+     */
     protected function getParentPath($parentId)
     {
         if (0 == $parentId) {
@@ -295,6 +333,10 @@ class Model extends \Ufocms\AdminModules\Model
         return !is_null($val) ? $val : '';
     }
     
+    /**
+     * @param string $path
+     * @return string
+     */
     protected function getSafeSectionPath($path)
     {
         $out = preg_replace('/\/+/',
@@ -311,6 +353,10 @@ class Model extends \Ufocms\AdminModules\Model
         return $out;
     }
     
+    /**
+     * @param string $path
+     * @return bool
+     */
     protected function isPathExists($path)
     {
         $sql =  'SELECT COUNT(*) AS Cnt' . 
@@ -320,6 +366,10 @@ class Model extends \Ufocms\AdminModules\Model
         return !is_null($val) ? 0 != $val : false;
     }
     
+    /**
+     * @param int $parentId
+     * @return int
+     */
     protected function getTopId($parentId)
     {
         if (0 == $parentId) {
@@ -332,6 +382,10 @@ class Model extends \Ufocms\AdminModules\Model
         return !is_null($val) ? $val : 0;
     }
     
+    /**
+     * @param int $parendId
+     * @return int
+     */
     protected function getMaxOrder($parentId)
     {
         $sql =  'SELECT MAX(orderid) AS maxorderid' . 
@@ -341,6 +395,10 @@ class Model extends \Ufocms\AdminModules\Model
         return !is_null($val) ? $val : 0;
     }
     
+    /**
+     * @param int $parentId
+     * @return int
+     */
     protected function getLevel($parentId)
     {
         if (0 == $parentId) {
@@ -353,6 +411,11 @@ class Model extends \Ufocms\AdminModules\Model
         return !is_null($val) ? ++$val : 0;
     }
     
+    /**
+     * @param int $parentId
+     * @param int $orderId
+     * @return string
+     */
     protected function getMask($parentId, $orderId)
     {
         $mask = $this->getLocalMask($orderId);
@@ -369,6 +432,8 @@ class Model extends \Ufocms\AdminModules\Model
     }
     
     /**
+     * @param int $orderId
+     * @return bool
      * @todo: replace with str_pad
      */
     protected function getLocalMask($orderId)
@@ -380,6 +445,10 @@ class Model extends \Ufocms\AdminModules\Model
         return $mask;
     }
     
+    /**
+     * @param int $moduleId
+     * @return bool
+     */
     protected function isModuleExists($moduleId)
     {
         $sql =  'SELECT COUNT(*) AS Cnt' . 
@@ -389,6 +458,10 @@ class Model extends \Ufocms\AdminModules\Model
         return !is_null($val) ? 0 != $val : false;
     }
     
+    /**
+     * Add section content.
+     * @return bool
+     */
     protected function addContent($sectionId, $moduleId)
     {
         $sql = 'SELECT mtable FROM ' . C_DB_TABLE_PREFIX . 'modules WHERE muid=' . $moduleId;
@@ -400,6 +473,9 @@ class Model extends \Ufocms\AdminModules\Model
         }
     }
     
+    /**
+     * Delete section.
+     */
     public function delete()
     {
         if (is_null($this->params->itemId)) {
@@ -453,6 +529,10 @@ class Model extends \Ufocms\AdminModules\Model
         }
     }
     
+    /**
+     * @param int $sectionId
+     * @return bool
+     */
     protected function isParent($sectionId)
     {
         $sql =  'SELECT COUNT(*) AS Cnt' . 
@@ -462,6 +542,10 @@ class Model extends \Ufocms\AdminModules\Model
         return !is_null($val) ? 0 != $val : false;
     }
     
+    /**
+     * @param int $parentId
+     * @return bool
+     */
     protected function reorder($parentId)
     {
         $sql =  'SELECT id FROM ' . C_DB_TABLE_PREFIX . 'sections' .
@@ -482,6 +566,11 @@ class Model extends \Ufocms\AdminModules\Model
         }
     }
     
+    /**
+     * @param string $parentMask
+     * @param int $parentId
+     * @return bool
+     */
     protected function resetMask($parentMask, $parentId)
     {
         $sql =  'SELECT id,orderid,isparent' . 
@@ -509,6 +598,10 @@ class Model extends \Ufocms\AdminModules\Model
         }
     }
     
+    /**
+     * @param int $id
+     * @return string
+     */
     protected function getMaskById($id)
     {
         if (0 == $id) {
@@ -521,6 +614,10 @@ class Model extends \Ufocms\AdminModules\Model
         return !is_null($val) ? $val : '';
     }
     
+    /**
+     * @param int $id
+     * @return bool
+     */
     protected function setParentFlag($id)
     {
         if (0 == $id) {
@@ -587,6 +684,9 @@ class Model extends \Ufocms\AdminModules\Model
         return $this->db->query($sql1) && $this->db->query($sql2);
     }
     
+    /**
+     * Move item up in list.
+     */
     public function up()
     {
         $item = $this->getItemInfo($this->params->itemId, 'parentid, orderid');
@@ -623,6 +723,9 @@ class Model extends \Ufocms\AdminModules\Model
         }
     }
     
+    /**
+     * Move item down in list.
+     */
     public function down()
     {
         $item = $this->getItemInfo($this->params->itemId, 'parentid, orderid');

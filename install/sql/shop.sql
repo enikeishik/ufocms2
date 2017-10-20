@@ -129,3 +129,7 @@ CREATE TABLE `/* TABLE_PREFIX */shop_sections` (
 
 INSERT INTO `/* TABLE_PREFIX */modules` (`id`, `muid`, `mname`, `mfile`, `mfileins`, `mfileinc`, `mfilexsm`, `mtable`, `mtableitems`, `madmin`, `issingle`, `isinsertion`, `isinclusion`, `isenabled`) 
 VALUES (24, 24, 'Магазин', 'mod_shop.php', 'ins_shop.php', 'inc_shop.php', 'xsm_shop.php', 'shop_sections', 'shop_items,shop_items_images,shop_categories,shop_orders,shop_orders_items,shop_relatedinfo', 'mod_shop', 0, 1, 1, 1);
+
+INSERT INTO `/* TABLE_PREFIX */widgets_types`
+(ModuleId, Name, Title, Description) VALUES
+(24, '', 'Магазин', 'Вывод элементов из раздела типа Магазин');

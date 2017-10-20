@@ -33,7 +33,22 @@ class Model extends \Ufocms\Modules\Model //implements IModel
         $sqlBase =  ' FROM ' . C_DB_TABLE_PREFIX . 'board' . 
                     ' WHERE SectionId=' . $this->params->sectionId . 
                     ' AND IsHidden=0';
-        $sqlOrder = 'DateCreate DESC';
+        switch ($this->settings['Orderby']) {
+            case 0:
+                $sqlOrder = 'DateCreate DESC';
+                break;
+            case 1:
+                $sqlOrder = 'DateCreate';
+                break;
+            case 2:
+                $sqlOrder = 'Title';
+                break;
+            case 3:
+                $sqlOrder = 'Title DESC';
+                break;
+            default:
+                $sqlOrder = 'DateCreate DESC';
+        }
         $sql =  'SELECT *' . 
                 $sqlBase . 
                 ' ORDER BY ' . $sqlOrder . 

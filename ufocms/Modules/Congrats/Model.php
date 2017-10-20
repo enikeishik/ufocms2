@@ -35,8 +35,28 @@ class Model extends \Ufocms\Modules\Model //implements IModel
                     ' AND IsDisabled=0' . 
                     " AND DateStart<='" . $now . "'" . 
                     " AND DateStop>'" . $now . "'";
-        //TODO: switch ($this->params['SortOrder']) {
-        $sqlOrder = 'IsPinned DESC, DateStart DESC';
+        switch ($this->settings['Orderby']) {
+            case 0:
+                $sqlOrder = 'IsPinned DESC, DateStart DESC';
+                break;
+            case 1:
+                $sqlOrder = 'IsPinned DESC, DateStart';
+                break;
+            case 2:
+                $sqlOrder = 'DateStart DESC';
+                break;
+            case 3:
+                $sqlOrder = 'DateStart';
+                break;
+            case 4:
+                $sqlOrder = 'ViewedCnt DESC';
+                break;
+            case 5:
+                $sqlOrder = 'ViewedCnt';
+                break;
+            default:
+                $sqlOrder = 'IsPinned DESC, DateStart DESC';
+        }
         $sql =  'SELECT *' . 
                 $sqlBase . 
                 ' ORDER BY ' . $sqlOrder . 

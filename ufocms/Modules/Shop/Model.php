@@ -123,8 +123,34 @@ class Model extends \Ufocms\Modules\Model //implements IModel
                         ' WHERE i.SectionId=' . $this->params->sectionId . 
                         ' AND i.IsHidden=0 AND (SELECT IsHidden FROM ' . C_DB_TABLE_PREFIX . 'shop_categories WHERE Id=i.CategoryId)=0' . 
                         $maskCnt;
-            //TODO: switch ($this->params['SortOrder']) {
-            $sqlOrder = 'i.OrderNumber';
+            switch ($this->settings['Orderby']) {
+                case 0:
+                    $sqlOrder = 'i.OrderNumber';
+                    break;
+                case 1:
+                    $sqlOrder = 'i.OrderNumber DESC';
+                    break;
+                case 2:
+                    $sqlOrder = 'i.Title';
+                    break;
+                case 3:
+                    $sqlOrder = 'i.Title DESC';
+                    break;
+                case 4:
+                    $sqlOrder = 'i.DateCreate';
+                    break;
+                case 5:
+                    $sqlOrder = 'i.DateCreate DESC';
+                    break;
+                case 6:
+                    $sqlOrder = 'i.Price';
+                    break;
+                case 7:
+                    $sqlOrder = 'i.Price DESC';
+                    break;
+                default:
+                    $sqlOrder = 'i.OrderNumber';
+            }
             $sql =  'SELECT ' . $fields . 
                     ', c.Alias AS CategoryAlias, c.Title AS CategoryTitle' . 
                     $sqlBase;

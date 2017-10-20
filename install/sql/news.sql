@@ -51,3 +51,9 @@ CREATE TABLE IF NOT EXISTS `/* TABLE_PREFIX */news_import` (
   `ItemBodyReplace` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`Id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+INSERT INTO `/* TABLE_PREFIX */widgets_types`
+(ModuleId, Name, Title, Description) VALUES
+(2, '', 'Новости', 'Вывод элементов новостных разделов'),
+(2, 'Calendar', 'Архив новостей (календарь)', 'Вывод ссылок на архив новостей в виде календаря'),
+(2, 'Authors', 'Авторы новостей', 'Вывод ссылок на новости конкретных авторов');

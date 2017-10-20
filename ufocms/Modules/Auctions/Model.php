@@ -69,7 +69,6 @@ class Model extends \Ufocms\Modules\Model //implements IModel
                     ' WHERE SectionId=' . $this->params->sectionId . 
                     ' AND IsDisabled=0' . 
                     " AND DatePublicate<='" . $now . "'";
-        //TODO: switch ($this->params['SortOrder']) {
         $sqlOrder = 'DateStart DESC';
         $sql =  'SELECT *,' . 
                 ' (SELECT MAX(DateCreate) FROM ' . C_DB_TABLE_PREFIX . 'auctions_log WHERE AuctionId=i.Id) AS DateStep' . 

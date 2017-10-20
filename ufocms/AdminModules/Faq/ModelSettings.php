@@ -52,8 +52,6 @@ class ModelSettings extends \Ufocms\AdminModules\Model
             array('Value' => 1, 'Title' => 'по дате ответа, по убыванию'),
             array('Value' => 2, 'Title' => 'по дате вопроса, по возрастанию'),
             array('Value' => 3, 'Title' => 'по дате ответа, по возрастанию'),
-            array('Value' => 4, 'Title' => 'по заголовку вопроса, по возрастанию'),
-            array('Value' => 5, 'Title' => 'по заголовку вопроса, по убыванию'),
         );
     }
 }
