@@ -8,8 +8,8 @@
  * @var array|null $items
  */
 ?>
-<h1><?=$section['indic'];?></h1>
-<p><?=$item['Body'];?></p>
+<h1><?=$this->getSectionTitle()?></h1>
+<?=$item['Body']?>
 <?php if ($section['shcomments']) { ?>
     <?php $this->renderComments(); ?>
 <?php } ?>

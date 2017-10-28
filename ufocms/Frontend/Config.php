@@ -8,7 +8,7 @@ namespace Ufocms\Frontend;
 /**
  * Класс конфигурации.
  */
-class Config
+class Config extends Struct
 {
     /**
      * Путь к корню сайта.
@@ -148,6 +148,12 @@ class Config
      * @var string
      */
     public $themeDefault = '/default';
+    
+    /**
+     * Файл конфигурации темы
+     * @var string
+     */
+    public $themeConfig = '/config.php';
     
     /**
      * Имя параметра (GET, COOKIE) определяющего стиль темы
@@ -344,20 +350,39 @@ class Config
      * Конструктор. Инициализирует вспомогательные объекты-структуры для хранения связанных параметров.
      * Поскольку в конструкторе инициализируются объекты, которые могут не содержать возможности для изменения своих полей, это единственная возможность для их переопределения.
      * 
-     * @param array $overrides = null    массив, содержащий имена полей и значения, для переопределения значений
+     * @see parent
      */
-    public function __construct(array $overrides = null)
+    public function __construct($vars = null, $cast = true)
     {
         $this->rootUrl = $this->rootPath;
         $this->rootPath = $_SERVER['DOCUMENT_ROOT'] . $this->rootPath;
         $this->staticUrl = $this->staticDir;
         $this->staticDir = $_SERVER['DOCUMENT_ROOT'] . $this->staticDir;
-        if (!is_null($overrides)) {
-            foreach ($overrides as $name => $value) {
-                if (property_exists($this, $name)) {
-                    $this->$name = $value;
-                }
+        parent::__construct($vars, $cast);
+    }
+    
+    /**
+     * Загрузка дополнительной конфигурации
+     * @param string $configPath
+     * @param bool $overwrite
+     */
+    public function load($configPath, $overwrite = false)
+    {
+        if (!file_exists($configPath)) {
+            return;
+        }
+        $cfg = include_once $configPath;
+        if (!is_array($cfg) && !is_object($cfg)) {
+            return;
+        }
+        if (is_object($cfg)) {
+            $cfg = get_object_vars($cfg);
+        }
+        foreach ($cfg as $name => $value) {
+            if (!$overwrite && property_exists($this, $name)) {
+                continue;
             }
+            $this->$name = $value;
         }
     }
 }

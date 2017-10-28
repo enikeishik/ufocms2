@@ -65,7 +65,7 @@ class Tools
         if (!$unsigned) {
             return (string) (int) $str === (string) $str;
         } else {
-            return ctype_digit((string) $str) && ($str <= PHP_INT_MAX) && ($str > (PHP_INT_MAX * -1));
+            return ctype_digit((string) $str) && ($str <= PHP_INT_MAX);
         }
     }
     

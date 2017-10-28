@@ -12,7 +12,7 @@
  */
 ?>
 <div class="defaultresult">
-<h1><?=$section['indic']?></h1>
+<h1><?=$this->getSectionTitle()?></h1>
 <?php if ($actionResult) { ?>
     <div>Действие выполнено удачно</div>
 <?php } else { ?>

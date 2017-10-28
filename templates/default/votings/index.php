@@ -10,7 +10,7 @@
  */
 ?>
 <div class="votings">
-<h1><?=$section['indic']?></h1>
+<h1><?=$this->getSectionTitle()?></h1>
 <?=$settings['BodyHead']?>
 <?php if (0 < $itemsCount) { ?>
     <div class="items">

@@ -1,7 +1,13 @@
 <?php
 require_once 'presets.php';
 if (isset($_GET['action'])) {
-    $config = null;
+    $config = new \Ufocms\Frontend\Config();
+    if (defined('C_THEME') && '' != C_THEME) {
+        $path = '/' . C_THEME;
+    } else {
+        $path = $config->themeDefault;
+    }
+    $config->load($config->rootPath . $config->templatesDir . $path . $config->themeConfig);
     $captcha = new \Ufocms\Frontend\Captcha($config, $debug);
     switch ($_GET['action']) {
     case 'code':

@@ -179,7 +179,16 @@ class View extends DIObject
     }
     
     /**
-     * Установка текущего набора шаблонов.
+     * Загрузка конфигурации темы.
+     */
+    protected function loadThemeConfig()
+    {
+        $configPath = $this->templatePath . $this->config->themeConfig;
+        $this->config->load($configPath);
+    }
+    
+    /**
+     * Установка текущего набора шаблонов (темы).
      * @param string $theme = null
      */
     public function setTheme($theme = null)
@@ -190,6 +199,7 @@ class View extends DIObject
             $this->templateUrl = $this->config->templatesDir . '/' . $theme;
         }
         $this->templatePath = $this->config->rootPath . $this->templateUrl;
+        $this->loadThemeConfig();
         $this->setThemeStyle();
     }
     
@@ -319,7 +329,11 @@ class View extends DIObject
         if (null !== $this->debug) {
             $idx = $this->debug->trace('Render preparation');
         }
-        $this->setTheme();
+        if (defined('C_THEME') && '' != C_THEME) {
+            $this->setTheme(C_THEME);
+        } else {
+            $this->setTheme();
+        }
         $this->setContext();
         extract(
             array_merge(
@@ -659,6 +673,7 @@ class View extends DIObject
     }
     
     /**
+     * Возвращает заголовок страницы для тэга <title>.
      * @return string
      */
     protected function getHeadTitle()
@@ -675,6 +690,7 @@ class View extends DIObject
     }
     
     /**
+     * Возвращает значение мета тэга описание (description).
      * @return string
      */
     protected function getMetaDesc()
@@ -683,11 +699,31 @@ class View extends DIObject
     }
     
     /**
+     * Возвращает значение мета тэга ключевые слова (keywords).
      * @return string
      */
     protected function getMetaKeys()
     {
         return htmlspecialchars($this->context['section']['metakeys'] . ' ' . $this->context['site']['SiteMetaKeywords']);
+    }
+    
+    /**
+     * Возвращает заголовок раздела, в соответствии с настройками раздела.
+     * @return string
+     */
+    protected function getSectionTitle()
+    {
+        $section = $this->core->getCurrentSection();
+        switch ($section['shtitle']) {
+            case 1:
+                return $section['indic'];
+            case 2:
+                return $section['title'];
+            case 2:
+                return $section['metadesc'];
+            default:
+                return '';
+        }
     }
     
     /**

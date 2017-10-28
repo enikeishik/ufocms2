@@ -10,7 +10,7 @@
 ?>
 <div class="congratsitem">
 
-<h1><?=$section['indic']?></h1>
+<h1><?=$this->getSectionTitle()?></h1>
 
 <div class="date"><?=strftime('%e %B %G', strtotime($item['DateStart']))?></div>
 <div class="views">Просмотров: <?=$item['ViewedCnt']?></div>

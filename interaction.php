@@ -52,7 +52,7 @@ if (isset($_POST['rate'])) {
         if ($comment = $interaction->getLastComment()) {
             $commentData = '';
             foreach ($comment as $field => $value) {
-                $commentData .= ',' . $field . ':"' . htmlspecialchars(addcslashes($value, "\0..\37\"\'\\"), ENT_NOQUOTES) . '"';
+                $commentData .= ',' . $field . ':"' . $tools->getSafeJsString($value) . '"';
             }
             $data = 'objData={Message:"Комментарий добавлен"' . $commentData . '}';
             echo    "errCode=0;strData='" . $tools->getSafeJsString($data) . "';\r\n";

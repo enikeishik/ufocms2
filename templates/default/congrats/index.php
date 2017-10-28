@@ -10,7 +10,7 @@
  */
 ?>
 <div class="congrats">
-<h1><?=$section['indic']?></h1>
+<h1><?=$this->getSectionTitle()?></h1>
 <?=$settings['BodyHead']?>
 <?php if (0 < count($items)) { ?>
     <div class="items">

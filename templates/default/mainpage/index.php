@@ -7,9 +7,9 @@
  * @var array|null $item
  * @var array|null $items
  */
- ?>
-<h1><?=$section['indic'];?></h1>
-<?=$item['body'];?>
+?>
+<h1><?=$this->getSectionTitle()?></h1>
+<?=$item['body']?>
 <table border="0" cellpadding="0" cellspacing="0" id="mpcontenttable" width="100%"><tr valign="top">
 <td id="mpcontenttableleft">
     <?php $this->renderInsertions(['PlaceId' => 3]); ?>

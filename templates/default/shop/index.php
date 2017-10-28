@@ -17,7 +17,7 @@
 <?php if (null !== $this->category) { ?>
 <h1><?=htmlspecialchars($category['Title'])?></h1>
 <?php } else { ?>
-<h1><?=$section['indic']?></h1>
+<h1><?=$this->getSectionTitle()?></h1>
 <?php } ?>
 
 <?=$settings['BodyHead']?>

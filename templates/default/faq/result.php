@@ -12,7 +12,7 @@
  */
 ?>
 <div class="defaultresult">
-<h1><?=$section['indic']?></h1>
+<h1><?=$this->getSectionTitle()?></h1>
 <?php if ($actionResult['db']) { ?>
     <?php if (0 < strlen($settings['PostMessage'])) { ?>
     <?=$settings['PostMessage']?>

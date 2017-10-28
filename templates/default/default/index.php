@@ -10,7 +10,7 @@
  */
 ?>
 <div class="default">
-<h1><?=$section['indic']?></h1>
+<h1><?=$this->getSectionTitle()?></h1>
 <?php if (0 < $itemsCount) { ?>
     <div class="items">
     <?php foreach ($items as $item) { ?>

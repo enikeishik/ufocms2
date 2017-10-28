@@ -295,7 +295,7 @@ class Model extends \Ufocms\Modules\Model //implements IModel
                 $fileName = substr($file, 0, $pos);
                 $fileExt = substr($file, $pos + 1);
                 
-                //... ? check ext or mime type ?
+                //TODO: ... ? check ext or mime type ?
                 
                 //собираем для сохранения, чтобы можно было просмотреть/скачать через админку
                 list($msec, $sec) = explode(' ', microtime());

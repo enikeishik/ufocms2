@@ -60,19 +60,19 @@ class Captcha
      * Цвет фона.
      * @var array<R, G, B>
      */
-    protected $bgColor = array('red' => 0xEE, 'green' => 0xEE, 'blue' => 0xFF);
+    protected $bgColor = array(0xEE, 0xEE, 0xFF);
     
     /**
      * Цвет теней.
      * @var array<R, G, B>
      */
-    protected $shColor = array('red' => 0xCC, 'green' => 0xCC, 'blue' => 0xEE);
+    protected $shColor = array(0xCC, 0xCC, 0xEE);
     
     /**
      * Цвет текста.
      * @var array<R, G, B>
      */
-    protected $fgColor = array('red' => 0x99, 'green' => 0x99, 'blue' => 0xCC);
+    protected $fgColor = array(0x99, 0x99, 0xCC);
     
     /**
      * Уровень сжатия JPEG.
@@ -113,6 +113,15 @@ class Captcha
         }
         $this->stack = new Stack($this->config, $this->debug);
         $this->stack->set($this->stackFile, $this->stackLifetime);
+        if (isset($this->config->captcha)) {
+            //TODO: may be overwrite only some props?
+            foreach ($this->config->captcha as $name => $value) {
+                if (!property_exists($this, $name)) {
+                    continue;
+                }
+                $this->$name = $value;
+            }
+        }
     }
     
     /**
@@ -177,9 +186,13 @@ class Captcha
             return false;
         }
         
-        $bg =  imagecolorallocate($img, $this->bgColor['red'], $this->bgColor['green'], $this->bgColor['blue']);
-        $fg =  imagecolorallocate($img, $this->fgColor['red'], $this->fgColor['green'], $this->fgColor['blue']);
-        $sh =  imagecolorallocate($img, $this->shColor['red'], $this->shColor['green'], $this->shColor['blue']);
+        list($r, $g, $b) = $this->bgColor;
+        $bg =  imagecolorallocate($img, $r, $g, $b);
+        list($r, $g, $b) = $this->fgColor;
+        $fg =  imagecolorallocate($img, $r, $g, $b);
+        list($r, $g, $b) = $this->shColor;
+        $sh =  imagecolorallocate($img, $r, $g, $b);
+        unset($r, $g, $b);
         imagestring($img, $this->font, mt_rand(5, 60), mt_rand(5, 40), $data, $fg);
         imagestring($img, $this->font, mt_rand(1, 60), mt_rand(1, 20), $randomData1, $sh);
         imagestring($img, $this->font, mt_rand(1, 60), mt_rand(21, 40), $randomData2, $sh);

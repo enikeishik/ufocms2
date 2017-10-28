@@ -101,9 +101,6 @@ class Controller extends DIObject //implements IController
         $this->modelAction($model);
         
         $view = $this->getView($model);
-        if (defined('C_THEME') && '' != C_THEME) {
-            $view->setTheme(C_THEME);
-        }
         $view->render();
     }
     
