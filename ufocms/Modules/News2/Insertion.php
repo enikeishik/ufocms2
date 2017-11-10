@@ -56,9 +56,11 @@ class Insertion extends \Ufocms\Modules\Insertion //implements IInsertion
                     ' AND t1.DateCreate<=NOW()';
         $sql = 'SELECT t1.Id, t1.DateCreate, t1.DateView,' . 
                ' t1.Title, t1.Author, t1.Icon, t1.InsIcon, t1.Announce, t1.Body, t1.ViewedCnt,' . 
-               ' t2.path, t2.image, t2.timage, t2.indic, t2.title' . 
+               ' t2.path, t2.image, t2.timage, t2.indic, t2.title,' . 
+               ' t4.DateComment, t4.CommentsCnt, t4.CommentsStatusAvg, t4.DateRate, t4.RatesCnt, t4.Rating' . 
                ' FROM ' . C_DB_TABLE_PREFIX . 'news2 AS t1' . 
                ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'sections AS t2 ON t1.SectionId=t2.id' . 
+               ' LEFT JOIN ' . C_DB_TABLE_PREFIX . 'interaction_stat_items AS t4 ON (t1.SectionId=t4.SectionId AND t1.Id=t4.ItemId)' . 
                $sqlWhere;
         //если установлен параметр ItemsIds, выводим только запрошенные элементы
         if (0 < strlen($this->data['ItemsIds'])) {

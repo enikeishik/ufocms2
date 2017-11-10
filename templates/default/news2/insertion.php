@@ -9,7 +9,11 @@
  * @var array|null $this->options      insertions call [in template] options
  */
 ?>
-<div class="widgetnews">
+<style type="text/css">
+.insertionnews2 .info { text-align: right; }
+.insertionnews2 .info span { color: #999; font-size: 11px; padding-right: 5px; white-space: nowrap; }
+</style>
+<div class="insertionnews2">
 <h3><?=$this->data['Title']?></h3>
 <?php if (0 < count($items)) { ?>
     <div class="items">
@@ -21,6 +25,14 @@
                 <div class="icon"><?=$item['Icon'];?></div>
             <?php } ?>
             <div class="announce"><?=$this->getAnnounce($item, $this->data)?></div>
+            <div class="info">
+                <span class="views">просмотров <?=$item['ViewedCnt']?></span>
+                <?php if (null !== $item['CommentsCnt']) { ?>
+                <span class="comments">комментариев <?=$item['CommentsCnt']?></span>
+                <span class="comments">рейтинг <?=round($item['Rating'], 2)?></span>
+                <span class="comments">голосов <?=$item['RatesCnt']?></span>
+                <?php } ?>
+            </div>
         </div>
     <?php } ?>
     </div>

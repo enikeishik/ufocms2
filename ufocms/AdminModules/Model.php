@@ -564,7 +564,15 @@ class Model extends Schema
         if (!$field['Required']) {
             return true;
         }
-        return isset($_POST[$field['Name']]) && '' != $_POST[$field['Name']];
+        if (!isset($_POST[$field['Name']])) {
+            return false;
+        }
+        $val = $_POST[$field['Name']];
+        if (!is_scalar($val)) {
+            return true;
+        }
+        return '' != $_POST[$field['Name']] 
+            && (!$this->tools->isInt($_POST[$field['Name']]) || 0 != $_POST[$field['Name']]);
     }
     
     /**

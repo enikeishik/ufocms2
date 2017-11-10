@@ -183,8 +183,13 @@ class View extends DIObject
      */
     protected function loadThemeConfig()
     {
-        $configPath = $this->templatePath . $this->config->themeConfig;
-        $this->config->load($configPath);
+        $this->config->load(
+            $this->findTemplate(
+                $this->templatePath, 
+                null, 
+                $this->config->themeConfig
+            )
+        );
     }
     
     /**
@@ -236,13 +241,13 @@ class View extends DIObject
     /**
      * Поиск требуемого шаблона. Возвращаемый путь может не существовать.
      * @param string $theme
-     * @param string $module
+     * @param string|null $module
      * @param string $entry
      * @return string
      */
     protected function findTemplate($theme, $module, $entry)
     {
-        if (null !== $module) {
+        if (null !== $module && '' != $module) {
             // /templates/mytemplate/mymodule/entry
             $template = $theme . 
                         '/' . strtolower($module) . 
