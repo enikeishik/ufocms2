@@ -183,13 +183,30 @@ class View extends DIObject
      */
     protected function loadThemeConfig()
     {
-        $this->config->load(
-            $this->findTemplate(
-                $this->templatePath, 
-                null, 
-                $this->config->themeConfig
-            )
+        $defaultCfg = $this->getThemeDefaultPath() . $this->config->themeConfig;
+        
+        $themeCfg = $this->findTemplate(
+            $this->templatePath, 
+            null, 
+            $this->config->themeConfig
         );
+        
+        if ($themeCfg != $defaultCfg) {
+            $this->config->loadWithDefault($defaultCfg, $themeCfg);
+        } else {
+            $this->config->load($defaultCfg);
+        }
+    }
+    
+    /**
+     * Возвращает путь к теме по-умолчанию.
+     * @return string
+     */
+    protected function getThemeDefaultPath()
+    {
+        return  $this->config->rootPath . 
+                $this->config->templatesDir . 
+                $this->config->themeDefault;
     }
     
     /**
@@ -269,24 +286,21 @@ class View extends DIObject
                         return $template;
                     } else {
                         // /templates/default/mymodule/entry
-                        $template = $this->config->rootPath . 
-                                    $this->config->templatesDir . $this->config->themeDefault . 
+                        $template = $this->getThemeDefaultPath() . 
                                     '/' . strtolower($module) . 
                                     $entry;
                         if (file_exists($template)) {
                             return $template;
                         } else {
                             // /templates/default/default/entry
-                            $template = $this->config->rootPath . 
-                                        $this->config->templatesDir . $this->config->themeDefault . 
+                            $template = $this->getThemeDefaultPath() . 
                                         $this->config->templateDefault . 
                                         $entry;
                             if (file_exists($template)) {
                                 return $template;
                             } else {
                                 // /templates/default/entry
-                                $template = $this->config->rootPath . 
-                                            $this->config->templatesDir . $this->config->themeDefault . 
+                                $template = $this->getThemeDefaultPath() . 
                                             $entry;
                                 return $template;
                             }
@@ -302,8 +316,7 @@ class View extends DIObject
                 return $template;
             } else {
                 // /templates/default/entry
-                $template = $this->config->rootPath . 
-                            $this->config->templatesDir . $this->config->themeDefault . 
+                $template = $this->getThemeDefaultPath() . 
                             $entry;
                 return $template;
             }
@@ -872,6 +885,7 @@ class View extends DIObject
             '/' . strtolower($this->module['Name']), 
             $entry
         );
+        echo $template;
         include $template;
     }
     
@@ -939,5 +953,37 @@ class View extends DIObject
         }
         $template = $this->findTemplate($this->templatePath, '', $this->config->templatesDebugEntry);
         include $template;
+    }
+    
+    /**
+     * Генерация HTTP заголовков.
+     * @param array $headers = null
+     */
+    protected function renderHttpHeaders(array $headers = null)
+    {
+        if (isset($this->config->http)) {
+            if (null === $this->debug && isset($this->config->http['headers'])) {
+                foreach ($this->config->http['headers'] as $header) {
+                    header($header);
+                }
+            } else if (isset($this->config->http['headersDebug'])) {
+                foreach ($this->config->http['headersDebug'] as $header) {
+                    header($header);
+                }
+            }
+        }
+        
+        if (null !== $headers) {
+            foreach ($headers as $header) {
+                $replace = true;
+                if (is_array($header)) {
+                    if (1 < count($header)) {
+                        $replace = $header[1];
+                    }
+                    $header = $header[0];
+                }
+                header($header, $replace);
+            }
+        }
     }
 }

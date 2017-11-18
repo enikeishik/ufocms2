@@ -190,10 +190,16 @@ class Stack
      */
     public function clearOld()
     {
+        clearstatcache();
         if (!file_exists($this->stackFile)) {
             return false;
         }
-        if ($this->stackLifetime > (time() - filectime($this->stackFile))) {
+        /* TODO: check on *nix systems!
+        echo time() - filemtime($this->stackFile);
+        echo '<br>';
+        echo time() - filectime($this->stackFile);
+        */
+        if ($this->stackLifetime > (time() - filemtime($this->stackFile))) {
             return false;
         }
         $oldTimestamp = time() - $this->stackLifetime;
@@ -214,7 +220,7 @@ class Stack
             return false;
         }
         $written = false;
-        if (flock($handle, LOCK_EX)) {
+        if (flock($handle, LOCK_EX | LOCK_NB)) {
             fwrite($handle, implode('', $arr_));
             fflush($handle);
             flock($handle, LOCK_UN);

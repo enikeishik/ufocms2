@@ -15,7 +15,8 @@
  * @var string $metaDesc
  */
 
-header('Content-type: text/html; charset=utf-8');
+$this->renderHttpHeaders();
+
 ?><!DOCTYPE html>
 <html>
 <head>

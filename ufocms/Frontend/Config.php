@@ -362,9 +362,9 @@ class Config extends Struct
     }
     
     /**
-     * Загрузка дополнительной конфигурации
+     * Загрузка дополнительной конфигурации из файла конфигурации.
      * @param string $configPath
-     * @param bool $overwrite
+     * @param bool $overwrite = false
      */
     public function load($configPath, $overwrite = false)
     {
@@ -378,6 +378,34 @@ class Config extends Struct
         if (is_object($cfg)) {
             $cfg = get_object_vars($cfg);
         }
+        $this->loadArray($cfg, $overwrite);
+    }
+    
+    /**
+     * Загрузка дополнительной конфигурации из файла конфигурации по-умолчанию и файла целевой конфигурации.
+     * @param string $defaultConfigPath
+     * @param string $configPath
+     */
+    public function loadWithDefault($defaultConfigPath, $configPath)
+    {
+        if (!file_exists($configPath)) {
+            return;
+        }
+        $cfgDefault = include_once $defaultConfigPath;
+        $cfg = include_once $configPath;
+        if (!is_array($cfgDefault) && !is_array($cfg)) {
+            return;
+        }
+        $this->loadArray(array_merge($cfgDefault, $cfg));
+    }
+    
+    /**
+     * Загрузка дополнительной конфигурации из массива.
+     * @param array $cfg
+     * @param bool $overwrite = false
+     */
+    public function loadArray(array $cfg, $overwrite = false)
+    {
         foreach ($cfg as $name => $value) {
             if (!$overwrite && property_exists($this, $name)) {
                 continue;

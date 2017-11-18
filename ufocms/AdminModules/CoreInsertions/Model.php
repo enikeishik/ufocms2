@@ -28,7 +28,7 @@ class Model extends \Ufocms\AdminModules\Model
         $targetId = !is_null($this->params->sectionId) ? $this->params->sectionId : 0;
         $this->fields = array(
             array('Type' => 'int',          'Name' => 'Id',             'Value' => 0,           'Title' => 'id',                'Filter' => false,  'Show' => true,     'Sort' => true,     'Edit' => false),
-            array('Type' => 'list',         'Name' => 'TargetId',       'Value' => $targetId,   'Title' => 'Раздел вывода',     'Filter' => false,  'Show' => false,    'Sort' => false,    'Edit' => true,     'Required' => true, 'Items' => 'getSections'),
+            array('Type' => 'list',         'Name' => 'TargetId',       'Value' => $targetId,   'Title' => 'Раздел вывода',     'Filter' => false,  'Show' => false,    'Sort' => false,    'Edit' => true,     /* not required, may by equal 0 */ 'Items' => 'getSections'),
             array('Type' => 'int',          'Name' => 'PlaceId',        'Value' => 0,           'Title' => 'Место вывода',      'Filter' => true,   'Show' => true,     'Sort' => true,     'Edit' => true,     'Required' => true),
             array('Type' => 'int',          'Name' => 'OrderId',        'Value' => 0,           'Title' => 'Порядок вывода',    'Filter' => false,  'Show' => true,     'Sort' => true,     'Edit' => true,     'Required' => true),
             array('Type' => 'list',         'Name' => 'SourceId',       'Value' => 0,           'Title' => 'Источник',          'Filter' => true,   'Show' => true,     'Sort' => true,     'Edit' => true,     'Required' => true, 'Items' => 'getSections'),

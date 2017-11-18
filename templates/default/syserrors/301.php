@@ -7,7 +7,7 @@
  */
 
 //header('HTTP/1.0 301 Moved Permanently');
-header('Location: ' . $location);
+header('Location: ' . $location, true, 301);
 ?><!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <HTML><HEAD>
 <TITLE>301 Moved Permanently</TITLE>

@@ -15,17 +15,8 @@
  * @var string $metaDesc
  */
 
-header('Content-type: text/html; charset=utf-8');
-if (null === $this->debug) {
-    header('Last-Modified: ' . gmdate('D, d M Y H:i:s', time() - 600) . ' GMT'); //10 min ago
-    header('Cache-Control: max-age=' . 3600);
-    header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 3600) . ' GMT');
-} else {
-    header('Last-Modified: ' . gmdate('D, d M Y H:i:s', time() - 999999) . ' GMT');
-    header('Cache-Control: no-store, no-cache, must-revalidate');
-    header('Expires: ' . gmdate('D, d M Y H:i:s', time() - 999999) . ' GMT');
-    header('Pragma: no-cache'); 
-}
+$this->renderHttpHeaders();
+
 ?><!DOCTYPE html>
 <html>
 <head>

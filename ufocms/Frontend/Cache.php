@@ -96,10 +96,15 @@ class Cache
      */
     public function expired()
     {
+        clearstatcache();
         if (!$this->exists()) {
             return true;
         }
-        clearstatcache();
+        /* TODO: check on *nix systems!
+        echo time() - filemtime($this->cacheFile);
+        echo '<br>';
+        echo time() - filectime($this->cacheFile);
+        */
         return $this->config->cacheLifeTime < (time() - filemtime($this->cacheFile));
     }
     

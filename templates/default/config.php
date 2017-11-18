@@ -10,4 +10,19 @@ return [
         'letterSeparator'   => ' ', 
     ], 
     
+    'http' => [
+        'headers' => [
+            'Content-type: text/html; charset=utf-8', 
+            'Last-Modified: ' . gmdate('D, d M Y H:i:s', time() - 600) . ' GMT', 
+            'Cache-Control: max-age=' . 3600, 
+            'Expires: ' . gmdate('D, d M Y H:i:s', time() + 3600) . ' GMT', 
+        ], 
+        'headersDebug' => [
+            'Content-type: text/html; charset=utf-8', 
+            'Last-Modified: ' . gmdate('D, d M Y H:i:s', time() - 999999) . ' GMT', 
+            'Cache-Control: no-store, no-cache, must-revalidate', 
+            'Expires: ' . gmdate('D, d M Y H:i:s', time() - 999999) . ' GMT', 
+            'Pragma: no-cache', 
+        ], 
+    ], 
 ];
