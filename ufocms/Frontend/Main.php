@@ -174,6 +174,7 @@ class Main //implements IController
     
     /**
      * Проверка является ли текущий раздел служебным.
+     * @param string $pathRaw
      * @return array<string $path, string $class>|null
      */
     protected function getSystemModule($pathRaw)

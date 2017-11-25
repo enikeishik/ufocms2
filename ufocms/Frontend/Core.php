@@ -21,7 +21,7 @@ class Core
     protected $config = null;
     
     /**
-     * @var array
+     * @var Params
      */
     protected $params = null;
     
@@ -66,8 +66,13 @@ class Core
     protected $interaction = null;
     
     /**
+     * @var InteractionManage
+     */
+    protected $interactionManage = null;
+    
+    /**
      * @param Config &$config
-     * @param array &$params
+     * @param Params &$params
      * @param Db &$db
      * @param Debug &$debug = null
      */
@@ -485,6 +490,17 @@ class Core
             $this->interaction = new Interaction($this->config, $this->params, $this->db, $this->debug);
         }
         return $this->interaction;
+    }
+    
+    /**
+     * @return Interaction
+     */
+    public function getInteractionManage()
+    {
+        if (null === $this->interactionManage) {
+            $this->interactionManage = new InteractionManage($this->config, $this->params, $this->db, $this->debug);
+        }
+        return $this->interactionManage;
     }
     
     /**

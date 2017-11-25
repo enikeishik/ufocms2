@@ -100,7 +100,7 @@ class Loader
     
     /**
      * Установка параметра dataChecker.
-     * @param string $dataChecker
+     * @param callable $dataChecker
      */
     public function setDataChecker(callable $dataChecker)
     {

@@ -166,13 +166,13 @@ class Captcha
     public function showImage()
     {
         if (!isset($_GET[$this->htgetFieldKey])) {
-            return false;
+            return;
         }
         
         $data = $this->stack->getDataByKey($_GET[$this->htgetFieldKey]);
         if (false === $data) {
             $this->showImageError();
-            return false;
+            return;
         }
         $data = $this->separateData($data);
         $this->letterSeparator = '  ';
@@ -183,7 +183,7 @@ class Captcha
         $img = @imagecreate(120, 60);
         if (false === $img) {
             $this->showImageError();
-            return false;
+            return;
         }
         
         list($r, $g, $b) = $this->bgColor;

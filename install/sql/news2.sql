@@ -91,3 +91,7 @@ CREATE TABLE IF NOT EXISTS `/* TABLE_PREFIX */news2_nt` (
 
 INSERT INTO `/* TABLE_PREFIX */modules` (`id`, `muid`, `mname`, `mfile`, `mfileins`, `mfileinc`, `mfilexsm`, `mtable`, `mtableitems`, `madmin`, `issingle`, `isinsertion`, `isinclusion`, `isenabled`) 
 VALUES (17, 17, 'Лента новостей 2', 'mod_news2.php', 'ins_news2.php', 'inc_news2.php', 'xsm_news2.php', 'news2_sections', 'news2,news2_ns,news2_tags,news2_nt', 'mod_news2', 0, 1, 1, 1);
+
+INSERT INTO `/* TABLE_PREFIX */widgets_types`
+(ModuleId, Name, Title, Description) VALUES
+(17, '', 'Новости 2', 'Вывод элементов разделов типа Новости 2');

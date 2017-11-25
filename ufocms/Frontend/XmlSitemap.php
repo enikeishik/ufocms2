@@ -63,7 +63,6 @@ class XmlSitemap
     /**
      * @param Config &$config
      * @param Db &$db
-     * @param Core &$core
      * @param Debug &$debug = null
      */
     public function __construct(&$config, &$db, &$debug = null)
@@ -209,9 +208,10 @@ class XmlSitemap
     }
     
     /**
+     * @param array $section
      * @return string
      */
-    protected function xmlSection($section)
+    protected function xmlSection(array $section)
     {
         return  '<url>' . 
                 '<loc>http://' . 

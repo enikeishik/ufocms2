@@ -113,7 +113,9 @@ class Cache
      */
     public function deleteOld()
     {
-        if ($dh = opendir($this->config->cacheDir)) {
+        $dir = $this->config->rootPath . $this->config->cacheDir;
+        clearstatcache();
+        if ($dh = opendir($dir)) {
             while (($file = readdir($dh)) !== false) {
                 $filePath = $dir . '/' . $file;
                 if (is_file($filePath) && 0 !== strpos($file, '.')) {

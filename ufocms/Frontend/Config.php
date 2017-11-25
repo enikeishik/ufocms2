@@ -144,6 +144,12 @@ class Config extends Struct
     public $templatesDir = '/templates';
     
     /**
+     * Файл конфигурации сайта
+     * @var string
+     */
+    public $siteConfig = '/config.php';
+    
+    /**
      * Папка темы по-умолчанию
      * @var string
      */
@@ -359,6 +365,7 @@ class Config extends Struct
         $this->staticUrl = $this->staticDir;
         $this->staticDir = $_SERVER['DOCUMENT_ROOT'] . $this->staticDir;
         parent::__construct($vars, $cast);
+        $this->load($this->rootPath . $this->templatesDir . $this->siteConfig);
     }
     
     /**

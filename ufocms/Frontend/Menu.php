@@ -37,6 +37,11 @@ class Menu extends DIObject
     protected $core = null;
     
     /**
+     * @var Tools
+     */
+    protected $tools = null;
+    
+    /**
      * @var string
      */
     protected $templateUrl = null;
@@ -57,6 +62,7 @@ class Menu extends DIObject
         $this->params =& $this->container->getRef('params');
         $this->db =& $this->container->getRef('db');
         $this->core =& $this->container->getRef('core');
+        $this->tools =& $this->container->getRef('tools');
         $this->templateUrl = $this->container->get('templateUrl');
     }
     

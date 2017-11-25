@@ -6,7 +6,6 @@
 namespace Ufocms\Modules;
 
 use Ufocms\Frontend\DIObject;
-use Ufocms\Frontend\Container;
 
 /**
  * Module level model base class
@@ -163,16 +162,17 @@ abstract class Model extends DIObject
      */
     public function getSections($nc = false)
     {
-        if (!$nc && !is_null($this->sections)) {
-            return $this->sections;
+        static $sections = null;
+        if (!$nc && !is_null($sections)) {
+            return $sections;
         }
         $section = $this->core->getSection($this->params->sectionId, 'moduleid');
         $items = $this->core->getModuleSections($section['moduleid']);
         foreach ($items as &$item) {
             $item = array('Value' => $item['id'], 'Title' => $item['indic']);
         }
-        $this->sections = $items;
-        return $this->sections;
+        $sections = $items;
+        return $sections;
     }
     
     /**

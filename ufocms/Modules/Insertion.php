@@ -54,9 +54,16 @@ abstract class Insertion extends DIObject
     protected $options = null;
     
     /**
+     * Относительный путь (от корня сайта) к папке текущего шаблона.
      * @var string
      */
     protected $templateUrl = null;
+    
+    /**
+     * Абсолютрый путь к папке текущего шаблона.
+     * @var string
+     */
+    protected $templatePath = null;
     
     /**
      * @var array
@@ -76,6 +83,7 @@ abstract class Insertion extends DIObject
         $this->data =& $this->container->getRef('data');
         $this->options =& $this->container->getRef('options');
         $this->templateUrl = $this->container->get('templateUrl');
+        $this->templatePath = $this->config->rootPath . $this->templateUrl;
         $this->setModuleName();
     }
     
@@ -134,50 +142,70 @@ abstract class Insertion extends DIObject
     }
     
     /**
-     * 
+     * Возвращает путь к теме по-умолчанию.
+     * @return string
+     */
+    protected function getThemeDefaultPath()
+    {
+        return  $this->config->rootPath . 
+                $this->config->templatesDir . 
+                $this->config->themeDefault;
+    }
+    
+    /**
+     * Поиск требуемого шаблона. Возвращает существующий путь или пустую строку.
+     * @return string
+     */
+    protected function findTemplate()
+    {
+        if (null !== $this->templateUrl) {
+            // /templates/mytemplate/mymodule/entry
+            $template = $this->templatePath . 
+                        '/' . strtolower($this->moduleName) . 
+                        $this->config->templatesInsertionEntry;
+            if (file_exists($template)) {
+                return $template;
+            }
+            
+            // /templates/mytemplate/default/entry
+            $template = $this->templatePath . 
+                        $this->config->templateDefault . 
+                        $this->config->templatesInsertionEntry;
+            if (file_exists($template)) {
+                return $template;
+            }
+        }
+        
+        // /templates/default/mymodule/entry
+        $template = $this->getThemeDefaultPath() . 
+                    '/' . strtolower($this->moduleName) . 
+                    $this->config->templatesInsertionEntry;
+        if (file_exists($template)) {
+            return $template;
+        }
+        
+        if (null !== $this->debug) {
+            // /templates/default/default/entry
+            $template = $this->getThemeDefaultPath() . 
+                        $this->config->templateDefault . 
+                        $this->config->templatesInsertionEntry;
+            if (file_exists($template)) {
+                return $template;
+            }
+        } else {
+            return '';
+        }
+    }
+    
+    /**
+     * Генерация вывода.
      */
     public function render()
     {
-        $this->setContext();
-        extract(
-            $this->context, 
-            EXTR_PREFIX_SAME, 'insertion'
-        );
-        
-        if (null === $this->templateUrl) {
-            $template = $this->config->rootPath . 
-                        $this->config->templatesDir . $this->config->themeDefault . 
-                        '/' . strtolower($this->moduleName) . 
-                        $this->config->templatesInsertionEntry;
-        } else {
-            $template = $this->config->rootPath . 
-                        $this->templateUrl . 
-                        '/' . strtolower($this->moduleName) . 
-                        $this->config->templatesInsertionEntry;
-        }
-        if (file_exists($template)) {
+        if ('' != $template = $this->findTemplate()) {
+            $this->setContext();
+            extract($this->context);
             include $template;
-        } else {
-            if (null === $this->templateUrl) {
-                $template = $this->config->rootPath . 
-                            $this->config->templatesDir . $this->config->themeDefault . 
-                            $this->config->templateDefault . 
-                            $this->config->templatesInsertionEntry;
-            } else {
-                $template = $this->config->rootPath . 
-                            $this->templateUrl . 
-                            $this->config->templateDefault . 
-                            $this->config->templatesInsertionEntry;
-            }
-            if (file_exists($template)) {
-                include $template;
-            } else {
-                $template = $this->config->rootPath . 
-                            $this->config->templatesDir . $this->config->themeDefault . 
-                            $this->config->templateDefault . 
-                            $this->config->templatesInsertionEntry;
-                include $template;
-            }
         }
     }
 }

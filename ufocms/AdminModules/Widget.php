@@ -5,8 +5,6 @@
 
 namespace Ufocms\AdminModules;
 
-use Ufocms\Frontend\DIObject;
-
 /**
  * Base Widget class
  */

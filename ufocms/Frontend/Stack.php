@@ -53,8 +53,8 @@ class Stack
     
     /**
      * Установка параметров конфигурации.
-     * @param string $file
-     * @param int $lifetime
+     * @param string $fileName
+     * @param int $lifeTime
      */
     public function set($fileName, $lifeTime)
     {

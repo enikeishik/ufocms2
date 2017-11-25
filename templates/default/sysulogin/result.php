@@ -11,23 +11,14 @@
  * @var string $error                   only for debug, do not use on production
  */
 ?>
-<div class="usersresult">
+<div class="uloginresult">
 <h1><?=$section['indic']?></h1>
-<?php if (!$actionResult['referer']) { ?>
+<?php if (!$actionResult['method']) { ?>
     <div>Некорректный источник</div>
-<?php } else if (!$actionResult['form']) { ?>
-    <div>Не заполнены обязательные поля</div>
-<?php } else if (!$actionResult['human']) { ?>
-    <div>Неверный код подтверждения</div>
-<?php } else if (!$actionResult['correct']) { ?>
+<?php } else if (!$actionResult['data']) { ?>
     <div>Некорректные данные</div>
-    <?php if ('login' == $actionResult['method']) { ?>
-    <?php include 'formrecover.php'; ?>
-    <?php } ?>
-<?php } else if (!$actionResult['enabled']) { ?>
-    <div>Учетная запись заблокирована</div>
-<?php } else if (!$actionResult['db']) { ?>
-    <div>Ошибка базы данных <?=$error?></div>
+<?php } else if (!$actionResult['service']) { ?>
+    <div>Ошибка сервиса <?=$error?></div>
 <?php } else { ?>
 <div>Действие выполнено удачно</div>
 <div>Через пять секунд страница будет перенаправлена на <a href="<?=$from?>">предыдущую страницу</a>.</div>

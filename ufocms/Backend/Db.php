@@ -18,7 +18,7 @@ class Db extends \Ufocms\Frontend\Db
     /**
      * @param Audit &$audit
      * @param \Ufocms\Frontend\Debug &$debug = null
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct(Audit &$audit, \Ufocms\Frontend\Debug &$debug = null)
     {

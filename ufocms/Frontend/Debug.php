@@ -111,7 +111,11 @@ class Debug
     }
     
     /**
-     * 
+     * Вывод информации о переменной.
+     * @param mixed $var
+     * @param bool $dump = true
+     * @param bool $exit = true
+     * @param bool $float = false
      */
     public static function varDump($var, $dump = true, $exit = true, $float = false)
     {

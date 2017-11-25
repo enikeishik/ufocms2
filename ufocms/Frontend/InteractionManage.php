@@ -179,9 +179,9 @@ class InteractionManage extends Interaction
         if (!is_null($checkReferer)) {
             $this->settings->checkReferer = (bool) $checkReferer;
         }
-        if (is_object($captcha)) {
+        if (is_object($captchaObject)) {
             $this->settings->checkCaptcha = true;
-            $this->captcha = $captcha;
+            $this->captcha = $captchaObject;
         }
         if (!is_null($commentMaxLength)) {
             $this->settings->commentMaxLength = (int) $commentMaxLength;
@@ -223,8 +223,8 @@ class InteractionManage extends Interaction
             }
         } else {
             $delay = (int) $delay;
-            if (0 > $this->delay) {
-                $this->delay = 0;
+            if (0 > $delay) {
+                $delay = 0;
             }
             $this->settings->commentAddDelay    = $delay;
             $this->settings->commentRateDelay   = $delay;
@@ -589,6 +589,7 @@ class InteractionManage extends Interaction
      * @param array $requiredFields список имен обязательных полей формы
      * @param int $commentId идентификатор комментария, который оценивается
      * @return false|array<string 'IP' IP адрес источника, string 'Info' HTTP заголовки источника>
+     * @throws \Exception
      */
     protected function check($postType = 0, $requiredFields = array(), $commentId = 0)
     {
@@ -771,6 +772,7 @@ class InteractionManage extends Interaction
      *
      * @param int $postType тип запроса: 0 - комментарий, 1 - голос
      * @return bool
+     * @thorws \Exception
      */
     protected function updateItemStatistic($postType = 0)
     {
@@ -898,6 +900,7 @@ class InteractionManage extends Interaction
      * @param int $postType тип запроса: 0 - комментарий, 1 - голос, 2 - отметка текущим пользователем чужого комментария, -1 - отметка другим пользователем комментария зарегистрированного пользователя, используется только совместно со вторым параметром $user_id
      * @param int $userId идентификатор зарегистрированного пользователя при отметке другим пользователем его комментария
      * @return bool
+     * @thorws \Exception
      */
     protected function updateUserStatistic($postType = 0, $userId = 0)
     {
@@ -1084,10 +1087,10 @@ class InteractionManage extends Interaction
     /**
      * Отправка уведомления на почту.
      * 
-     * @param string $data
+     * @param array $data
      * @return bool
      */
-    protected function sendMail($data)
+    protected function sendMail(array $data)
     {
         if (null === $this->mailTo) {
             return false;

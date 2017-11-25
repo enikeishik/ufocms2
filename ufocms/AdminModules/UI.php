@@ -19,7 +19,7 @@ class UI extends DIObject
     
     /**
      * Ссылка на объект конфигурации.
-     * @var Config
+     * @var \Ufocms\Backend\Config
      */
     protected $config = null;
     
@@ -252,11 +252,73 @@ class UI extends DIObject
     }
     
     /**
+     * Отрисовка фильтра по типу поля int.
+     * @param array $field
+     * @param string $basePathFields
+     * @return string
+     */
+    protected function filterByTypeInt(array $field, $basePathFields)
+    {
+        $s =    '<form action="' . $this->basePath . '" method="get">' . 
+                '<div>Искать в поле «' . $field['Title'] . '»</div>' . 
+                $basePathFields . 
+                '<input type="hidden" name="' . $this->config->paramsNames['action'] . '" value="filter">' . 
+                '<input type="hidden" name="' . $this->config->paramsNames['page'] . '" value="1">' . 
+                '<input type="hidden" name="filtername" value="' . $field['Name'] . '">' . 
+                '<input type="number" name="filtervalue" value="' . ($this->params->filterName == $field['Name'] ? htmlspecialchars($this->params->filterValue) : '') . 
+                    '" maxlength="10">' . 
+                '<input type="submit" value="&gt;">' . 
+                '</form>';
+        return $s;
+    }
+    
+    /**
+     * Отрисовка фильтра по типу поля float.
+     * @param array $field
+     * @param string $basePathFields
+     * @return string
+     */
+    protected function filterByTypeFloat(array $field, $basePathFields)
+    {
+        $s =    '<form action="' . $this->basePath . '" method="get">' . 
+                '<div>Искать в поле «' . $field['Title'] . '»</div>' . 
+                $basePathFields . 
+                '<input type="hidden" name="' . $this->config->paramsNames['action'] . '" value="filter">' . 
+                '<input type="hidden" name="' . $this->config->paramsNames['page'] . '" value="1">' . 
+                '<input type="hidden" name="filtername" value="' . $field['Name'] . '">' . 
+                '<input type="number" step="0.01" name="filtervalue" value="' . ($this->params->filterName == $field['Name'] ? htmlspecialchars($this->params->filterValue) : '') . 
+                    '" maxlength="12">' . 
+                '<input type="submit" value="&gt;">' . 
+                '</form>';
+        return $s;
+    }
+    
+    /**
+     * Отрисовка фильтра по типу поля text.
+     * @param array $field
+     * @param string $basePathFields
+     * @return string
+     */
+    protected function filterByTypeText(array $field, $basePathFields)
+    {
+        $s =    '<form action="' . $this->basePath . '" method="get">' . 
+                '<div>Искать в поле «' . $field['Title'] . '»</div>' . 
+                $basePathFields . 
+                '<input type="hidden" name="' . $this->config->paramsNames['action'] . '" value="filter">' . 
+                '<input type="hidden" name="' . $this->config->paramsNames['page'] . '" value="1">' . 
+                '<input type="hidden" name="filtername" value="' . $field['Name'] . '">' . 
+                '<input type="text" name="filtervalue" value="' . ($this->params->filterName == $field['Name'] ? htmlspecialchars($this->params->filterValue) : '') . 
+                    '" maxlength="255">' . 
+                '<input type="submit" value="&gt;">' . 
+                '</form>';
+        return $s;
+    }
+    
+    /**
      * Отрисовка фильтра по типу поля.
      * @param array $field
      * @param string $basePathFields
      * @return string
-     * @todo make seperate methods for each type
      */
     protected function filterByType(array $field, $basePathFields)
     {
@@ -277,43 +339,13 @@ class UI extends DIObject
             case 'text':
             case 'mediumtext':
             case 'bigtext':
-                $s =    '<form action="' . $this->basePath . '" method="get">' . 
-                        '<div>Искать в поле «' . $field['Title'] . '»</div>' . 
-                        $basePathFields . 
-                        '<input type="hidden" name="' . $this->config->paramsNames['action'] . '" value="filter">' . 
-                        '<input type="hidden" name="' . $this->config->paramsNames['page'] . '" value="1">' . 
-                        '<input type="hidden" name="filtername" value="' . $field['Name'] . '">' . 
-                        '<input type="text" name="filtervalue" value="' . ($this->params->filterName == $field['Name'] ? htmlspecialchars($this->params->filterValue) : '') . 
-                            '" maxlength="255">' . 
-                        '<input type="submit" value="&gt;">' . 
-                        '</form>';
-                return $s;
+                return $this->filterByTypeText($field, $basePathFields);
                 
             case 'int':
-                $s =    '<form action="' . $this->basePath . '" method="get">' . 
-                        '<div>Искать в поле «' . $field['Title'] . '»</div>' . 
-                        $basePathFields . 
-                        '<input type="hidden" name="' . $this->config->paramsNames['action'] . '" value="filter">' . 
-                        '<input type="hidden" name="' . $this->config->paramsNames['page'] . '" value="1">' . 
-                        '<input type="hidden" name="filtername" value="' . $field['Name'] . '">' . 
-                        '<input type="number" name="filtervalue" value="' . ($this->params->filterName == $field['Name'] ? htmlspecialchars($this->params->filterValue) : '') . 
-                            '" maxlength="10">' . 
-                        '<input type="submit" value="&gt;">' . 
-                        '</form>';
-                return $s;
+                return $this->filterByTypeInt($field, $basePathFields);
                 
             case 'float':
-                $s =    '<form action="' . $this->basePath . '" method="get">' . 
-                        '<div>Искать в поле «' . $field['Title'] . '»</div>' . 
-                        $basePathFields . 
-                        '<input type="hidden" name="' . $this->config->paramsNames['action'] . '" value="filter">' . 
-                        '<input type="hidden" name="' . $this->config->paramsNames['page'] . '" value="1">' . 
-                        '<input type="hidden" name="filtername" value="' . $field['Name'] . '">' . 
-                        '<input type="number" step="0.01" name="filtervalue" value="' . ($this->params->filterName == $field['Name'] ? htmlspecialchars($this->params->filterValue) : '') . 
-                            '" maxlength="12">' . 
-                        '<input type="submit" value="&gt;">' . 
-                        '</form>';
-                return $s;
+                return $this->filterByTypeFloat($field, $basePathFields);
                 
             default:
                 $method = 'filterByType' . ucfirst($field['Type']);

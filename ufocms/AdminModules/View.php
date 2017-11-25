@@ -158,7 +158,7 @@ class View extends DIObject
     protected function getUI($ui = null, $uiParams = null, $uiParamsAppend = false)
     {
         $uiClass = $this->getUIClass($ui);
-        $container = new \Ufocms\Frontend\Container([
+        $container = $this->core->getContainer([
             'debug'         => &$this->debug, 
             'config'        => &$this->config, 
             'params'        => &$this->params, 
@@ -225,6 +225,7 @@ class View extends DIObject
      */
     public function render($layout = null, $ui = null, $uiParams = null, $uiParamsAppend = false)
     {
+        $idx = 0;
         if (null !== $this->debug) {
             $idx = $this->debug->trace('Render preparation');
         }

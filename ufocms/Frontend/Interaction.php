@@ -21,7 +21,7 @@ class Interaction
     protected $config = null;
     
     /**
-     * @var array
+     * @var Params
      */
     protected $params = null;
     
@@ -29,6 +29,11 @@ class Interaction
      * @var Db
      */
     protected $db = null;
+    
+    /**
+     * @var InteractionConfig
+     */
+    protected $settings = null;
     
     /**
      * @var int
@@ -69,7 +74,7 @@ class Interaction
     /**
      * Конструктор.
      * @param Config &$config
-     * @param array &$params
+     * @param Params &$params
      * @param Db &$db
      * @param Debug &$debug = null
      */
@@ -87,6 +92,7 @@ class Interaction
      */
     protected function init()
     {
+        $this->settings = new InteractionConfig();
         $this->sectionId = $this->params->sectionId;
         $this->itemId = $this->params->itemId;
     }
@@ -94,7 +100,7 @@ class Interaction
     /**
      * Установка параметров (раздел, элемент, пользователь).
      * @param int $sectionId
-     * @param int $userId = 0
+     * @param int $itemId = 0
      * @param int $userId = 0
      * @param bool $isXhr = false
      */
@@ -338,6 +344,7 @@ class Interaction
      * @param int $postType тип данных статистики: 0 - комментарии, 1 - голоса, 2 - отметки комментариям (поставленные мною комментариям других), -1 - отметки комментариев (поставленные моим комментариям другими)
      * @param int $commentId идентификатор комментария, который оценивается
      * @return bool
+     * @throws \Exception
      */
     protected function voted($postType, $commentId = 0)
     {

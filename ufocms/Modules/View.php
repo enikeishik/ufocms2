@@ -265,61 +265,53 @@ class View extends DIObject
     protected function findTemplate($theme, $module, $entry)
     {
         if (null !== $module && '' != $module) {
+            
             // /templates/mytemplate/mymodule/entry
-            $template = $theme . 
-                        '/' . strtolower($module) . 
-                        $entry;
+            $template = $theme . '/' . strtolower($module) . $entry;
             if (file_exists($template)) {
                 return $template;
-            } else {
-                // /templates/mytemplate/default/entry
-                $template = $theme . 
-                            $this->config->templateDefault . 
-                            $entry;
-                if (file_exists($template)) {
-                    return $template;
-                } else {
-                    // /templates/mytemplate/entry (!NOT /templates/mytemplate/index.php)
-                    $template = $theme . 
-                                $entry;
-                    if ($this->config->templatesEntry != $entry && file_exists($template)) {
-                        return $template;
-                    } else {
-                        // /templates/default/mymodule/entry
-                        $template = $this->getThemeDefaultPath() . 
-                                    '/' . strtolower($module) . 
-                                    $entry;
-                        if (file_exists($template)) {
-                            return $template;
-                        } else {
-                            // /templates/default/default/entry
-                            $template = $this->getThemeDefaultPath() . 
-                                        $this->config->templateDefault . 
-                                        $entry;
-                            if (file_exists($template)) {
-                                return $template;
-                            } else {
-                                // /templates/default/entry
-                                $template = $this->getThemeDefaultPath() . 
-                                            $entry;
-                                return $template;
-                            }
-                        }
-                    }
-                }
             }
+            
+            // /templates/mytemplate/default/entry
+            $template = $theme . $this->config->templateDefault . $entry;
+            if (file_exists($template)) {
+                return $template;
+            }
+            
+            // /templates/mytemplate/entry (!NOT /templates/mytemplate/index.php)
+            $template = $theme . $entry;
+            if ($this->config->templatesEntry != $entry && file_exists($template)) {
+                return $template;
+            }
+            
+            // /templates/default/mymodule/entry
+            $template = $this->getThemeDefaultPath() . '/' . strtolower($module) . $entry;
+            if (file_exists($template)) {
+                return $template;
+            }
+            
+            // /templates/default/default/entry
+            $template = $this->getThemeDefaultPath() . $this->config->templateDefault . $entry;
+            if (file_exists($template)) {
+                return $template;
+            }
+            
+            // /templates/default/entry
+            $template = $this->getThemeDefaultPath() . $entry;
+            return $template;
+            
         } else {
+            
             // /templates/mytemplate/entry
-            $template = $theme . 
-                        $entry;
+            $template = $theme . $entry;
             if (file_exists($template)) {
                 return $template;
-            } else {
-                // /templates/default/entry
-                $template = $this->getThemeDefaultPath() . 
-                            $entry;
-                return $template;
             }
+            
+            // /templates/default/entry
+            $template = $this->getThemeDefaultPath() . $entry;
+            return $template;
+            
         }
     }
     
@@ -334,6 +326,7 @@ class View extends DIObject
             'params'        => &$this->params, 
             'db'            => &$this->db, 
             'core'          => &$this->core, 
+            'tools'         => &$this->tools, 
             'templateUrl'   => $this->templateUrl, 
         ]);
         return new Menu($container);
@@ -344,6 +337,7 @@ class View extends DIObject
      */
     public function render()
     {
+        $idx = 0;
         if (null !== $this->debug) {
             $idx = $this->debug->trace('Render preparation');
         }
@@ -737,7 +731,7 @@ class View extends DIObject
                 return $section['indic'];
             case 2:
                 return $section['title'];
-            case 2:
+            case 3:
                 return $section['metadesc'];
             default:
                 return '';
@@ -885,7 +879,6 @@ class View extends DIObject
             '/' . strtolower($this->module['Name']), 
             $entry
         );
-        echo $template;
         include $template;
     }
     

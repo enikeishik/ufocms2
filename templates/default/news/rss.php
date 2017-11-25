@@ -1,7 +1,9 @@
 <?php
 /**
  * @var \Ufocms\Modules\View $this
+ * @var \Ufocms\Frontend\Core $core
  * @var \Ufocms\Frontend\Tools $tools
+ * @var \Ufocms\Frontend\Config $config
  * @var array|null $site
  * @var array|null $section
  * @var array|null $settings

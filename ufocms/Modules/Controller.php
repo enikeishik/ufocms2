@@ -24,6 +24,12 @@ class Controller extends DIObject //implements IController
     protected $debug = null;
     
     /**
+     * Ссылка на объект конфигурации.
+     * @var \Ufocms\Frontend\Config
+     */
+    protected $config = null;
+    
+    /**
      * @var \Ufocms\Frontend\Params
      */
     protected $params = null;
@@ -44,13 +50,13 @@ class Controller extends DIObject //implements IController
     protected $tools = null;
     
     /**
-     * Availabe module level parameters
+     * Available module level parameters.
      * @var array<string paramName => array<string type, string from, string prefix, bool additional, mixed value, mixed default> paramSet>
      */
     protected $moduleParamsStruct = null;
     
     /**
-     * Availabe module level parameters
+     * Available module level parameters.
      * @var array<string paramName => mixed paramValue>
      */
     protected $moduleParams = null;
@@ -126,6 +132,17 @@ class Controller extends DIObject //implements IController
     }
     
     /**
+     * Установка параметров приложения.
+     * @param string $name
+     * @param mixed $value
+     * @param mixed $default = null
+     */
+    protected function setAppParam($name, $value, $default = null)
+    {
+        $this->params->$name = $value ?? $default;
+    }
+    
+    /**
      * Установка параметров.
      */
     protected function setParams()
@@ -149,36 +166,22 @@ class Controller extends DIObject //implements IController
         $this->moduleParams = $this->getModuleParams();
         
         //set some application level params
-        if (null !== $this->moduleParams['itemId']) {
-            $this->params->itemId = $this->moduleParams['itemId'];
-        } else {
-            $this->params->itemId = 0;
-        }
-        if (null !== $this->moduleParams['actionId']) {
-            $this->params->actionId = $this->moduleParams['actionId'];
-        }
-        if (null !== $this->moduleParams['action']) {
-            $this->params->action = $this->moduleParams['action'];
-        }
-        if (null !== $this->moduleParams['page']) {
-            $this->params->page = $this->moduleParams['page'];
-        } else {
-            $this->params->page = $this->config->pageDefault;
-        }
-        if (null !== $this->moduleParams['pageSize']) {
-            $this->params->pageSize = $this->moduleParams['pageSize'];
-        } else {
-            $this->params->pageSize = $this->config->pageSizeDefault;
-        }
+        $this->setAppParam('itemId', $this->moduleParams['itemId'], 0);
+        $this->setAppParam('actionId', $this->moduleParams['actionId']);
+        $this->setAppParam('action', $this->moduleParams['action']);
+        $this->setAppParam('page', $this->moduleParams['page'], $this->config->pageDefault);
+        $this->setAppParam('pageSize', $this->moduleParams['pageSize'], $this->config->pageSizeDefault);
+        //TODO: set all appl level params
+        
+        //check common used params
         if (null === $this->moduleParams['commentsPage']) {
             $this->moduleParams['commentsPage'] = $this->moduleParamsStruct['commentsPage']['default'];
         } else {
             if ($this->moduleParams['commentsPage'] < $this->config->pageMin 
             || $this->moduleParams['commentsPage'] > $this->config->pageMax) {
-                $this->moduleParams['commentsPage'] = $this->config->pageDefault;
+                $this->moduleParams['commentsPage'] = $this->moduleParamsStruct['commentsPage']['default'];
             }
         }
-        //TODO: set all appl level params
     }
     
     /**
@@ -192,13 +195,13 @@ class Controller extends DIObject //implements IController
         if (null !== $this->moduleParamsStruct['interaction']['value']) {
             switch ($this->moduleParamsStruct['interaction']['value']) {
                 case 1:
-                    $this->core->getInteraction()->addComment();
+                    $this->core->getInteractionManage()->addComment();
                     break;
                 case 2:
-                    $this->core->getInteraction()->addRate();
+                    $this->core->getInteractionManage()->addRate();
                     break;
                 case 3:
-                    $this->core->getInteraction()->addCommentRate();
+                    $this->core->getInteractionManage()->addCommentRate();
                     break;
             }
         }

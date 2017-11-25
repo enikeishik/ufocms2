@@ -48,6 +48,7 @@ class Tree
     /**
      * @param array $sections
      * @param bool $last = false
+     * @return string
      * @todo: move $s to template
      */
     public function drawSections(array $sections, $last = false)

@@ -23,7 +23,7 @@ class Tools
     protected $config = null;
     
     /**
-     * @var array
+     * @var Params
      */
     protected $params = null;
     
@@ -40,7 +40,7 @@ class Tools
     /**
      * Конструктор.
      * @param Config &$config
-     * @param array &$params
+     * @param Params &$params
      * @param Db &$db
      * @param Debug &$debug = null
      */
@@ -184,10 +184,10 @@ class Tools
      * После обрезания по заданной длинне, 
      * производится дополнительное обрезание до последнего пробела.
      *
-     * @param string  $str              исходный текст
-     * @param int     $length           длинна отрезаемого текста
-     * @param int     $offset = 0       смещение от начала текста
-     * @param boolean $offset = true    очистить текст от тэгов перед обрезкой
+     * @param string  $str                  исходный текст
+     * @param int     $length               длинна отрезаемого текста
+     * @param int     $offset = 0           смещение от начала текста
+     * @param bool    $removeTags = true    очистить текст от тэгов перед обрезкой
      *
      * @return string
      */

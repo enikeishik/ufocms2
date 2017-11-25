@@ -21,7 +21,7 @@ class Comments
     protected $config = null;
     
     /**
-     * @var array
+     * @var Params
      */
     protected $params = null;
     
@@ -64,7 +64,7 @@ class Comments
     /**
      * Конструктор.
      * @param Config &$config
-     * @param array &$params
+     * @param Params &$params
      * @param Db &$db
      * @param Debug &$debug = null
      */

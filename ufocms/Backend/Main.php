@@ -239,7 +239,7 @@ class Main //implements IController
     }
     
     /**
-     * @return Controller|null
+     * @return \Ufocms\AdminModules\Controller|null
      */
     protected function getController()
     {
@@ -261,7 +261,7 @@ class Main //implements IController
     }
     
     /**
-     * @return Model
+     * @return \Ufocms\AdminModules\Model
      */
     protected function getModel()
     {
@@ -285,8 +285,8 @@ class Main //implements IController
     }
     
     /**
-     * @param Model &$model
-     * @return View
+     * @param \Ufocms\AdminModules\Model &$model
+     * @return \Ufocms\AdminModules\View
      */
     protected function getView(&$model)
     {

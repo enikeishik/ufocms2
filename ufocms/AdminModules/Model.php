@@ -17,7 +17,7 @@ class Model extends Schema
     
     /**
      * Ссылка на объект конфигурации.
-     * @var Config
+     * @var \Ufocms\Backend\Config
      */
     protected $config = null;
     
@@ -225,7 +225,6 @@ class Model extends Schema
     /**
      * @param string $prefix
      * @return string
-     * @todo: make case for db.tbl
      */
     protected function getSqlFieldPrefix($prefix)
     {
@@ -252,7 +251,9 @@ class Model extends Schema
      */
     protected function getItemsSqlBase($alias = '', $addSql = '')
     {
-        return ' FROM `' . C_DB_TABLE_PREFIX . $this->itemsTable . '`' . ('' != $alias ? ' AS ' . $alias : '') . $addSql;
+        return  ' FROM `' . C_DB_TABLE_PREFIX . $this->itemsTable . '`' . 
+                ('' != $alias ? ' AS ' . $alias : '') . 
+                $addSql;
     }
     
     /**
@@ -396,7 +397,7 @@ class Model extends Schema
     }
     
     /**
-     * Init $items and $itemsCount vars
+     * Init $items and $itemsCount vars.
      */
     protected function setItems()
     {
@@ -415,25 +416,6 @@ class Model extends Schema
         if (null === $this->items) {
             $this->items = array();
         }
-        /* if sometime we need gets external fields values
-        else {
-            $externalFields = array();
-            foreach ($this->fields as $field) {
-                if ($field['Show'] 
-                && (array_key_exists('External', $field) && $field['External'])) {
-                    $externalFields[$field['Name']] = $this->getFieldItems($field);
-                }
-            }
-            if (0 < count($externalFields)) {
-                foreach ($this->items as &$item) {
-                    foreach ($externalFields as $name => $value) {
-                        $item[$name] = $value;
-                    }
-                }
-                unset($item);
-            }
-        }
-        */
     }
     
     /**
@@ -533,7 +515,7 @@ class Model extends Schema
     }
     
     /**
-     * Get sections with the same muduleid as current section
+     * Get sections with the same muduleid as current section.
      * @param bool $nc = false
      * @return array
      */
@@ -552,7 +534,7 @@ class Model extends Schema
     }
     
     /**
-     * Check if field is required and field value is set
+     * Check if field is required and field value is set.
      * @param array $field
      * @return bool
      */
@@ -576,7 +558,7 @@ class Model extends Schema
     }
     
     /**
-     * Check if field value is set
+     * Check if field value is set.
      * @param array $field
      * @return bool
      */
@@ -586,7 +568,7 @@ class Model extends Schema
     }
     
     /**
-     * Check if field must be skipped
+     * Check if field must be skipped.
      * @param array $field
      * @param bool $update = false
      * @return bool

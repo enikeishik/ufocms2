@@ -20,7 +20,7 @@ abstract class Controller extends DIObject //implements IController
     
     /**
      * Ссылка на объект конфигурации.
-     * @var Config
+     * @var \Ufocms\Backend\Config
      */
     protected $config = null;
     
@@ -147,6 +147,7 @@ abstract class Controller extends DIObject //implements IController
                     } else {
                         $this->moduleParamsStruct[$paramName]['Value'] = (int) $param;
                     }
+                    break;
                 default:
                     $this->moduleParamsStruct[$paramName]['Value'] = $param;
             }
@@ -251,7 +252,7 @@ abstract class Controller extends DIObject //implements IController
     /**
      * Осуществить вывод отображения представления.
      * @param string $layout = null
-     * @param string $uiClass = null
+     * @param string $ui = null
      * @param string $uiParams = null
      * @param bool $uiParamsAppend = false
      */

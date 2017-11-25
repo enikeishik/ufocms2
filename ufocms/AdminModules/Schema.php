@@ -52,7 +52,7 @@ abstract class Schema extends DIObject
     /**
      * Получение ссылки на поле по полю или его имени.
      * @param string|array $field
-     * @return &array|null
+     * @return &array|&null
      */
     public function &getFieldRef($field)
     {
@@ -66,14 +66,14 @@ abstract class Schema extends DIObject
         //make link on field, it is necessary to change Items value 
         //from method name to array of field items
         $field = null;
-        $finded = false;
+        $found = false;
         foreach ($this->fields as &$field) {
             if ($field['Name'] == $fieldName) {
-                $finded = true;
+                $found = true;
                 break;
             }
         }
-        if (!$finded || !is_array($field)) {
+        if (!$found || !is_array($field)) {
             return $this->nullField;
         }
         return $field;

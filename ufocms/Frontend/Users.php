@@ -57,7 +57,7 @@ class Users
     protected $config = null;
     
     /**
-     * @var array
+     * @var Params
      */
     protected $params = null;
     
@@ -80,7 +80,7 @@ class Users
     
     /**
      * @param Config &$config
-     * @param array &$params
+     * @param Params &$params
      * @param Db &$db
      * @param Debug &$debug = null
      */

@@ -55,9 +55,16 @@ abstract class Widget extends DIObject
     protected $options = null;
     
     /**
+     * Относительный путь (от корня сайта) к папке текущего шаблона.
      * @var string
      */
     protected $templateUrl = null;
+    
+    /**
+     * Абсолютрый путь к папке текущего шаблона.
+     * @var string
+     */
+    protected $templatePath = null;
     
     /**
      * @var array
@@ -80,7 +87,7 @@ abstract class Widget extends DIObject
     protected $showTitle = null;
     
     /**
-     * @var text
+     * @var string
      */
     protected $title = null;
     
@@ -108,6 +115,7 @@ abstract class Widget extends DIObject
         $this->data         =& $this->container->getRef('data');
         $this->options      =& $this->container->getRef('options');
         $this->templateUrl  = $this->container->get('templateUrl');
+        $this->templatePath = $this->config->rootPath . $this->templateUrl;
     }
     
     /**
@@ -139,6 +147,17 @@ abstract class Widget extends DIObject
     }
     
     /**
+     * Возвращает путь к теме по-умолчанию.
+     * @return string
+     */
+    protected function getThemeDefaultPath()
+    {
+        return  $this->config->rootPath . 
+                $this->config->templatesDir . 
+                $this->config->themeDefault;
+    }
+    
+    /**
      * Поиск требуемого шаблона. Возвращает существующий путь или пустую строку.
      * @return string
      */
@@ -151,23 +170,25 @@ abstract class Widget extends DIObject
             $widget =   '/widgets/' . strtolower($this->data['Name']) . '.php';
         }
         
+        // /templates/mytemplate/mymodule|widgets/entry
         if (null !== $this->templateUrl) {
-            $template = $this->config->rootPath . 
-                        $this->templateUrl . 
+            $template = $this->templatePath . 
                         $widget;
             if (file_exists($template)) {
                 return $template;
             }
         }
-        $template = $this->config->rootPath . 
-                    $this->config->templatesDir . $this->config->themeDefault . 
+        
+        // /templates/default/mymodule|widgets/entry
+        $template = $this->getThemeDefaultPath() . 
                     $widget;
         if (file_exists($template)) {
             return $template;
         }
+        
         if (null !== $this->debug) {
-            return  $this->config->rootPath . 
-                    $this->config->templatesDir . $this->config->themeDefault . 
+            // /templates/default/default/entry
+            return  $this->getThemeDefaultPath() . 
                     $this->config->templateDefault . 
                     '/widget.php';
         } else {

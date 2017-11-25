@@ -45,7 +45,6 @@ class Audit
     
     /**
      * @param string $data
-     * @return bool
      */
     public function record($data)
     {
@@ -71,13 +70,21 @@ class Audit
         }
     }
     
+    /**
+     * Write buffer to file.
+     * @return int|false
+     */
     protected function write()
     {
         if($fhnd = fopen($this->config->rootPath . $this->config->logAudit . date('ymd') . '.log', 'a')) {
             return @fwrite($fhnd, $this->buffer);
         }
+        return false;
     }
     
+    /**
+     * Clean buffer.
+     */
     protected function cleanBuffer()
     {
         $this->buffer = '';
