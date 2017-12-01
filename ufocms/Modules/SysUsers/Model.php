@@ -56,7 +56,7 @@ class Model extends \Ufocms\Modules\Model //implements IModel
             return $this->settings;
         }
         
-        //TODO: use site params
+        //TODO: use site params or site config
         $this->settings = array_merge(
             array(
                 'IsReferer'         => true, 
@@ -66,7 +66,6 @@ class Model extends \Ufocms\Modules\Model //implements IModel
             $this->users->getSettings()
         );
         
-        //TODO: use site params
         $site = $this->core->getSite();
         if ($this->settings['IsGlobalAE'] 
         && array_key_exists('SiteEMail', $site)) {

@@ -375,10 +375,10 @@ class Core
     {
         static $insertionsData = null;
         if (null === $insertionsData) {
-            $sql =  'SELECT i.Id,i.TargetId,i.PlaceId,i.OrderId,i.SourceId,i.SourcesIds,' . 
-                    'i.Title,i.ItemsIds,i.ItemsStart,i.ItemsCount,i.ItemsLength,' . 
-                    'i.ItemsStartMark,i.ItemsStopMark,i.ItemsOptions,' . 
-                    's.path,m.madmin' . 
+            $sql =  'SELECT i.Id, i.TargetId, i.PlaceId, i.OrderId, i.SourceId, i.SourcesIds, ' . 
+                    'i.Title, i.ItemsIds, i.ItemsStart, i.ItemsCount, i.ItemsLength, ' . 
+                    'i.ItemsStartMark, i.ItemsStopMark, i.ItemsOptions, ' . 
+                    's.path, m.madmin' . 
                     ' FROM ' . C_DB_TABLE_PREFIX . 'insertions AS i' . 
                     ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'sections AS s ON s.id=i.SourceId' . 
                     ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'modules AS m ON m.muid=s.moduleid' . 
@@ -429,10 +429,10 @@ class Core
      */
     public function getInsertionsDataOld($targetId, $placeId, $offset = 0, $limit = 0)
     {
-        $sql =  'SELECT i.Id,i.TargetId,i.PlaceId,i.OrderId,i.SourceId,i.SourcesIds,' . 
-                'i.Title,i.ItemsIds,i.ItemsStart,i.ItemsCount,i.ItemsLength,' . 
-                'i.ItemsStartMark,i.ItemsStopMark,i.ItemsOptions,' . 
-                's.path,m.madmin' . 
+        $sql =  'SELECT i.Id, i.TargetId, i.PlaceId, i.OrderId, i.SourceId, i.SourcesIds, ' . 
+                'i.Title, i.ItemsIds, i.ItemsStart, i.ItemsCount, i.ItemsLength, ' . 
+                'i.ItemsStartMark, i.ItemsStopMark, i.ItemsOptions, ' . 
+                's.path, m.madmin' . 
                 ' FROM ' . C_DB_TABLE_PREFIX . 'insertions AS i' . 
                 ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'sections AS s ON s.id=i.SourceId' . 
                 ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'modules AS m ON m.muid=s.moduleid' . 

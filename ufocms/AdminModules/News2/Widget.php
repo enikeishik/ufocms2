@@ -16,11 +16,13 @@ class Widget extends \Ufocms\AdminModules\Widget
     protected function setFields()
     {
         $this->fields = array(
-            array('Type' => 'int',  'Name' => 'ItemsStart',     'Value' => 0,   'Title' => 'Пропустить эл-ов',          'Edit' => true),
-            array('Type' => 'int',  'Name' => 'ItemsCount',     'Value' => 5,   'Title' => 'Вывести эл-ов',             'Edit' => true),
-            array('Type' => 'int',  'Name' => 'AnnounceLength', 'Value' => 100, 'Title' => 'Кол-во символов анонса',    'Edit' => true),
-            array('Type' => 'int',  'Name' => 'DaysLimit',      'Value' => 0,   'Title' => 'Выводить за, дней',         'Edit' => true),
-            array('Type' => 'list', 'Name' => 'SortOrder',      'Value' => 0,   'Title' => 'Сортировка',                'Edit' => true,     'Items' => 'getSort'),
+            array('Type' => 'int',  'Name' => 'ItemsStart',         'Value' => 0,   'Title' => 'Пропустить эл-ов',          'Edit' => true),
+            array('Type' => 'int',  'Name' => 'ItemsCount',         'Value' => 5,   'Title' => 'Вывести эл-ов',             'Edit' => true),
+            array('Type' => 'int',  'Name' => 'AnnounceLength',     'Value' => 100, 'Title' => 'Кол-во символов анонса',    'Edit' => true),
+            array('Type' => 'int',  'Name' => 'DaysLimit',          'Value' => 0,   'Title' => 'Выводить за, дней',         'Edit' => true),
+            array('Type' => 'list', 'Name' => 'SortOrder',          'Value' => 0,   'Title' => 'Сортировка',                'Edit' => true,     'Items' => 'getSort'),
+            array('Type' => 'bool', 'Name' => 'ShowLinked',         'Value' => 0,   'Title' => 'Из других разделов',        'Edit' => true,     'Info' => 'Показывать также материалы, для которых выбранные разделы не основные'),
+            array('Type' => 'bool', 'Name' => 'ShowInteractive',    'Value' => 0,   'Title' => 'Показывать статистику',     'Edit' => true,     'Info' => 'Показывать рейтинг, количество комментариев и пр.'),
         );
     }
     

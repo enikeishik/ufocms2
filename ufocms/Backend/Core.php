@@ -102,20 +102,21 @@ class Core extends \Ufocms\Frontend\Core
     
     /**
      * Check referer and session state to prevent XSRF attacks.
-     * todo: replace /admin/ to $this->config->...
      * todo: use session or complex cookie value
      * todo: on fail do audit, alert and some error output
      */
     public function checkXsrf()
     {
+        //BOOKMARK: close slash
+        $adminDir = $this->config->adminDir . '/';
         if (!isset($_SERVER['HTTP_REFERER'])
         || false === strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST'])) {
-            if ('/admin/' == $_SERVER['REQUEST_URI']) {
+            if ($adminDir == $_SERVER['REQUEST_URI']) {
                 if (isset($_COOKIE['xsrf_check'])) {
                     setcookie('xsrf_check', 0, time() - 9999);
                 } else {
-                    setcookie('xsrf_check', 1, 0, '/admin/', '', false, true);
-                    $this->riseError(301, 'Referer required', '/admin/');
+                    setcookie('xsrf_check', 1, 0, $adminDir, '', false, true);
+                    $this->riseError(301, 'Referer required', $adminDir);
                 }
             } else {
                 if ($this->debug) {

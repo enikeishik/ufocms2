@@ -59,6 +59,12 @@ class Config extends Struct
     public $cacheDir = '/cache';
     
     /**
+     * Путь к папке административной части сайта.
+     * @var string
+     */
+    public $adminDir = '/admin';
+    
+    /**
      * Время жизни кэша.
      * @var int
      */

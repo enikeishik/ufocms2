@@ -42,9 +42,16 @@ class Menu extends DIObject
     protected $tools = null;
     
     /**
+     * Относительный путь (от корня сайта) к папке текущего шаблона.
      * @var string
      */
     protected $templateUrl = null;
+    
+    /**
+     * Абсолютрый путь к папке текущего шаблона.
+     * @var string
+     */
+    protected $templatePath = null;
     
     /**
      * Filter sections with inmenu (false) or inlinks (true) flag.
@@ -64,6 +71,7 @@ class Menu extends DIObject
         $this->core =& $this->container->getRef('core');
         $this->tools =& $this->container->getRef('tools');
         $this->templateUrl = $this->container->get('templateUrl');
+        $this->templatePath = $this->config->rootPath . $this->templateUrl;
     }
     
     /**
@@ -91,6 +99,7 @@ class Menu extends DIObject
     }
     
     /**
+     * Выбор ссылок для основного или дополнительного меню.
      * @return string
      */
     protected function getFilter()
@@ -113,27 +122,50 @@ class Menu extends DIObject
         );
     }
     
-    protected function getTemplatePath()
+    /**
+     * Возвращает путь к теме по-умолчанию.
+     * @return string
+     */
+    protected function getThemeDefaultPath()
     {
-        if (null === $this->templateUrl) {
-            return  $this->config->rootPath . 
-                    $this->config->templatesDir . $this->config->themeDefault;
-        } else {
-            return  $this->config->rootPath . 
-                    $this->templateUrl;
-        }
-    }
-    
-    protected function getEntryPoint($entry = null)
-    {
-        if (null === $entry) {
-            return $this->config->templatesMenuEntry;
-        } else {
-            return '/' . $entry . '.php';
-        }
+        return  $this->config->rootPath . 
+                $this->config->templatesDir . 
+                $this->config->themeDefault;
     }
     
     /**
+     * Получение входной точки шаблона.
+     * @param string $entry = null
+     * @return string
+     */
+    protected function getEntryPoint($entry = null)
+    {
+        if (null !== $entry) {
+            return '/' . $entry . '.php';
+        }
+        return $this->config->templatesMenuEntry;
+    }
+    
+    /**
+     * Поиск требуемого шаблона. Возвращаемый путь может не существовать.
+     * @param string $entry = null
+     * @return string
+     */
+    protected function getTemplatePath($entry = null)
+    {
+        if (null !== $this->templateUrl) {
+            $template = $this->templatePath . 
+                        $this->getEntryPoint($entry);
+            if (file_exists($template)) {
+                return  $template;
+            }
+        }
+        return  $this->getThemeDefaultPath() . 
+                $this->getEntryPoint($entry);
+    }
+    
+    /**
+     * Получение разделов верхнего уровня.
      * @return array
      */
     public function getTopSections()
@@ -142,6 +174,31 @@ class Menu extends DIObject
     }
     
     /**
+     * Получение разделов верхнего уровня и их непосредственных подразделов.
+     * @return array
+     */
+    public function getTwoLevelsSections()
+    {
+        $sections = $this->core->getSections('id, path, indic', $this->getFilter() . ' AND parentid=0');
+        $ids = [];
+        foreach ($sections as $section) {
+            $ids[] = $section['id'];
+        }
+        $children = $this->core->getSections('id, parentid, path, indic', $this->getFilter() . ' AND parentid IN(' . implode(',', $ids) . ')');
+        foreach ($sections as &$section) {
+            $section['children'] = [];
+            foreach ($children as $child) {
+                if ($section['id'] == $child['parentid']) {
+                    $section['children'][] = $child;
+                }
+            }
+        }
+        unset($section);
+        return $sections;
+    }
+    
+    /**
+     * Вывод разделов верхнего уровня.
      * @param string $entry = null
      */
     public function topSections($entry = null)
@@ -154,20 +211,39 @@ class Menu extends DIObject
                 )
             )
         );
-        include $this->getTemplatePath() . $this->getEntryPoint($entry);
+        include $this->getTemplatePath($entry);
     }
     
     /**
+     * Вывод разделов верхнего уровня и их непрсредственных подразделов.
+     * @param string $entry = null
+     */
+    public function twoLevelsSections($entry = null)
+    {
+        extract(
+            array_merge(
+                $this->getApplicationContext(), 
+                array(
+                    'items' => $this->getTwoLevelsSections()
+                )
+            )
+        );
+        include $this->getTemplatePath($entry);
+    }
+    
+    /**
+     * Вывод пользовательского меню.
      * @param array $items
      * @param string $entry = null
      */
     public function custom(array $items, $entry = null)
     {
         extract($this->getApplicationContext());
-        include $this->getTemplatePath() . $this->getEntryPoint($entry);
+        include $this->getTemplatePath($entry);
     }
     
     /**
+     * Получение дочерних разделов текущего раздела.
      * @return array
      */
     public function getChildren()
@@ -179,6 +255,7 @@ class Menu extends DIObject
     }
     
     /**
+     * Вывод дочерних разделов текущего раздела.
      * @param string $entry = null
      */
     public function children($entry = null)
@@ -191,10 +268,11 @@ class Menu extends DIObject
                 )
             )
         );
-        include $this->getTemplatePath() . $this->getEntryPoint($entry);
+        include $this->getTemplatePath($entry);
     }
     
     /**
+     * Получение дочерних разделов указанного раздела.
      * @param int $itemId
      * @return array
      */
@@ -207,6 +285,7 @@ class Menu extends DIObject
     }
     
     /**
+     * Вывод дочерних разделов указанного раздела.
      * @param int $itemId
      * @param string $entry = null
      */
@@ -220,10 +299,11 @@ class Menu extends DIObject
                 )
             )
         );
-        include $this->getTemplatePath() . $this->getEntryPoint($entry);
+        include $this->getTemplatePath($entry);
     }
     
     /**
+     * Получение родительского раздела указанного раздела.
      * @return array
      * @param int $itemId
      */
@@ -240,6 +320,7 @@ class Menu extends DIObject
     }
     
     /**
+     * Получение смежных разделов текущего раздела.
      * @return array
      */
     public function getSiblings()
@@ -252,6 +333,7 @@ class Menu extends DIObject
     }
     
     /**
+     * Вывод смежных разделов текущего раздела.
      * @param string $entry = null
      */
     public function siblings($entry = null)
@@ -264,10 +346,11 @@ class Menu extends DIObject
                 )
             )
         );
-        include $this->getTemplatePath() . $this->getEntryPoint($entry);
+        include $this->getTemplatePath($entry);
     }
     
     /**
+     * Получение цепочки родительских разделов.
      * @return array
      */
     public function getBreadcrumbs()
@@ -276,6 +359,7 @@ class Menu extends DIObject
     }
     
     /**
+     * Вывод цепочки родительских разделов.
      * @param string $entry = null
      */
     public function breadcrumbs($entry = null)
@@ -286,6 +370,6 @@ class Menu extends DIObject
                 array('items' => $this->getBreadcrumbs())
             )
         );
-        include $this->getTemplatePath() . $this->getEntryPoint($entry);
+        include $this->getTemplatePath($entry);
     }
 }

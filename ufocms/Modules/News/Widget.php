@@ -47,6 +47,10 @@ class Widget extends \Ufocms\Modules\Widget
         } else {
             $days = '';
         }
+        $author = '';
+        if (!empty($this->params['Author'])) {
+            $author = " AND i.Author='" . $this->db->addEscape($this->params['Author']) . "'";
+        }
         switch ($this->params['SortOrder']) {
             case 0:
                 $order = 'i.DateCreate DESC';
@@ -66,25 +70,27 @@ class Widget extends \Ufocms\Modules\Widget
         //different SQLs because JOIN required TEMP table
         if (false === strpos($this->srcSections, ',')) {
             $section = $this->core->getSection((int) $this->srcSections, 'path,indic');
-            $sql =  'SELECT Id,DateCreate,Title,Author,Icon,Announce,Body,' . 
-                    "'" . $section['path'] . "' AS path,'" . $this->db->addEscape($section['indic']) . "' AS indic" . 
+            $sql =  'SELECT Id, DateCreate, Title, Author, Icon, Announce, Body, ' . 
+                    "'" . $section['path'] . "' AS path, '" . $this->db->addEscape($section['indic']) . "' AS indic" . 
                     ' FROM ' . C_DB_TABLE_PREFIX . 'news AS i' . 
                     ' WHERE SectionId=' . (int) $this->srcSections . 
                         ' AND IsHidden=0' . 
                         " AND DateCreate<='" . $now . "'" . 
                         $days . 
+                        $author . 
                     ' ORDER BY ' . $order . 
                     ' LIMIT ' . $this->params['ItemsStart'] . ', ' . $this->params['ItemsCount'];
             unset($section);
         } else {
-            $sql =  'SELECT i.Id,i.DateCreate,i.Title,i.Author,i.Icon,i.Announce,i.Body,' . 
-                    's.path,s.indic' . 
+            $sql =  'SELECT i.Id, i.DateCreate, i.Title, i.Author, i.Icon, i.Announce, i.Body, ' . 
+                    's.path, s.indic' . 
                     ' FROM ' . C_DB_TABLE_PREFIX . 'news AS i' . 
                     ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'sections AS s ON i.SectionId=s.id' . 
                     ' WHERE i.SectionId IN (' . $this->srcSections . ')' . 
                         ' AND i.IsHidden=0' . 
                         " AND i.DateCreate<='" . $now . "'" . 
                         $days . 
+                        $author . 
                     ' ORDER BY ' . $order . 
                     ' LIMIT ' . $this->params['ItemsStart'] . ', ' . $this->params['ItemsCount'];
         }

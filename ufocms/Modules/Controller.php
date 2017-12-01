@@ -171,7 +171,7 @@ class Controller extends DIObject //implements IController
         $this->setAppParam('action', $this->moduleParams['action']);
         $this->setAppParam('page', $this->moduleParams['page'], $this->config->pageDefault);
         $this->setAppParam('pageSize', $this->moduleParams['pageSize'], $this->config->pageSizeDefault);
-        //TODO: set all appl level params
+        //TODO: set all appl level params (like itemPath, filterName and other when it will be used)
         
         //check common used params
         if (null === $this->moduleParams['commentsPage']) {

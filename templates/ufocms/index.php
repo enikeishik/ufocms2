@@ -39,7 +39,8 @@ $this->renderHttpHeaders();
     </div>
     <div id="usersform"><?php $this->renderUsersForm(); ?></div>
     <div class="menu">
-        <?php $menu->topSections('menu3'); ?>
+        <?php //$menu->topSections('menu3'); ?>
+        <?php $menu->twoLevelsSections('menu34'); ?>
     </div>
     <div id="social">
         <a href="#"><img src="<?=$this->templateUrl?>/images/vk-20.png" alt="VKontakte"></a>

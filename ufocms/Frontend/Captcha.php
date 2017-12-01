@@ -244,6 +244,26 @@ class Captcha
     }
     
     /**
+     * Поиск требуемого шаблона. Возвращаемый путь может не существовать.
+     * @return string
+     */
+    protected function findTemplate()
+    {
+        if (defined('C_THEME') && '' != C_THEME) {
+            $template = $this->config->rootPath . 
+                        $this->config->templatesDir . '/' . C_THEME . 
+                        $this->config->templatesCaptchaEntry;
+            if (file_exists($template)) {
+                return $template;
+            }
+        }
+        $template = $this->config->rootPath . 
+                    $this->config->templatesDir . $this->config->themeDefault . 
+                    $this->config->templatesCaptchaEntry;
+        return $template;
+    }
+    
+    /**
      * Отображение HTML кода полей формы CAPTCHA.
      */
     public function show()
@@ -252,20 +272,7 @@ class Captcha
             @header('HTTP/1.0 500 Internal Server Error');
             exit();
         }
-        $template = '';
-        if (defined('C_THEME') && '' != C_THEME) {
-            $template = $this->config->rootPath . 
-                        $this->config->templatesDir . '/' . C_THEME . 
-                        $this->config->templatesCaptchaEntry;
-        }
-        if (file_exists($template)) {
-            require $template;
-        } else {
-            $template = $this->config->rootPath . 
-                        $this->config->templatesDir . $this->config->themeDefault . 
-                        $this->config->templatesCaptchaEntry;
-            require $template;
-        }
+        require $this->findTemplate();
     }
     
     /**

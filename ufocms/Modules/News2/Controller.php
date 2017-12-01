@@ -18,6 +18,7 @@ class Controller extends \Ufocms\Modules\Controller //implements IController
                 'tagId'     => ['type' => 'int',    'from' => 'path',   'prefix' => 'tag',      'additional' => false,  'value' => null, 'default' => 0], 
                 'isYandex'  => ['type' => 'bool',   'from' => 'path',   'prefix' => 'yandex',   'additional' => false,  'value' => null, 'default' => false], 
                 'isYaDzen'  => ['type' => 'bool',   'from' => 'path',   'prefix' => 'yadzen',   'additional' => false,  'value' => null, 'default' => false], 
+                'isYaTurbo' => ['type' => 'bool',   'from' => 'path',   'prefix' => 'yaturbo',  'additional' => false,  'value' => null, 'default' => false], 
                 'isRambler' => ['type' => 'bool',   'from' => 'path',   'prefix' => 'rambler',  'additional' => false,  'value' => null, 'default' => false], 
                 'pageSize'  => ['type' => 'int',    'from' => 'path',   'prefix' => 'psize',    'additional' => true,   'value' => null, 'default' => $this->config->pageSizeDefault], 
             )

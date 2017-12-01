@@ -10,17 +10,20 @@ namespace Ufocms\AdminModules\News;
  */
 class Widget extends \Ufocms\AdminModules\Widget
 {
+    use Authors;
+    
     /**
      * @see parent
      */
     protected function setFields()
     {
         $this->fields = array(
-            array('Type' => 'int',  'Name' => 'ItemsStart',     'Value' => 0,   'Title' => 'Пропустить эл-ов',          'Edit' => true),
-            array('Type' => 'int',  'Name' => 'ItemsCount',     'Value' => 5,   'Title' => 'Вывести эл-ов',             'Edit' => true),
-            array('Type' => 'int',  'Name' => 'AnnounceLength', 'Value' => 100, 'Title' => 'Кол-во символов анонса',    'Edit' => true),
-            array('Type' => 'int',  'Name' => 'DaysLimit',      'Value' => 0,   'Title' => 'Выводить за, дней',         'Edit' => true),
-            array('Type' => 'list', 'Name' => 'SortOrder',      'Value' => 0,   'Title' => 'Сортировка',                'Edit' => true,     'Items' => 'getSort'),
+            array('Type' => 'int',      'Name' => 'ItemsStart',     'Value' => 0,   'Title' => 'Пропустить эл-ов',          'Edit' => true),
+            array('Type' => 'int',      'Name' => 'ItemsCount',     'Value' => 5,   'Title' => 'Вывести эл-ов',             'Edit' => true),
+            array('Type' => 'int',      'Name' => 'AnnounceLength', 'Value' => 100, 'Title' => 'Кол-во символов анонса',    'Edit' => true),
+            array('Type' => 'int',      'Name' => 'DaysLimit',      'Value' => 0,   'Title' => 'Выводить за, дней',         'Edit' => true),
+            array('Type' => 'list',     'Name' => 'SortOrder',      'Value' => 0,   'Title' => 'Сортировка',                'Edit' => true,     'Items' => 'getSort'),
+            array('Type' => 'slist',    'Name' => 'Author',         'Value' => '',  'Title' => 'Автор',                     'Edit' => true,     'Items' => $this->getAuthors(true)),
         );
     }
     

@@ -66,9 +66,9 @@ class Widget extends \Ufocms\Modules\Widget
         //different SQLs because JOIN required TEMP table
         if (false === strpos($this->srcSections, ',')) {
             $section = $this->core->getSection((int) $this->srcSections, 'path,indic');
-            $sql =  'SELECT Id,DateStart,DateStop,IsClosed,AnswersSeparate,CheckCaptcha,ResultsDisplay,' . 
-                    'VotesCnt,Title,Image,Description,' . 
-                    "'" . $section['path'] . "' AS path,'" . $this->db->addEscape($section['indic']) . "' AS indic" . 
+            $sql =  'SELECT Id, DateStart, DateStop, IsClosed, AnswersSeparate, CheckCaptcha, ResultsDisplay, ' . 
+                    'VotesCnt, Title, Image, Description, ' . 
+                    "'" . $section['path'] . "' AS path, '" . $this->db->addEscape($section['indic']) . "' AS indic" . 
                     ' FROM ' . C_DB_TABLE_PREFIX . 'votings AS i' . 
                     ' WHERE i.Id=' . $this->params['VotingId'] . 
                         ' i.SectionId=' . (int) $this->srcSections . 
@@ -76,9 +76,9 @@ class Widget extends \Ufocms\Modules\Widget
                         " AND i.DateStart<='" . $now . "'";
             unset($section);
         } else {
-            $sql =  'SELECT i.Id,i.DateStart,i.DateStop,i.IsClosed,i.AnswersSeparate,i.CheckCaptcha,' . 
-                    'i.ResultsDisplay,i.VotesCnt,i.Title,i.Image,i.Description,' . 
-                    's.path,s.indic' . 
+            $sql =  'SELECT i.Id, i.DateStart, i.DateStop, i.IsClosed, i.AnswersSeparate, i.CheckCaptcha, ' . 
+                    'i.ResultsDisplay, i.VotesCnt, i.Title, i.Image, i.Description, ' . 
+                    's.path, s.indic' . 
                     ' FROM ' . C_DB_TABLE_PREFIX . 'votings AS i' . 
                     ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'sections AS s ON i.SectionId=s.id' . 
                     ' WHERE i.Id=' . $this->params['VotingId'] . 

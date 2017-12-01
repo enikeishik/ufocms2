@@ -55,9 +55,13 @@ h6 { font-size: 14px; font-weight: normal; }
 .clear { clear: both; }
 
 .debug { border: solid 1px #933; background-color: #fee; }
-.debug div { padding: 5px; }
-.debug pre { height: 100px; overflow: auto; padding: 5px; margin: 0px; border-top: dashed #999 1px; }
-.debug span { float: right; cursor: pointer; margin-left: 10px; border: dashed #999 1px; padding: 0px 5px; }
+.debug>div { padding: 5px; }
+.debug>div>span { float: right; cursor: pointer; margin-left: 10px; border: dashed #999 1px; padding: 0px 5px; }
+.debug pre { height: 140px; overflow-y: auto; white-space: pre-wrap; padding: 5px; margin: 0px; border-top: solid #c99 1px; }
+.debug pre div { padding: 2px 0px; margin: 0px; border-top: dashed #c99 1px; }
+.debug pre div.selected { background-color: #ecc; }
+.debug pre div span.time { color: #009; }
+.debugfloat { position: absolute; top: 0px; left: 0px; z-index: 999999; border: solid 1px #933; background-color: #fee; padding: 5px; }
 
 .menu { margin-bottom: 10px; }
 .menu a { color: #2266dd; }

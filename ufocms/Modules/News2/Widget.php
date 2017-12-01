@@ -63,30 +63,77 @@ class Widget extends \Ufocms\Modules\Widget
             default:
                 $order = 'i.DateCreate DESC';
         }
-        //different SQLs because JOIN required TEMP table
-        if (false === strpos($this->srcSections, ',')) {
-            $section = $this->core->getSection((int) $this->srcSections, 'path,indic');
-            $sql =  'SELECT Id,DateCreate,DateView,Title,Author,Icon,InsIcon,Announce,Body,ViewedCnt,' . 
-                    "'" . $section['path'] . "' AS path,'" . $this->db->addEscape($section['indic']) . "' AS indic" . 
-                    ' FROM ' . C_DB_TABLE_PREFIX . 'news2 AS i' . 
-                    ' WHERE SectionId=' . (int) $this->srcSections . 
-                        ' AND IsHidden=0' . 
-                        " AND DateCreate<='" . $now . "'" . 
-                        $days . 
-                    ' ORDER BY ' . $order . 
-                    ' LIMIT ' . $this->params['ItemsStart'] . ', ' . $this->params['ItemsCount'];
-            unset($section);
-        } else {
-            $sql =  'SELECT i.Id,i.DateCreate,i.DateView,i.Title,i.Author,i.Icon,i.InsIcon,i.Announce,i.Body,i.ViewedCnt,' . 
-                    's.path,s.indic' . 
+        if (!$this->params['ShowInteractive'] && !$this->params['ShowLinked'] ) {
+            //different SQLs because JOIN required TEMP table
+            if (false === strpos($this->srcSections, ',')) {
+                $section = $this->core->getSection((int) $this->srcSections, 'path,indic');
+                $sql =  'SELECT Id, DateCreate, DateView, Title, Author, Icon, InsIcon, Announce, Body, ViewedCnt, ' . 
+                        "'" . $section['path'] . "' AS path, '" . $this->db->addEscape($section['indic']) . "' AS indic" . 
+                        ' FROM ' . C_DB_TABLE_PREFIX . 'news2 AS i' . 
+                        ' WHERE SectionId=' . (int) $this->srcSections . 
+                            ' AND IsHidden=0' . 
+                            " AND DateCreate<='" . $now . "'" . 
+                            $days . 
+                        ' ORDER BY ' . $order . 
+                        ' LIMIT ' . $this->params['ItemsStart'] . ', ' . $this->params['ItemsCount'];
+                unset($section);
+            } else {
+                $sql =  'SELECT i.Id, i.DateCreate, i.DateView, i.Title,i.Author, i.Icon, i.InsIcon, i.Announce, i.Body, i.ViewedCnt, ' . 
+                        's.path, s.indic' . 
+                        ' FROM ' . C_DB_TABLE_PREFIX . 'news2 AS i' . 
+                        ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'sections AS s ON i.SectionId=s.id' . 
+                        ' WHERE i.SectionId IN (' . $this->srcSections . ')' . 
+                            ' AND i.IsHidden=0' . 
+                            " AND i.DateCreate<='" . $now . "'" . 
+                            $days . 
+                        ' ORDER BY ' . $order . 
+                        ' LIMIT ' . $this->params['ItemsStart'] . ', ' . $this->params['ItemsCount'];
+            }
+            
+        } else if (!$this->params['ShowInteractive']) {
+            $sql =  'SELECT i.Id, i.DateCreate, i.DateView, i.Title, i.Author, i.Icon, i.InsIcon, i.Announce, i.Body, i.ViewedCnt, ' . 
+                    's.path, s.indic' . 
                     ' FROM ' . C_DB_TABLE_PREFIX . 'news2 AS i' . 
                     ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'sections AS s ON i.SectionId=s.id' . 
-                    ' WHERE i.SectionId IN (' . $this->srcSections . ')' . 
+                    ' LEFT JOIN ' . C_DB_TABLE_PREFIX . 'news2_ns AS t3 ON i.Id=t3.ItemId' . 
+                    ' WHERE (i.SectionId IN (' . $this->srcSections . ') OR t3.AnotherSectionId IN (' . $this->srcSections . '))' . 
                         ' AND i.IsHidden=0' . 
                         " AND i.DateCreate<='" . $now . "'" . 
                         $days . 
                     ' ORDER BY ' . $order . 
                     ' LIMIT ' . $this->params['ItemsStart'] . ', ' . $this->params['ItemsCount'];
+            
+        } else if (!$this->params['ShowLinked']) {
+            $sql =  'SELECT i.Id, i.DateCreate, i.DateView, i.Title, i.Author, i.Icon, i.InsIcon, i.Announce, i.Body, i.ViewedCnt, ' . 
+                    's.path, s.indic, ' . 
+                    't4.DateComment, t4.CommentsCnt, t4.CommentsStatusAvg, t4.DateRate, t4.RatesCnt, t4.Rating' . 
+                    ' FROM ' . C_DB_TABLE_PREFIX . 'news2 AS i' . 
+                    ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'sections AS s ON i.SectionId=s.id' . 
+                    ' LEFT JOIN ' . C_DB_TABLE_PREFIX . 'interaction_stat_items AS t4 ON (i.SectionId=t4.SectionId AND i.Id=t4.ItemId)' . 
+                    ' WHERE i.SectionId IN (' . $this->srcSections . ') ' . 
+                        ' AND i.IsHidden=0' . 
+                        " AND i.DateCreate<='" . $now . "'" . 
+                        $days . 
+                        ' AND (t4.PeriodId=0 OR t4.PeriodId IS NULL)' . 
+                    ' ORDER BY ' . $order . 
+                    ' LIMIT ' . $this->params['ItemsStart'] . ', ' . $this->params['ItemsCount'];
+            
+        } else {
+            $sql =  'SELECT i.Id, i.DateCreate, i.DateView, i.Title, i.Author, i.Icon, i.InsIcon, i.Announce, i.Body, i.ViewedCnt, ' . 
+                    's.path, s.indic, ' . 
+                    't4.DateComment, t4.CommentsCnt, t4.CommentsStatusAvg, t4.DateRate, t4.RatesCnt, t4.Rating' . 
+                    ' FROM ' . C_DB_TABLE_PREFIX . 'news2 AS i' . 
+                    ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'sections AS s ON i.SectionId=s.id' . 
+                    ' LEFT JOIN ' . C_DB_TABLE_PREFIX . 'news2_ns AS t3 ON i.Id=t3.ItemId' . 
+                    ' LEFT JOIN ' . C_DB_TABLE_PREFIX . 'interaction_stat_items AS t4 ON (i.SectionId=t4.SectionId AND i.Id=t4.ItemId)' . 
+                    ' WHERE (i.SectionId IN (' . $this->srcSections . ') OR t3.AnotherSectionId IN (' . $this->srcSections . '))' . 
+                        ' AND i.IsHidden=0' . 
+                        " AND i.DateCreate<='" . $now . "'" . 
+                        $days . 
+                        ' AND (t4.PeriodId=0 OR t4.PeriodId IS NULL)' . 
+                    ' ORDER BY ' . $order . 
+                    ' LIMIT ' . $this->params['ItemsStart'] . ', ' . $this->params['ItemsCount'];
+            
         }
         return $this->db->getItems($sql);
     }

@@ -10,6 +10,8 @@ namespace Ufocms\AdminModules\News;
  */
 class Model extends \Ufocms\AdminModules\Model
 {
+    use Authors;
+    
     /**
      * @see parent
      */
@@ -47,21 +49,5 @@ class Model extends \Ufocms\AdminModules\Model
             array('Type' => 'bool',         'Name' => 'IsRss',          'Value' => true,                        'Title' => 'RSS',           'Filter' => false,  'Show' => false,    'Sort' => false,    'Edit' => true),
             /* deprecated array('Type' => 'bool',         'Name' => 'IsTimered',      'Value' => false,                       'Title' => 'Отсрочка',      'Filter' => false,  'Show' => false,    'Sort' => false,    'Edit' => true), */
         );
-    }
-    
-    protected function getAuthors()
-    {
-        static $authors = null;
-        if (null === $authors) {
-            $sql =  'SELECT DISTINCT Author' . 
-                    ' FROM ' . C_DB_TABLE_PREFIX . 'news' . 
-                    ' ORDER BY Author';
-            $authors = $this->db->getItems($sql);
-            foreach ($authors as &$item) {
-                $item = array('Value' => $item['Author'], 'Title' => $item['Author']);
-            }
-            unset($item);
-        }
-        return $authors;
     }
 }
