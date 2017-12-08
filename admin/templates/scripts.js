@@ -24,6 +24,30 @@ window.onload = function() {
     if (-1 != document.cookie.indexOf('ufo_clop_state=1')) {
         document.getElementById('clop').click();
     }
+    document.getElementById('sectionshclop').onclick = function(e) {
+        if (document.getElementById('sections').style.display == 'none') {
+            document.getElementById('sections').style.display = '';
+            document.cookie = 'ufo_shclop_state=0';
+        } else {
+            document.getElementById('sections').style.display = 'none';
+            document.cookie = 'ufo_shclop_state=1';
+        }
+    };
+    if (-1 != document.cookie.indexOf('ufo_shclop_state=1')) {
+        document.getElementById('sectionshclop').click();
+    }
+    document.getElementById('coresectionshclop').onclick = function(e) {
+        if (document.getElementById('coresections').style.display == 'none') {
+            document.getElementById('coresections').style.display = '';
+            document.cookie = 'ufo_cshclop_state=0';
+        } else {
+            document.getElementById('coresections').style.display = 'none';
+            document.cookie = 'ufo_cshclop_state=1';
+        }
+    };
+    if (-1 != document.cookie.indexOf('ufo_cshclop_state=1')) {
+        document.getElementById('coresectionshclop').click();
+    }
 };
 
 /**

@@ -22,8 +22,12 @@ span.info { margin-left: 5px; line-height: 10px; font-size: 10px; font-weight: n
 #framemain { position: fixed; top: 0; left: 230px; right: 0; bottom: 0; overflow: auto; }
 #framemain .framewrap { margin: 5px 10px 5px 10px; }
 
+.hclop { height: 5px; cursor: pointer; padding-top: 5px; }
+.hclop:hover { background-color: #eee; }
+.hclop>div { border-top: dashed #999 1px; height: 4px; }
+
 /* Дерево разделов */
-.sections { padding: 0; clear: both; width: 100%; margin: 5px 0px; border-top: dashed #999 1px; border-bottom: dashed #999 1px; }
+.sections { padding: 0; clear: both; width: 100%; margin: 0px; }
 .sections * { font-size: 12px; }
 .sections ul { overflow: hidden; width: 100%; margin: 0; padding: 0 0 1.5em 0; list-style-type: none; }
 .sections ul ul { overflow: visible; width: auto; margin: 0 0 0 0; padding: 0 0 0 0.75em; }

@@ -192,6 +192,7 @@ abstract class Insertion extends DIObject
             if (file_exists($template)) {
                 return $template;
             }
+            return '';
         } else {
             return '';
         }

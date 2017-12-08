@@ -16,7 +16,11 @@ class Config extends \Ufocms\Frontend\Config
      */
     public $logAudit = '/logs/aa';
     
-    public $paramsNames = array(
+    /**
+     * Имена обрабатываемых GET параметров.
+     * @var array
+     */
+    public $paramsNames = [
         'coreModule'        => 'coremodule', 
         'sectionId'         => 'sectionid', 
         'itemId'            => 'itemid', 
@@ -28,20 +32,49 @@ class Config extends \Ufocms\Frontend\Config
         'sortDirection'     => 'sortdirection', 
         'page'              => 'page', 
         'pageSize'          => 'pagesize', 
-    );
+    ];
     
+    /**
+     * Minimal page value.
+     * @var int
+     */
     public $pageMin = 1;
+    
+    /**
+     * Maximal page value.
+     * @var int
+     */
     public $pageMax = 1000;
+    
+    /**
+     * Default page value.
+     * @var int
+     */
     public $pageDefault = 1;
+    
+    /**
+     * Minimal page size.
+     * @var int
+     */
     public $pageSizeMin = 1;
+    
+    /**
+     * Maximal page size.
+     * @var int
+     */
     public $pageSizeMax = 1000;
+    
+    /**
+     * Default page size.
+     * @var int
+     */
     public $pageSizeDefault = 10;
     
     /**
-     * Available core modules
+     * Available core modules.
      * @var array
      */
-    public $coreModules = array(
+    public $coreModules = [
         'insertions'    => ['Menu' => false, 'Title' => 'Вставки',                   'Description' => 'Информационные блоки, размещаемые на страницах сайта с информацией из разделов сайта'], 
         'widgets'       => ['Menu' => true,  'Title' => 'Виджеты',                   'Description' => 'Информационные и функциональные блоки, размещаемые на страницах сайта'], 
         'quotes'        => ['Menu' => true,  'Title' => 'Цитаты',                    'Description' => 'Блок с возможностью случайного отображение текста/графики/произвольного кода из списка'], 
@@ -53,13 +86,14 @@ class Config extends \Ufocms\Frontend\Config
         'sections'      => ['Menu' => true,  'Title' => 'Структура сайта',           'Description' => 'Управление структурой сайта, созданиеи и редактирование разделов сайта'], 
         'site'          => ['Menu' => true,  'Title' => 'Параметры сайта',           'Description' => 'Общие параметры сайта (название, заголовок, мета тэги и пр.)'], 
         'xmlsitemap'    => ['Menu' => true,  'Title' => 'Обновить XmlSitemap',       'Description' => 'Обновление XML карты сайта'], 
-    );
+        'tools'         => ['Menu' => true,  'Title' => 'Инструменты',                  'Description' => 'Инструменты для обслуживания сайта'], 
+    ];
     
     /**
-     * Available actions
+     * Available actions.
      * @var array
      */
-    public $actions = array(
+    public $actions = [
         'filter', 
         'sort', 
         'add', 
@@ -69,19 +103,19 @@ class Config extends \Ufocms\Frontend\Config
         'disable', 
         'enable', 
         'delete', 
-    );
+    ];
     
     /**
      * Actions to display form view (else - items view)
      * @var array
      */
-    public $actionsForm = array('add', 'edit');
+    public $actionsForm = ['add', 'edit'];
     
     /**
      * Actions to make somthing and then get output
      * @var array
      */
-    public $actionsMake = array('delete', 'update', 'disable', 'enable');
+    public $actionsMake = ['delete', 'update', 'disable', 'enable'];
     
     /**
      * @param string $action

@@ -62,6 +62,11 @@ class View extends DIObject
     /**
      * @var string
      */
+    protected $basePath = '';
+    
+    /**
+     * @var string
+     */
     protected $layout = '';
     
     /**
@@ -157,6 +162,7 @@ class View extends DIObject
      */
     protected function getUI($ui = null, $uiParams = null, $uiParamsAppend = false)
     {
+        $this->basePath = $this->getUIParams($uiParams, $uiParamsAppend);
         $uiClass = $this->getUIClass($ui);
         $container = $this->core->getContainer([
             'debug'         => &$this->debug, 
@@ -168,7 +174,7 @@ class View extends DIObject
             'moduleParams'  => &$this->moduleParams, 
             'model'         => &$this->model, 
             'layout'        => $this->layout, 
-            'basePath'      => $this->getUIParams($uiParams, $uiParamsAppend), 
+            'basePath'      => $this->basePath, 
         ]);
         return new $uiClass($container);
     }

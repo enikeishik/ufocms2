@@ -493,7 +493,7 @@ class Core
     }
     
     /**
-     * @return Interaction
+     * @return InteractionManage
      */
     public function getInteractionManage()
     {

@@ -1571,6 +1571,9 @@ class UI extends DIObject
         //TODO: moveto config
         $arr = array('Title', 'title', 'Caption', 'caption', 'Indic', 'indic', 'Name', 'name');
         
+        if (null === $this->model) {
+            return '';
+        }
         $master = $this->model->getMaster();
         if (null === $master) {
             return '';

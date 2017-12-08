@@ -12,7 +12,7 @@
  * @var int|null $itemsCount
  * @var string $headTitle
  * @var string $metaDesc
- * @var string $metaDesc
+ * @var string $metaKeys
  */
 
 $this->renderHttpHeaders();

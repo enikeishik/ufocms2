@@ -12,7 +12,7 @@ $this->ui->headers();
 <meta charset="utf-8" />
 <title><?=$this->ui->headTitle()?></title>
 <link rel="stylesheet" type="text/css" href="templates/styles.css" />
-<script type="text/javascript" src="scripts.js"></script>
+<script type="text/javascript" src="templates/scripts.js"></script>
 <?=$this->ui->headCode()?>
 </head>
 <body>
@@ -23,6 +23,6 @@ $this->ui->headers();
 <div id="framemain"><div class="framewrap">
 <?=$this->ui->frameMainHeader()?>
 <?=$this->ui->masterHeader()?>
-<?php if (!is_null($result = $this->model->getResult())) { ?>
+<?php if (isset($this->model) && !is_null($result = $this->model->getResult())) { ?>
 <div class="result"><?=$result?><span class="close" title="Скрыть" onclick="this.parentNode.style.display='none'">X</span></div>
 <?php } ?>

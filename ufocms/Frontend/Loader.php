@@ -174,10 +174,9 @@ class Loader
     /**
      * Кэширование загруженных данных.
      * @param string $data
-     * @param callable $check = null
      * @return bool
      */
-    protected function cache($data, callable $check = null)
+    protected function cache($data)
     {
         //если данных нет, не обновляем файл кэша
         if ('' == $data) {

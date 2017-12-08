@@ -64,7 +64,7 @@ class InteractionManage extends Interaction
     /**
      * Конструктор.
      * @param Config &$config
-     * @param array &$params
+     * @param Params &$params
      * @param Db &$db
      * @param Debug &$debug = null
      */
