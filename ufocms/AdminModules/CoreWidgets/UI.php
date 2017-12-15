@@ -134,7 +134,7 @@ function selectorTrgSectionsSwitch(on) {
 </div>
 EOD;
             if (in_array(0, $value)) {
-                $s .= '<script type="text/javascript">window.onload = function() { var el = document.getElementsByName("TrgSectionsAll"); el[0].click(); }</script>';
+                $s .= '<script type="text/javascript">document.addEventListener("DOMContentLoaded",  function() { var el = document.getElementsByName("TrgSectionsAll"); el[0].click(); });</script>';
             }
             return $s . parent::formFieldElement($field, $value);
         }

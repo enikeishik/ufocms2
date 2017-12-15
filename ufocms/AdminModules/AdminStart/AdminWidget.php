@@ -13,8 +13,9 @@ class AdminWidget extends \Ufocms\AdminModules\AdminWidget
     public function render()
     {
         $items = array(
-            ['title' => 'Version', 'body' => '2.0 beta'], 
-            ['title' => 'License', 'body' => 'GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007 <a href="/license.txt" target="_blank">license.txt</a>', 'raw' => true], 
+            ['title' => 'Name', 'body' => 'UFOCMS v2'], 
+            ['title' => 'Version', 'body' => '1.0'], 
+            ['title' => 'License', 'body' => 'GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007 <a href="/LICENSE.txt" target="_blank">LICENSE.txt</a>', 'raw' => true], 
             ['title' => 'Requirements', 'body' => 'PHP >= 7.0; MySQL >= 5.5 / MariaDB >= 10'], 
         );
         echo    '<div class="widget">' . 

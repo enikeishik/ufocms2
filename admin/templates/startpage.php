@@ -1,14 +1,5 @@
 <?php require_once 'layout-begin.php'; ?>
 
-<?php if(!isset($_COOKIE['disablewarning'])) { ?>
-<div style="border: solid #f90 2px; padding: 5px; margin-bottom: 10px;">
-<span class="close" title="Скрыть" onclick="this.parentNode.style.display='none';document.cookie='disablewarning=1;expires=<?=date(DATE_COOKIE, time() + (3600 * 24 * 7))?>'">X</span>
-<p><b style="color: #f90;">Бета-версия!</b> Система находится в стадии бета-версии.</p>
-<p>Это означает что реализованы основные функции системы, но различные удобства и вспомогательные функции могут быть недоступны.</p>
-<p>Система может работать нестабильно, рекомендуется использовать систему только в целях тестирования.</p>
-</div>
-<?php } ?>
-
 <?php if (C_DB_READONLY) { ?>
 <div style="border: solid #090 2px; padding: 5px; margin-bottom: 10px;">Database in readonly mode</div>
 <?php } ?>

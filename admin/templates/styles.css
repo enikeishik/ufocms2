@@ -96,15 +96,15 @@ div.items div.itemfoot { border-top: dashed #999 1px; }
 div.items div.itemfoot div.itemfield { display: inline-block; padding: 5px; margin-right: 20px; font-size: 11px; }
 div.items div.itemfoot div.itemfield span.fieldname { font-weight: bold; padding-right: 5px; }
 
-div.widget { display: inline-block; width: 365px; height: 200px; overflow: hidden; border: solid #999 1px; padding: 5px; margin-right: 10px; margin-bottom: 10px; }
+div.widget { display: inline-block; width: 365px; height: 210px; overflow: hidden; border: solid #999 1px; padding: 5px; margin-right: 10px; margin-bottom: 10px; }
 div.widget div.caption { display: block; width: 200px; overflow: hidden; background-color: #ccc; margin-top: -5px; margin-left: -5px; padding: 2px; }
-div.widget div.items { width: 365px; height: 190px; overflow: auto; }
+div.widget div.items { width: 365px; height: 200px; overflow: auto; }
 div.widget div.item { width: 335px; margin-top: 4px; margin-bottom: 0px; border-style: none; background-color: #eee; padding: 5px; font-size: 11px; }
 div.widget div.item div.itemhead { padding-bottom: 2px; }
 div.widget div.item div.itemhead div.fieldvalue { font-size: 11px; }
 div.widget div.item div.itembody { border-top: solid #fff 1px; padding: 2px 0px 0px 0px; }
 div.widget div.item div.itembody div.fieldvalue { }
-div.widget div.item div.itembody div.fieldvalue pre { height: 130px; overflow: auto; }
+div.widget div.item div.itembody div.fieldvalue pre { height: 140px; overflow: auto; }
 div.widget div.item div.itembody div.fieldvalue div.subfields { border-top: dashed #999 1px; }
 div.widget div.item div.itembody div.fieldvalue div.subfields:first-child { border-top: none; }
 div.widget div.item div.itembody div.fieldvalue div.subfields span { display: inline-block; float: right; margin-left: 20px; }

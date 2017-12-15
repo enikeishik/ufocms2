@@ -5,50 +5,53 @@ function showHide(id)
     }
 }
 
-window.onload = function() {
-    document.getElementById('clop').onclick = function(e) {
-        if ('<a>&lt;</a>' == this.innerHTML) {
-            this.innerHTML = '<a>&gt;</a>';
-            document.getElementById('frameleft').style.width = '0px';
-            this.style.left = '1px';
-            document.getElementById('framemain').style.left = '15px';
-            document.cookie = 'ufo_clop_state=1';
-        } else {
-            this.innerHTML = '<a>&lt;</a>';
-            document.getElementById('framemain').style.left = '230px';
-            this.style.left = '215px';
-            document.getElementById('frameleft').style.width = '215px';
-            document.cookie = 'ufo_clop_state=0';
+document.addEventListener(
+    'DOMContentLoaded', 
+    function() {
+        document.getElementById('clop').onclick = function(e) {
+            if ('<a>&lt;</a>' == this.innerHTML) {
+                this.innerHTML = '<a>&gt;</a>';
+                document.getElementById('frameleft').style.width = '0px';
+                this.style.left = '1px';
+                document.getElementById('framemain').style.left = '15px';
+                document.cookie = 'ufo_clop_state=1';
+            } else {
+                this.innerHTML = '<a>&lt;</a>';
+                document.getElementById('framemain').style.left = '230px';
+                this.style.left = '215px';
+                document.getElementById('frameleft').style.width = '215px';
+                document.cookie = 'ufo_clop_state=0';
+            }
+        };
+        if (-1 != document.cookie.indexOf('ufo_clop_state=1')) {
+            document.getElementById('clop').click();
         }
-    };
-    if (-1 != document.cookie.indexOf('ufo_clop_state=1')) {
-        document.getElementById('clop').click();
-    }
-    document.getElementById('sectionshclop').onclick = function(e) {
-        if (document.getElementById('sections').style.display == 'none') {
-            document.getElementById('sections').style.display = '';
-            document.cookie = 'ufo_shclop_state=0';
-        } else {
-            document.getElementById('sections').style.display = 'none';
-            document.cookie = 'ufo_shclop_state=1';
+        document.getElementById('sectionshclop').onclick = function(e) {
+            if (document.getElementById('sections').style.display == 'none') {
+                document.getElementById('sections').style.display = '';
+                document.cookie = 'ufo_shclop_state=0';
+            } else {
+                document.getElementById('sections').style.display = 'none';
+                document.cookie = 'ufo_shclop_state=1';
+            }
+        };
+        if (-1 != document.cookie.indexOf('ufo_shclop_state=1')) {
+            document.getElementById('sectionshclop').click();
         }
-    };
-    if (-1 != document.cookie.indexOf('ufo_shclop_state=1')) {
-        document.getElementById('sectionshclop').click();
-    }
-    document.getElementById('coresectionshclop').onclick = function(e) {
-        if (document.getElementById('coresections').style.display == 'none') {
-            document.getElementById('coresections').style.display = '';
-            document.cookie = 'ufo_cshclop_state=0';
-        } else {
-            document.getElementById('coresections').style.display = 'none';
-            document.cookie = 'ufo_cshclop_state=1';
+        document.getElementById('coresectionshclop').onclick = function(e) {
+            if (document.getElementById('coresections').style.display == 'none') {
+                document.getElementById('coresections').style.display = '';
+                document.cookie = 'ufo_cshclop_state=0';
+            } else {
+                document.getElementById('coresections').style.display = 'none';
+                document.cookie = 'ufo_cshclop_state=1';
+            }
+        };
+        if (-1 != document.cookie.indexOf('ufo_cshclop_state=1')) {
+            document.getElementById('coresectionshclop').click();
         }
-    };
-    if (-1 != document.cookie.indexOf('ufo_cshclop_state=1')) {
-        document.getElementById('coresectionshclop').click();
     }
-};
+);
 
 /**
  *  Open/close sections tree nodes
