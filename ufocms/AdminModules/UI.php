@@ -924,17 +924,17 @@ class UI extends DIObject
             case 'list':
             case 'mlist':
             case 'rlist':
+            case 'slist':
+            case 'mslist':
             case 'mediumtext':
             case 'bigtext':
                 $value = '';
                 break;
-            //case 'slist':
-            //case 'mslist':
             default:
                 $value = ' value="' . htmlspecialchars($value) . '"';
         }
         
-        $attributes = ' name="' . $field['Name'] . ('mlist' == $field['Type'] ? '[]' : '') . '" id="' . strtolower($field['Name']) . '"' . $value;
+        $attributes = ' name="' . $field['Name'] . (('mlist' == $field['Type'] || 'mslist' == $field['Type']) ? '[]' : '') . '" id="' . strtolower($field['Name']) . '"' . $value;
         if (isset($field['Required']) && $field['Required']) {
             $attributes .= ' required';
         }
