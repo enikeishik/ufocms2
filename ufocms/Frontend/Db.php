@@ -42,7 +42,10 @@ class Db extends \mysqli
         }
     }
     
-    public function query($query)
+    /**
+     * @see parent
+     */
+    public function query($query, $resultmode = null)
     {
         if (C_DB_READONLY 
         && 0 !== stripos($query, 'SELECT ') 

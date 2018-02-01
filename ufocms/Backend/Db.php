@@ -31,7 +31,10 @@ class Db extends \Ufocms\Frontend\Db
         parent::__construct($this->debug);
     }
     
-    public function query($query)
+    /**
+     * @see parent
+     */
+    public function query($query, $resultmode = null)
     {
         if (C_DB_READONLY 
         && 0 !== stripos($query, 'SELECT ') 
