@@ -55,25 +55,35 @@ class View extends \Ufocms\Modules\View //implements IView
     protected function getLayout()
     {
         if ($this->moduleParams['isRss']) {
-            return  $this->templatePath . 
-                    '/' . strtolower($this->module['Name']) . 
-                    '/rss.php';
+            return $this->findTemplate(
+                $this->templatePath, 
+                $this->module['Name'], 
+                '/rss.php'
+            );
         } else if ($this->moduleParams['isYandex']) {
-            return  $this->templatePath . 
-                    '/' . strtolower($this->module['Name']) . 
-                    '/yandex.php';
+            return  $this->findTemplate(
+                $this->templatePath, 
+                $this->module['Name'], 
+                '/yandex.php'
+            );
         } else if ($this->moduleParams['isYaDzen']) {
-            return  $this->templatePath . 
-                    '/' . strtolower($this->module['Name']) . 
-                    '/yadzen.php';
+            return  $this->findTemplate(
+                $this->templatePath, 
+                $this->module['Name'], 
+                '/yadzen.php'
+            );
         } else if ($this->moduleParams['isYaTurbo']) {
-            return  $this->templatePath . 
-                    '/' . strtolower($this->module['Name']) . 
-                    '/yaturbo.php';
+            return  $this->findTemplate(
+                $this->templatePath, 
+                $this->module['Name'], 
+                '/yaturbo.php'
+            );
         } else if ($this->moduleParams['isRambler']) {
-            return  $this->templatePath . 
-                    '/' . strtolower($this->module['Name']) . 
-                    '/rambler.php';
+            return  $this->findTemplate(
+                $this->templatePath, 
+                $this->module['Name'], 
+                '/rambler.php'
+            );
         } else {
             return parent::getLayout();
         }

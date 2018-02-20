@@ -64,13 +64,19 @@ class Widget extends \Ufocms\Modules\Widget
             case 3:
                 $order = 'i.Title DESC';
                 break;
+            case 4:
+                $order = 'i.ViewedCnt DESC';
+                break;
+            case 5:
+                $order = 'i.ViewedCnt';
+                break;
             default:
                 $order = 'i.DateCreate DESC';
         }
         //different SQLs because JOIN required TEMP table
         if (false === strpos($this->srcSections, ',')) {
             $section = $this->core->getSection((int) $this->srcSections, 'path,indic');
-            $sql =  'SELECT Id, DateCreate, Title, Author, Icon, Announce, Body, ' . 
+            $sql =  'SELECT Id, DateCreate, Title, Author, Icon, Announce, Body, ViewedCnt, ' . 
                     "'" . $section['path'] . "' AS path, '" . $this->db->addEscape($section['indic']) . "' AS indic" . 
                     ' FROM ' . C_DB_TABLE_PREFIX . 'news AS i' . 
                     ' WHERE SectionId=' . (int) $this->srcSections . 
@@ -82,7 +88,7 @@ class Widget extends \Ufocms\Modules\Widget
                     ' LIMIT ' . $this->params['ItemsStart'] . ', ' . $this->params['ItemsCount'];
             unset($section);
         } else {
-            $sql =  'SELECT i.Id, i.DateCreate, i.Title, i.Author, i.Icon, i.Announce, i.Body, ' . 
+            $sql =  'SELECT i.Id, i.DateCreate, i.Title, i.Author, i.Icon, i.Announce, i.Body, i.ViewedCnt, ' . 
                     's.path, s.indic' . 
                     ' FROM ' . C_DB_TABLE_PREFIX . 'news AS i' . 
                     ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'sections AS s ON i.SectionId=s.id' . 

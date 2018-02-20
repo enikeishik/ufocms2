@@ -110,6 +110,9 @@ class Model extends \Ufocms\Modules\Model //implements IModel
         return $this->items;
     }
     
+    /**
+     * @return array|null
+     */
     public function getItem()
     {
         if (null !== $this->item) {
@@ -122,6 +125,21 @@ class Model extends \Ufocms\Modules\Model //implements IModel
                 ' AND IsHidden=0' . 
                 " AND DateCreate<='" . $now . "'";
         $this->item = $this->db->getItem($sql);
+        
+        //обновляем данные по количеству просмотров
+        $this->updateViewCount($this->item['Id']);
+        
         return $this->item;
+    }
+    
+    /**
+     * @param int $itemId
+     */
+    protected function updateViewCount($itemId)
+    {
+        $sql = 'UPDATE ' . C_DB_TABLE_PREFIX . 'news' . 
+               ' SET ViewedCnt=ViewedCnt+1' . 
+               ' WHERE Id=' . $itemId;
+        $this->db->query($sql);
     }
 }
