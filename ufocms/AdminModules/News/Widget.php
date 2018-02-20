@@ -37,6 +37,8 @@ class Widget extends \Ufocms\AdminModules\Widget
             array('Value' => 1, 'Title' => 'По дате, по возрастанию'),
             array('Value' => 2, 'Title' => 'По заголовку, по возрастанию'),
             array('Value' => 3, 'Title' => 'По заголовку, по убыванию'),
+            array('Value' => 4, 'Title' => 'По просмотрам, по убыванию'),
+            array('Value' => 5, 'Title' => 'По просмотрам, по возрастанию'),
         );
     }
 }

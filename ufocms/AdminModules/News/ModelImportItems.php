@@ -42,7 +42,15 @@ class ModelImportItems extends \Ufocms\AdminModules\News\Model
         $this->items = $rssReader->getItems();
         $this->itemsCount = count($this->items);
         unset($rssReader);
+        $lastGuid = null;
         foreach ($this->items as &$item) {
+            if (null === $lastGuid) {
+                if (isset($item['guid'])) {
+                    $lastGuid = trim($item['guid']);
+                } else if (isset($item['link'])) {
+                    $lastGuid = trim($item['link']);
+                }
+            }
             $item['Publicate'] = 0;
             $item['SectionId'] = $this->params->sectionId;
             $item['DateCreate'] = date('Y-m-d H:i:s', strtotime($item['pubDate']));
@@ -59,6 +67,30 @@ class ModelImportItems extends \Ufocms\AdminModules\News\Model
             /* deprecated $item['IsTimered'] = 0; */
         }
         unset($item);
+        
+        $this->updateLastGuid($lastGuid);
+    }
+    
+    /**
+     * @param string $lastGuid 
+     */
+    protected function updateLastGuid($lastGuid)
+    {
+        $sql =  'UPDATE ' . C_DB_TABLE_PREFIX . 'news_import' . 
+                " SET LastGuid='" . $this->db->addEscape($lastGuid) . "'" . 
+                ' WHERE Id=' . $this->params->itemId;
+        $this->db->query($sql);
+    }
+    
+    /**
+     * @return string|null
+     */
+    public function getLastGuid()
+    {
+        $sql =  'SELECT LastGuid' . 
+                ' FROM ' . C_DB_TABLE_PREFIX . 'news_import' . 
+                ' WHERE Id=' . $this->params->itemId;
+        return $this->db->getValue($sql, 'LastGuid');
     }
     
     protected function setFields()

@@ -31,7 +31,7 @@ class ModelImportSettings extends \Ufocms\AdminModules\Model
             array('Type' => 'int',      'Name' => 'ItemsShow',  'Value' => 20,                          'Title' => 'Количество элементов',  'Filter' => false,  'Show' => false,    'Sort' => false,    'Edit' => true,     'Required' => true),
             array('Type' => 'text',     'Name' => 'Title',      'Value' => '',                          'Title' => 'Заголовок',             'Filter' => false,  'Show' => true,     'Sort' => true,     'Edit' => true,     'Required' => true),
             array('Type' => 'text',     'Name' => 'Url',        'Value' => '',                          'Title' => 'URL',                   'Filter' => false,  'Show' => true,     'Sort' => true,     'Edit' => true,     'Required' => true),
-            array('Type' => 'text',     'Name' => 'LastGuid',   'Value' => '',                          'Title' => 'Последний GUID',        'Filter' => false,  'Show' => false,    'Sort' => false,    'Edit' => true),
+            array('Type' => 'text',     'Name' => 'LastGuid',   'Value' => '',                          'Title' => 'Последний GUID',        'Filter' => false,  'Show' => true,     'Sort' => false,    'Edit' => true),
             array('Type' => 'text',     'Name' => 'ItemAuthor', 'Value' => '',                          'Title' => 'Авторство',             'Filter' => false,  'Show' => true,     'Sort' => true,     'Edit' => true),
         );
     }

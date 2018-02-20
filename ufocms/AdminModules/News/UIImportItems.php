@@ -15,33 +15,44 @@ class UIImportItems extends \Ufocms\AdminModules\News\UI
      */
     public function singleItems()
     {
+        $lastGuid = $this->model->getLastGuid();
         $fields = $this->model->getFields();
         $items = $this->model->getItems();
         
         $s =    '<form action="' . $this->basePath . '" method="post" onsubmit="document.getElementById(\'removeUnusedBtn\').click(); return true;">' . 
-                '<div class="items">';
+                '<div class="items">' . PHP_EOL;
         
         $i = 0;
+        $bgStyle = '';
         foreach ($items as $item) {
             $i++;
-            $s .=   '<div class="item" id="view' . $i . '">' . 
+            $link = (isset($item['guid']) ? trim($item['guid']) : (isset($item['link']) ? trim($item['link']) : ''));
+            
+            if ('' == $bgStyle 
+                && ('' != $link && $link == $lastGuid)
+            ) {
+                $bgStyle = ' style="background-color: #eee;"';
+            }
+            $s .=   '<div class="item" id="view' . $i . '"' . $bgStyle . '>' . 
                         '<div class="itemhead">' . 
                             '<div class="itemfield"><span style="background-color: #eee; padding: 5px 5px 2px 2px;">' . 
                                 '<label><input type="checkbox"' . 
                                     ' onclick="showForm(' . $i . ')"' . 
                                 '>&nbsp;импорт</label></span></div>' . 
                             '<div class="itemfield"><span class="fieldname">Дата</span>' . $item['DateCreate'] . '</div>' . 
+                            '<div class="itemfield"><a href="#" onclick="javascript:window.open(\'' . $link . '\');return false;">' . $link . '</a></div>' . 
                         '</div>' . 
                         '<div class="itembody">' . 
-                            '<div class="itemfield"><div class="fieldname">Заголовок</div><div class="fieldvalue">' . $item['Title'] . '</div></div>' . 
-                            '<div class="itemfield"><div class="fieldname">Анонс</div><div class="fieldvalue">' . $item['Announce'] . '</div></div>' . 
-                            '<div class="itemfield"><div class="fieldname">Текст</div><div class="fieldvalue">' . $item['Body'] . '</div></div>' . 
+                            '<div class="itemfield"><div class="fieldname">Заголовок</div><div class="fieldvalue">' . strip_tags($item['Title']) . '</div></div>' . 
+                            '<div class="itemfield"><div class="fieldname">Анонс</div><div class="fieldvalue">' . strip_tags($item['Announce']) . '</div></div>' . 
+                            '<div class="itemfield"><div class="fieldname">Текст</div><div class="fieldvalue">' . strip_tags($item['Body']) . '</div></div>' . 
                         '</div>' . 
-                    '</div>';
+                    '</div>' . PHP_EOL;
             
             $s .=   '<div class="item" id="form' . $i . '" style="display: none;">' . 
-                        '<input type="hidden" name="Import' . $i . '" id="Import' . $i . '" value="0">' . 
-                        '<table border="1" cellpadding="4" cellspacing="0" width="100%" class="form">';
+                        '<input type="hidden" name="Import' . $i . '" id="Import' . $i . '" value="0">' . PHP_EOL . 
+                        '<table border="1" cellpadding="4" cellspacing="0" width="100%" class="form">' . PHP_EOL . 
+                        '<tr><td><label>URL</label></td><td><a href="#" onclick="javascript:window.open(\'' . $link . '\');return false;">' . $link . '</a></td></tr>' . PHP_EOL;
             foreach ($fields as $field) {
                 if (!$field['Edit']) {
                     continue;
@@ -51,17 +62,17 @@ class UIImportItems extends \Ufocms\AdminModules\News\UI
                 $s .= $this->formField($field, $item[$fieldName]);
             }
             $s .=       '</table>' . 
-                    '</div>';
+                    '</div>' . PHP_EOL;
         }
-        $s .=   '<div><input type="button" id="removeUnusedBtn" value="Убрать ненужные" title="Убрать элементы не помеченные для импорта" onclick="removeUnused(' . $i . '); this.parentNode.style.display=\'none\';"></div>';
+        $s .=   '<div><input type="button" id="removeUnusedBtn" value="Убрать ненужные" title="Убрать элементы не помеченные для импорта" onclick="removeUnused(' . $i . '); this.parentNode.style.display=\'none\';"></div>' . PHP_EOL;
         
         $s .=   '</div>' . 
                 '<div><input type="hidden" name="itemscount" value="' . $i . '"><input type="submit" value="Импортировать"></div>' . 
-                '</form>' . "\r\n";
-        $s .=   '<script type="text/javascript">' . "\r\n" . 
-                'function showForm(i) { var el = document.getElementById("view" + i); el.parentNode.removeChild(el); document.getElementById("form" + i).style.display = ""; document.getElementById("Import" + i).value = "1"; }' . "\r\n" . 
-                'function removeUnused(total) { for (var i = 1; i <= total; i++) { var el = document.getElementById("view" + i); if (el) { el.parentNode.removeChild(el); el = document.getElementById("form" + i); el.parentNode.removeChild(el); } } }' . "\r\n" . 
-                '</script>' . "\r\n";
+                '</form>' . PHP_EOL;
+        $s .=   '<script type="text/javascript">' . PHP_EOL . 
+                'function showForm(i) { var el = document.getElementById("view" + i); el.parentNode.removeChild(el); document.getElementById("form" + i).style.display = ""; document.getElementById("Import" + i).value = "1"; }' . PHP_EOL . 
+                'function removeUnused(total) { for (var i = 1; i <= total; i++) { var el = document.getElementById("view" + i); if (el) { el.parentNode.removeChild(el); el = document.getElementById("form" + i); el.parentNode.removeChild(el); } } }' . PHP_EOL . 
+                '</script>' . PHP_EOL;
         return $s;
     }
     
