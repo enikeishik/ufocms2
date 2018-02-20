@@ -161,8 +161,8 @@ class Error extends DIObject
                         $_SERVER['PHP_SELF'] . "\t" . 
                         $_SERVER['SCRIPT_NAME'] . "\t" . 
                         $_SERVER['QUERY_STRING'] . "\t" . 
-                        $_SERVER['HTTP_USER_AGENT'] . "\t" . 
-                        $_SERVER['HTTP_ACCEPT_LANGUAGE'] . "\t" . 
+                        (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '') . "\t" . 
+                        (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '') . "\t" . 
                         (isset($_SERVER['PHP_AUTH_USER']) ? $_SERVER['PHP_AUTH_USER'] : '');
         
         if (null === $options) {
