@@ -30,6 +30,9 @@
         </li>
         <?php } ?>
     </ul>
+    <?php if ($this->params['ShowMore']) { ?>
+    <div class="more"><a href="<?=$item['path']?>">Все новости &#8594;</a></div>
+    <?php } ?>
     <div class="clear"></div>
 <?php } ?>
 </div>
