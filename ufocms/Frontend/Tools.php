@@ -473,6 +473,34 @@ class Tools
     }
     
     /**
+     * Оформление строк текста тегами параграфа <p>.
+     * 
+     * @param string $str    исходный текст
+     * 
+     * @return string
+     */
+    public function addParagraphs($str)
+    {
+        return preg_replace(
+            '/(<p>\s*<\/p>)+/', 
+            '', 
+            '<p>' . str_replace(
+                '</p>', 
+                "</p>\r\n", 
+                preg_replace(
+                    '/\s+/', 
+                    ' ', 
+                    preg_replace(
+                        '/\n+/', 
+                        "</p><p>", 
+                        str_replace("\r", '', $str)
+                    )
+                )
+            ) . '</p>' . "\r\n"
+        );
+    }
+    
+    /**
      * @return Captcha
      */
     public function getCaptcha()

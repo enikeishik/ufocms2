@@ -45,7 +45,7 @@ class UIImportItems extends \Ufocms\AdminModules\News\UI
                         '<div class="itembody">' . 
                             '<div class="itemfield"><div class="fieldname">Заголовок</div><div class="fieldvalue">' . strip_tags($item['Title']) . '</div></div>' . 
                             '<div class="itemfield"><div class="fieldname">Анонс</div><div class="fieldvalue">' . strip_tags($item['Announce']) . '</div></div>' . 
-                            '<div class="itemfield"><div class="fieldname">Текст</div><div class="fieldvalue">' . strip_tags($item['Body'], '<p><br><blockquote><ul><ol><li>') . '</div></div>' . 
+                            '<div class="itemfield"><div class="fieldname">Текст</div><div class="fieldvalue">' . strip_tags(nl2br($item['Body'], true), '<p><br><blockquote><ul><ol><li>') . '</div></div>' . 
                         '</div>' . 
                     '</div>' . PHP_EOL;
             
@@ -59,7 +59,11 @@ class UIImportItems extends \Ufocms\AdminModules\News\UI
                 }
                 $fieldName = $field['Name'];
                 $field['Name'] .= $i;
-                $s .= $this->formField($field, $item[$fieldName]);
+                if ('Body' != $fieldName) {
+                    $s .= $this->formField($field, $item[$fieldName]);
+                } else {
+                    $s .= $this->formField($field, $this->tools->addParagraphs($item[$fieldName]));
+                }
             }
             $s .=       '</table>' . 
                     '</div>' . PHP_EOL;
