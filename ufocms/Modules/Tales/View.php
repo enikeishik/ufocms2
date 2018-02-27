@@ -44,9 +44,11 @@ class View extends \Ufocms\Modules\View //implements IView
     protected function getLayout()
     {
         if ($this->moduleParams['isRss']) {
-            return  $this->templatePath . 
-                    '/' . strtolower($this->module['Name']) . 
-                    '/rss.php';
+            return $this->findTemplate(
+                $this->templatePath, 
+                $this->module['Name'], 
+                '/rss.php'
+            );
         } else {
             return parent::getLayout();
         }

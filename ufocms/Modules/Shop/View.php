@@ -88,13 +88,17 @@ class View extends \Ufocms\Modules\View //implements IView
     protected function getLayout()
     {
         if ($this->moduleParams['isRss']) {
-            return  $this->templatePath . 
-                    '/' . strtolower($this->module['Name']) . 
-                    '/rss.php';
+            return $this->findTemplate(
+                $this->templatePath, 
+                $this->module['Name'], 
+                '/rss.php'
+            );
         } else if ($this->moduleParams['isYandex']) {
-            return  $this->templatePath . 
-                    '/' . strtolower($this->module['Name']) . 
-                    '/yml.php';
+            return $this->findTemplate(
+                $this->templatePath, 
+                $this->module['Name'], 
+                '/yml.php'
+            );
         } else {
             return parent::getLayout();
         }
@@ -227,9 +231,11 @@ class View extends \Ufocms\Modules\View //implements IView
         
         extract($this->context);
         
-        $template = $this->templatePath . 
-                    '/' . strtolower($this->module['Name']) . 
-                    $templateEntry;
+        $template = $this->findTemplate(
+            $this->templatePath, 
+            $this->module['Name'], 
+            $templateEntry
+        );
         if (file_exists($template)) {
             include $template;
         } else {

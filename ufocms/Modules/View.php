@@ -256,7 +256,11 @@ class View extends DIObject
      */
     protected function getLayout()
     {
-        return $this->templatePath . $this->config->templatesEntry;
+        return $this->findTemplate(
+            $this->templatePath, 
+            null, 
+            $this->config->templatesEntry
+        );
     }
     
     /**
