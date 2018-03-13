@@ -782,6 +782,11 @@ class View extends DIObject
      */
     protected function renderComments(array $options = null)
     {
+        if (isset($this->config->restrictions['disableComments']) 
+        && $this->config->restrictions['disableComments']) {
+            return;
+        }
+        
         extract(
             array_merge(
                 $this->getApplicationContext(), 
@@ -871,6 +876,11 @@ class View extends DIObject
      */
     protected function renderInteraction(array $options = null)
     {
+        if (isset($this->config->restrictions['disableInteraction']) 
+        && $this->config->restrictions['disableInteraction']) {
+            return;
+        }
+        
         extract(
             array_merge(
                 $this->getApplicationContext(), 

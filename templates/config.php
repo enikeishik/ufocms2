@@ -1,6 +1,11 @@
 <?php
 return [
     
+    'restrictions' => [
+        'disableComments'       => false, 
+        'disableInteraction'    => false, 
+    ], 
+    
     'counters' => [
         'Yandex'        => '', 
         'LiveInternet'  => '', 
