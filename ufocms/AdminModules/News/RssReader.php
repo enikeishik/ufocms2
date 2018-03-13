@@ -34,7 +34,19 @@ class RssReader
         @ini_set('allow_url_fopen', 1);
         @ini_set('default_socket_timeout', $this->socket_timeout);
         //@ini_set('user_agent', $this->user_agent);
-        return @file_get_contents($this->url);
+        $context = stream_context_create(
+            array(
+                'http'  => array(
+                    'header'    => 'Connection: close', 
+                    'timeout'   => $this->socket_timeout
+                ),
+                'ssl'   => array(
+                    'verify_peer'       => false, 
+                    'verify_peer_name'  => false
+                ),
+            )
+        );
+        return file_get_contents($this->url, false, $context);
     }
     
     protected function checkXml($xml)
