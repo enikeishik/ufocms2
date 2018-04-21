@@ -278,8 +278,8 @@ class Model extends \Ufocms\AdminModules\Model
             $this->updateUserGroups($this->params->itemId, $this->groups);
             $this->updateUserRoles($this->params->itemId, $this->roles);
         } else {
-            $this->addUserGroups($this->params->itemId, $this->groups);
-            $this->addUserRoles($this->params->itemId, $this->roles);
+            $this->addUserGroups($this->groups);
+            $this->addUserRoles($this->roles);
         }
     }
     

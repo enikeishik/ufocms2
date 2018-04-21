@@ -45,10 +45,16 @@ class Roles
     const RESTRICT_ALL_VALUE = 'none';
     
     /**
-     * Длинна префикса названий модулей ядра (чтобы обрезать его).
-     * @const int
+     * Префикс названий модулей ядра (чтобы обрезать его).
+     * @const string
      */
-    const RESTR_COREMODULE_PREFIX_LEN = 4;
+    const RESTR_COREMODULE_PREFIX = 'Core';
+    
+    /**
+     * Calculated in constructor strlen(self::RESTR_COREMODULE_PREFIX)
+     * @var int
+     */
+    protected $coremodulePrefixLen = 4;
     
     /**
      * Допустимые действия.
@@ -103,6 +109,7 @@ class Roles
         $this->config   =& $config;
         $this->debug    =& $debug;
         $this->db       =& $db;
+        $this->coremodulePrefixLen = strlen(self::RESTR_COREMODULE_PREFIX);
     }
     
     /**
@@ -296,8 +303,8 @@ class Roles
                 return false;
             }
             
-            if (strlen($module) > self::RESTR_COREMODULE_PREFIX_LEN) {
-                $module = strtolower(substr($module, self::RESTR_COREMODULE_PREFIX_LEN));
+            if (0 === strpos($module, self::RESTR_COREMODULE_PREFIX)) {
+                $module = strtolower(substr($module, $this->coremodulePrefixLen));
             } else {
                 $module = strtolower($module);
             }
@@ -342,8 +349,8 @@ class Roles
         if (is_string($module)) {
             $allModules = '';
             $permissions = $this->getRolesCorePermissions($rolesIds);
-            if (strlen($module) > self::RESTR_COREMODULE_PREFIX_LEN) {
-                $module = strtolower(substr($module, self::RESTR_COREMODULE_PREFIX_LEN));
+            if (0 === strpos($module, self::RESTR_COREMODULE_PREFIX)) {
+                $module = strtolower(substr($module, $this->coremodulePrefixLen));
             } else {
                 $module = strtolower($module);
             }
