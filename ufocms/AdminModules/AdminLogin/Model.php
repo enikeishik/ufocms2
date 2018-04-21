@@ -30,7 +30,7 @@ class Model extends \Ufocms\AdminModules\StatelessModel
             if (0 != $userId = $this->authentication($_SERVER['REMOTE_USER'])) {
                 if ($this->authorization($userId)) {
                     $this->core->getUsers()->setTicket($userId);
-                    $this->core->riseError(302, 'Authentication and authorization passed', '?rnd=' . time());
+                    $this->core->riseError(302, 'Authentication and authorization passed', '#');
                 }
             }
             $this->adminlogout();
@@ -40,7 +40,7 @@ class Model extends \Ufocms\AdminModules\StatelessModel
                 if (0 != $userId = $this->authentication($_POST['login'], $_POST['password'])) {
                     if ($this->authorization($userId)) {
                         $this->core->getUsers()->setTicket($userId);
-                        $this->core->riseError(302, 'Authentication and authorization passed', '?rnd=' . time());
+                        $this->core->riseError(302, 'Authentication and authorization passed', '#');
                     }
                 }
             }

@@ -10,4 +10,4 @@ if (!is_null($this->debug)) {
 </div></div>
 
 </body>
-<html>
+</html>
