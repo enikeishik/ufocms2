@@ -19,5 +19,5 @@ and inform them of the time the error occurred,
 and anything you might have done that may have
 caused the error.<P>
 More information about this error may be available
-in the server error log.<P>
+in the error log `/logs/er<?=date('ymd')?>.log`.<P>
 </BODY></HTML>

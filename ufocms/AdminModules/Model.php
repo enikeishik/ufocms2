@@ -176,12 +176,45 @@ class Model extends Schema
     }
     
     /**
+     * Get model module.
+     * @return array
+     */
+    public function getModule()
+    {
+        return $this->module;
+    }
+    
+    /**
      * Get model of master (when this model is slave).
      * @return Model
      */
     public function getMaster()
     {
         return $this->master;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getItemsTable()
+    {
+        return $this->itemsTable;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getItemIdField()
+    {
+        return $this->itemIdField;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getItemDisabledField()
+    {
+        return $this->itemDisabledField;
     }
     
     /**
@@ -480,7 +513,7 @@ class Model extends Schema
                         ' WHERE `' . $this->itemIdField . '`=' . $this->params->itemId;
                 $item = $this->db->getItem($sql);
                 if (null === $item) {
-                    return array();
+                    $item = $this->getEmptyItem();
                 }
             } else {
                 $item = $this->getEmptyItem();
@@ -568,7 +601,10 @@ class Model extends Schema
      */
     protected function checkFormFieldExists(array $field)
     {
-        return isset($_POST[$field['Name']]) || 'bool' == $field['Type'] || 'subform' == $field['Type'];
+        return isset($_POST[$field['Name']]) 
+            || 'bool' == $field['Type'] 
+            || 'mlist' == $field['Type'] 
+            || 'subform' == $field['Type'];
     }
     
     /**
@@ -603,14 +639,16 @@ class Model extends Schema
                     $this->result = 'Required field `' . $field['Name'] . '` not set';
                     return null;
                 }
-                if (is_array($_POST[$field['Name']])) {
+                if (!isset($_POST[$field['Name']])) {
+                    return array('Type' => $field['Type'], 'Value' => array());
+                } else if (is_array($_POST[$field['Name']])) {
                     if (!$this->tools->isArrayOfIntegers($_POST[$field['Name']])) {
                         $this->result = 'Request error: field `' . $field['Name'] . '` has not correct value(s)';
                         return null;
                     }
                     return array('Type' => $field['Type'], 'Value' => $_POST[$field['Name']]);
                 } else {
-                    return array('Type' => $field['Type'], 'Value' => (int) $_POST[$field['Name']]);
+                    return array('Type' => $field['Type'], 'Value' => array((int) $_POST[$field['Name']]));
                 }
             case 'bool':
                 if (isset($_POST[$field['Name']])) {
@@ -693,6 +731,7 @@ class Model extends Schema
                     $values .= $field['Value'] . ',';
                     break;
                 case 'mlist':
+                case 'mslist':
                     $values .= "'" . (is_array($field['Value']) ? implode(',', $field['Value']) : $field['Value']) . "',";
                     break;
                 default:
@@ -723,6 +762,7 @@ class Model extends Schema
                     $fields .= '`' . $name . '`=' . $field['Value'] . ',';
                     break;
                 case 'mlist':
+                case 'mslist':
                     $fields .= '`' . $name . "`='" . (is_array($field['Value']) ? implode(',', $field['Value']) : $field['Value']) . "',";
                     break;
                 default:

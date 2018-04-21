@@ -114,7 +114,7 @@ class Error extends DIObject
     {
         //prepare context
         $context = array('errNum' => $errNum, 'errMsg' => $errMsg);
-        if (301 == $errNum && is_string($options)) {
+        if ((301 == $errNum || 302 == $errNum) && is_string($options)) {
             $context['location'] = $options;
         }
         extract(array_merge(

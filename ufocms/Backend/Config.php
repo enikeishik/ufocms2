@@ -15,10 +15,16 @@ namespace Ufocms\Backend;
 class Config extends \Ufocms\Frontend\Config
 {
     /**
-     * Путь и префикс файла протокола ошибок.
+     * Путь и префикс файла протокола действий.
      * @var string
      */
     public $logAudit = '/logs/aa';
+    
+    /**
+     * Уровень детализации протокола действий (0 - изменения, > 0 - все действия).
+     * @var int
+     */
+    public $auditLevel = 0;
     
     /**
      * Имена обрабатываемых GET параметров.

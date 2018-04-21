@@ -227,9 +227,16 @@ abstract class Controller extends DIObject //implements IController
     protected function modelAction()
     {
         $action = $this->params->action;
-        if (in_array($action, $this->config->actionsMake)) {
-            $this->model->$action();
+        if (!in_array($action, $this->config->actionsMake)) {
+            return;
         }
+        
+        $module = (0 != $this->module['ModuleId'] ? (int) $this->module['ModuleId'] : (string) $this->module['Module']);
+        $this->core->checkUserAccess($module, $this->params->sectionId, $action);
+        
+        $this->model->$action();
+        
+        $this->core->fixUserAction($this->model, $action);
     }
     
     /**

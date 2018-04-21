@@ -20,3 +20,6 @@ define('C_SITE_PAGEBREAK_SEPERATOR', '<!-- pagebreak -->');
 
 //используемый шаблон
 define('C_THEME', 'ufocms');
+
+//использовать системную аутентификацию для входа в админку
+define('C_ADMIN_SYS_AUTH', false);

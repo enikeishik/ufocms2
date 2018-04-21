@@ -17,9 +17,8 @@ class UIOrders extends \Ufocms\AdminModules\Shop\UI
     {
         if ('status' == $func) {
             return ' <a href="' . $this->basePath . '&' . $this->config->paramsNames['action'] . '=status&' . $this->config->paramsNames['itemId'] . '=' . $item['itemid'] . '" title="Изменить статус">Статус</a>';
-        } else {
-            return ' <a href="' . $this->basePath . '&' . $this->config->paramsNames['action'] . '=edit&' . $this->config->paramsNames['itemId'] . '=' . $item['itemid'] . '" title="Редактировать">Редакт.</a>';
         }
+        return parent::getItemFuncHtml($item, $func);
     }
     
     /**

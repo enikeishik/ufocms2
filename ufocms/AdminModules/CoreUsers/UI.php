@@ -23,7 +23,13 @@ class UI extends \Ufocms\AdminModules\UI
      */
     protected function getExternalFieldContent(array $field, array $item)
     {
-        $items = $this->model->getUserGroups($item['Id']);
+        if ('Groups' == $field['Name']) {
+            $items = $this->model->getUserGroups($item['Id']);
+        } else if ('Roles' == $field['Name']) {
+            $items = $this->model->getUserRoles($item['Id']);
+        } else {
+            return '';
+        }
         if (0 < count($items)) {
             return implode(', ', $items);
         }

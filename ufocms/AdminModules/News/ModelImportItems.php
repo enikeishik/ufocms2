@@ -68,7 +68,7 @@ class ModelImportItems extends \Ufocms\AdminModules\News\Model
         }
         unset($item);
         
-        if (null === $lastGuid) {
+        if (null !== $lastGuid) {
             $this->updateLastGuid($lastGuid);
         }
     }

@@ -160,6 +160,9 @@ CREATE TABLE `/* TABLE_PREFIX */users` (
   PRIMARY KEY  (`Id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
+INSERT INTO `/* TABLE_PREFIX */users` (`Id`, `DateCreate`, `DateLogin`, `EntryCounter`, `IsDisabled`, `IsHidden`, `Ticket`, `ExtUID`, `Login`, `Password`, `Title`, `Image`, `Email`, `Description`) VALUES
+(-1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0, 0, 0, '', '', 'admin', 'admin', '', '', '', 'Default administrator');
+
 CREATE TABLE `/* TABLE_PREFIX */users_attributes` (
   `Id` int(11) NOT NULL auto_increment,
   `OrderId` int(11) NOT NULL default '0',

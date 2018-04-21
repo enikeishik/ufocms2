@@ -198,6 +198,32 @@ class Users
     }
     
     /**
+     * @param int $userId
+     * @param string $itemsTable
+     * @param int $itemId
+     * @return bool
+     */
+    public function isOwner($userId, $itemsTable, $itemIdField, $itemId)
+    {
+        $sql =  'SELECT UserId' . 
+                ' FROM `' . C_DB_TABLE_PREFIX . $itemsTable . '`' . 
+                ' WHERE `' . $itemIdField . '`=' . $itemId;
+        try {
+            return $userId == $this->db->getValue($sql, 'UserId');
+        } catch (\Exception $e) {
+            //TODO: it uses only for comments, may be removed if comments not used
+            $sql =  'SELECT userid' . 
+                    ' FROM `' . C_DB_TABLE_PREFIX . $itemsTable . '`' . 
+                    ' WHERE `' . $itemIdField . '`=' . $itemId;
+            try {
+                return $userId == $this->db->getValue($sql, 'userid');
+            } catch (\Exception $e) {
+                return false;
+            }
+        }
+    }
+    
+    /**
      * Запись сеансового билета в базу и куки.
      * @param int $userId
      * @return bool

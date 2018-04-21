@@ -10,12 +10,18 @@
 namespace Ufocms\Backend;
 
 use Ufocms\Frontend\Debug;
+use Ufocms\AdminModules\Model;
 
 /**
  * Core functionality and data
  */
 class Core extends \Ufocms\Frontend\Core
 {
+    /**
+     * @var Roles
+     */
+    protected $roles = null;
+    
     /**
      * Get common site settings
      * @return array|null
@@ -69,7 +75,7 @@ class Core extends \Ufocms\Frontend\Core
     /**
      * Get section module information
      * @param string|array|null $fields = null
-     * @return array
+     * @return array|null
      */
     public function getModule($fields = null)
     {
@@ -86,6 +92,34 @@ class Core extends \Ufocms\Frontend\Core
             $this->module = $this->db->getItem($sql);
         }
         return $this->module;
+    }
+    
+    /**
+     * Get section module information by module name
+     * @param string $moduleName
+     * @param string|array|null $fields = null
+     * @return array|null
+     */
+    public function getModuleByName($moduleName, $fields = null)
+    {
+        static $module = null;
+        
+        if (null !== $module) {
+            return $module;
+        }
+        
+        if (is_null($fields)) {
+            $fields = '*';
+        } else if (is_array($fields)) {
+            $fields = implode(',', $fields);
+        }
+        
+        $sql =  'SELECT ' . $fields .
+                ' FROM ' . C_DB_TABLE_PREFIX . 'modules' .
+                " WHERE isenabled<>0 AND madmin='mod_" . $this->db->addEscape(strtolower($moduleName)) . "'";
+        $module = $this->db->getItem($sql);
+        
+        return $module;
     }
     
     /**
@@ -138,5 +172,83 @@ class Core extends \Ufocms\Frontend\Core
             //react on form posting (POST)
         }
         */
+    }
+    
+    /**
+     * @return Roles
+     */
+    public function getRoles()
+    {
+        if (null === $this->roles) {
+            $this->roles = new Roles($this->config, $this->db, $this->debug);
+        }
+        return $this->roles;
+        
+    }
+    
+    /**
+     * @param string|int $module
+     * @param int $sectionId
+     * @param string $action
+     */
+    public function checkUserAccess($module, $sectionId, $action)
+    {
+        //TODO 'adminlogin'
+        if ('adminlogin' == $action || 'adminlogout' == $action) {
+            return;
+        }
+        
+        $user = $this->getUsers()->getCurrent();
+        if (null === $user) {
+            $this->riseError(403, 'User not set');
+        }
+        
+        $roles = $this->getRoles();
+        $restricted = $roles->rolesRestricted(
+            $user['Id'], 
+            $module, 
+            $sectionId
+        );
+        if ($restricted) {
+            $this->riseError(403, 'User access restricted');
+        }
+        
+        //TODO: 'create'
+        $permitted = $roles->rolesPermittedAction(
+            $user['Id'], 
+            $module, 
+            (0 == $this->params->itemId ? 'create' : $action)
+        );
+        if (!$permitted) {
+            $this->riseError(403, 'User do not have required permissions');
+        }
+    }
+    
+    /**
+     * Дополнительные действия после действия Model::action, определяемые уровнем доступа пользователя.
+     * @param Model $model
+     * @param string $action
+     */
+    public function fixUserAction(Model $model, $action)
+    {
+        //TODO: 'update'
+        if ('update' != $action) {
+            return;
+        }
+        
+        $user = $this->getUsers()->getCurrent();
+        $roles = $this->getRoles();
+        $module = $model->getModule();
+        $module = (0 != $module['ModuleId'] ? (int) $module['ModuleId'] : (string) $module['Module']);
+        
+        if ($roles->isPublishRestricted($user['Id'], $module)) {
+            if (0 == $this->params->itemId) {
+                $this->params->itemId = $model->getLastInsertedId();
+                $model->disable();
+                $this->params->itemId = 0;
+            } else {
+                $model->disable();
+            }
+        }
     }
 }

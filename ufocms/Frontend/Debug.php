@@ -132,4 +132,12 @@ class Debug
             exit();
         }
     }
+    
+    /**
+     * @see varDump
+     */
+    public static function vd($var, $dump = true, $exit = true, $float = false)
+    {
+        self::varDump($var, $dump, $exit, $float);
+    }
 }

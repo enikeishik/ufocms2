@@ -50,9 +50,9 @@ class Statistic
             $periods[$item['PeriodId']] = $item;
         }
         unset($items);
-        //на всякий случай проверяем нет ли в БД данных с идентификатором 0
-        //и если есть, убираем эти данные, 
-        //поскольку 0 зарезервирован для статистики за все время
+        //РЅР° РІСЃСЏРєРёР№ СЃР»СѓС‡Р°Р№ РїСЂРѕРІРµСЂСЏРµРј РЅРµС‚ Р»Рё РІ Р‘Р” РґР°РЅРЅС‹С… СЃ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂРѕРј 0
+        //Рё РµСЃР»Рё РµСЃС‚СЊ, СѓР±РёСЂР°РµРј СЌС‚Рё РґР°РЅРЅС‹Рµ, 
+        //РїРѕСЃРєРѕР»СЊРєСѓ 0 Р·Р°СЂРµР·РµСЂРІРёСЂРѕРІР°РЅ РґР»СЏ СЃС‚Р°С‚РёСЃС‚РёРєРё Р·Р° РІСЃРµ РІСЂРµРјСЏ
         if (array_key_exists(0, $periods)) {
             $arr_ = array();
             foreach ($periods as $key => $val) {
@@ -89,22 +89,21 @@ class Statistic
     public function updateItemStat($sectionId, $itemId, $postType = 0)
     {
         $stats = array();
-        //обсчет статистики за все время
+        //РѕР±СЃС‡РµС‚ СЃС‚Р°С‚РёСЃС‚РёРєРё Р·Р° РІСЃРµ РІСЂРµРјСЏ
         switch ($postType) {
             case 0:
-                //статистика по комментариям
+                //СЃС‚Р°С‚РёСЃС‚РёРєР° РїРѕ РєРѕРјРјРµРЅС‚Р°СЂРёСЏРј
                 $sql = 'SELECT COUNT(*) AS CntVal, AVG(CommentStatus) AS AvgVal, MAX(DateCreate) AS DtmVal' . 
                        ' FROM ' . C_DB_TABLE_PREFIX . 'interaction_comments' . 
                        ' WHERE IsDisabled=0 AND SectionId=' . $sectionId . ' AND ItemId=' . $itemId;
                 break;
             case 1:
-                //статистика по голосам
+                //СЃС‚Р°С‚РёСЃС‚РёРєР° РїРѕ РіРѕР»РѕСЃР°Рј
                 $sql = 'SELECT COUNT(*) AS CntVal, AVG(Rate) AS AvgVal, MAX(DateCreate) AS DtmVal' . 
                        ' FROM ' . C_DB_TABLE_PREFIX . 'interaction_rates' . 
                        ' WHERE IsDisabled=0 AND SectionId=' . $sectionId . ' AND ItemId=' . $itemId;
                 break;
             default:
-                Audit('alert', C_MODULE_NAME, 'update item stat', 'Unsupported parameter value $postType', $postType);
                 return false;
         }
         $item = $this->db->getItem($sql);
@@ -114,19 +113,19 @@ class Statistic
             $stats[0]['Dtm'] = is_null($item['DtmVal']) ? '0000-00-00 00:00:00' : $item['DtmVal'];
         }
         
-        //обсчет статистики для периодов
+        //РѕР±СЃС‡РµС‚ СЃС‚Р°С‚РёСЃС‚РёРєРё РґР»СЏ РїРµСЂРёРѕРґРѕРІ
         $periods = $this->getPeriods();
         foreach ($periods as $periodId => $period) {
             switch ($postType) {
                 case 0:
-                    //статистика по комментариям
+                    //СЃС‚Р°С‚РёСЃС‚РёРєР° РїРѕ РєРѕРјРјРµРЅС‚Р°СЂРёСЏРј
                     $sql = 'SELECT COUNT(*) AS CntVal, AVG(CommentStatus) AS AvgVal, MAX(DateCreate) AS DtmVal' . 
                            ' FROM ' . C_DB_TABLE_PREFIX . 'interaction_comments' . 
                            ' WHERE IsDisabled=0 AND SectionId=' . $sectionId . ' AND ItemId=' . $itemId . 
                            ' AND DateCreate>=DATE_ADD(NOW(), INTERVAL - ' . $period['Period'] . ' ' . $period['Code'] . ')';
                     break;
                 case 1:
-                    //статистика по голосам
+                    //СЃС‚Р°С‚РёСЃС‚РёРєР° РїРѕ РіРѕР»РѕСЃР°Рј
                     $sql = 'SELECT COUNT(*) AS CntVal, AVG(Rate) AS AvgVal, MAX(DateCreate) AS DtmVal' . 
                            ' FROM ' . C_DB_TABLE_PREFIX . 'interaction_rates' . 
                            ' WHERE IsDisabled=0 AND SectionId=' . $sectionId . ' AND ItemId=' . $itemId . 
@@ -148,8 +147,8 @@ class Statistic
         
         $ret = array();
         
-        //обновление статистики за все время
-        //обновление статистики для периодов
+        //РѕР±РЅРѕРІР»РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё Р·Р° РІСЃРµ РІСЂРµРјСЏ
+        //РѕР±РЅРѕРІР»РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё РґР»СЏ РїРµСЂРёРѕРґРѕРІ
         foreach ($stats as $periodId => $stat) {
             $sql = 'SELECT Id FROM ' . C_DB_TABLE_PREFIX . 'interaction_stat_items' . 
                    ' WHERE SectionId=' . $sectionId . ' AND ItemId=' . $itemId . 
@@ -194,7 +193,7 @@ class Statistic
             $ret[$periodId] = $this->db->query($sql);
         }
         
-        //возвращаем значение (ищем была ли ошибка, если нет возвращается true иначе false)
+        //РІРѕР·РІСЂР°С‰Р°РµРј Р·РЅР°С‡РµРЅРёРµ (РёС‰РµРј Р±С‹Р»Р° Р»Рё РѕС€РёР±РєР°, РµСЃР»Рё РЅРµС‚ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ true РёРЅР°С‡Рµ false)
         return (false === array_search(false, $ret));
     }
     
@@ -205,29 +204,29 @@ class Statistic
         }
         
         $stats = array();
-        //обсчет статистики за все время
+        //РѕР±СЃС‡РµС‚ СЃС‚Р°С‚РёСЃС‚РёРєРё Р·Р° РІСЃРµ РІСЂРµРјСЏ
         switch ($postType) {
             case 0:
-                //статистика по комментариям
+                //СЃС‚Р°С‚РёСЃС‚РёРєР° РїРѕ РєРѕРјРјРµРЅС‚Р°СЂРёСЏРј
                 $sql = 'SELECT COUNT(*) AS CntVal, AVG(CommentStatus) AS AvgVal, MAX(DateCreate) AS DtmVal' . 
                        ' FROM ' . C_DB_TABLE_PREFIX . 'interaction_comments' . 
                        ' WHERE IsDisabled=0 AND UserId=' . $userId;
                 break;
             case 1:
-                //статистика по голосам
+                //СЃС‚Р°С‚РёСЃС‚РёРєР° РїРѕ РіРѕР»РѕСЃР°Рј
                 $sql = 'SELECT COUNT(*) AS CntVal, AVG(Rate) AS AvgVal, MAX(DateCreate) AS DtmVal' . 
                        ' FROM ' . C_DB_TABLE_PREFIX . 'interaction_rates' . 
                        ' WHERE IsDisabled=0 AND UserId=' . $userId;
                 break;
             case 2:
-                //статистика по отметкам других комментариев
+                //СЃС‚Р°С‚РёСЃС‚РёРєР° РїРѕ РѕС‚РјРµС‚РєР°Рј РґСЂСѓРіРёС… РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ
                 $sql = 'SELECT COUNT(*) AS CntVal, AVG(cr.Rate) AS AvgVal, MAX(cr.DateCreate) AS DtmVal' . 
                        ' FROM ' . C_DB_TABLE_PREFIX . 'interaction_comments_rates AS cr' . 
                        ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'interaction_comments AS c ON cr.CommentId=c.Id' . 
                        ' WHERE c.IsDisabled=0 AND cr.IsDisabled=0 AND cr.UserId=' . $userId;
                 break;
             case -1:
-                //статистика по отметкам других пользователей комментариев зарегистрированного пользователя
+                //СЃС‚Р°С‚РёСЃС‚РёРєР° РїРѕ РѕС‚РјРµС‚РєР°Рј РґСЂСѓРіРёС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
                 $sql = 'SELECT COUNT(*) AS CntVal, AVG(cr.Rate) AS AvgVal, AVG(c.Rating) AS Rating, MAX(cr.DateCreate) AS DtmVal' . 
                        ' FROM ' . C_DB_TABLE_PREFIX . 'interaction_comments_rates AS cr' . 
                        ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'interaction_comments AS c ON cr.CommentId=c.Id' . 
@@ -247,26 +246,26 @@ class Statistic
            $stats[0]['Dtm'] = is_null($item['DtmVal']) ? '0000-00-00 00:00:00' : $item['DtmVal'];
         }
         
-        //обсчет статистики для периодов
+        //РѕР±СЃС‡РµС‚ СЃС‚Р°С‚РёСЃС‚РёРєРё РґР»СЏ РїРµСЂРёРѕРґРѕРІ
         $periods = $this->getPeriods();
         foreach ($periods as $periodId => $period) {
             switch ($postType) {
                 case 0:
-                    //статистика по комментариям
+                    //СЃС‚Р°С‚РёСЃС‚РёРєР° РїРѕ РєРѕРјРјРµРЅС‚Р°СЂРёСЏРј
                     $sql = 'SELECT COUNT(*) AS CntVal, AVG(CommentStatus) AS AvgVal, MAX(DateCreate) AS DtmVal' . 
                            ' FROM ' . C_DB_TABLE_PREFIX . 'interaction_comments' . 
                            ' WHERE IsDisabled=0 AND UserId=' . $userId . 
                            ' AND DateCreate>=DATE_ADD(NOW(), INTERVAL - ' . $period['Period'] . ' ' . $period['Code'] . ')';
                     break;
                 case 1:
-                    //статистика по голосам
+                    //СЃС‚Р°С‚РёСЃС‚РёРєР° РїРѕ РіРѕР»РѕСЃР°Рј
                     $sql = 'SELECT COUNT(*) AS CntVal, AVG(Rate) AS AvgVal, MAX(DateCreate) AS DtmVal' . 
                            ' FROM ' . C_DB_TABLE_PREFIX . 'interaction_rates' . 
                            ' WHERE IsDisabled=0 AND UserId=' . $userId . 
                            ' AND DateCreate>=DATE_ADD(NOW(), INTERVAL - ' . $period['Period'] . ' ' . $period['Code'] . ')';
                     break;
                 case 2:
-                    //статистика по отметкам других комментариев
+                    //СЃС‚Р°С‚РёСЃС‚РёРєР° РїРѕ РѕС‚РјРµС‚РєР°Рј РґСЂСѓРіРёС… РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ
                     $sql = 'SELECT COUNT(*) AS CntVal, AVG(cr.Rate) AS AvgVal, MAX(cr.DateCreate) AS DtmVal' . 
                            ' FROM ' . C_DB_TABLE_PREFIX . 'interaction_comments_rates AS cr' . 
                            ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'interaction_comments AS c ON cr.CommentId=c.Id' . 
@@ -274,7 +273,7 @@ class Statistic
                            ' AND cr.DateCreate>=DATE_ADD(NOW(), INTERVAL - ' . $period['Period'] . ' ' . $period['Code'] . ')';
                     break;
                 case -1:
-                    //статистика по отметкам других пользователей комментариев зарегистрированного пользователя
+                    //СЃС‚Р°С‚РёСЃС‚РёРєР° РїРѕ РѕС‚РјРµС‚РєР°Рј РґСЂСѓРіРёС… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
                      $sql = 'SELECT COUNT(*) AS CntVal, AVG(cr.Rate) AS AvgVal, AVG(c.Rating) AS Rating, MAX(cr.DateCreate) AS DtmVal' . 
                            ' FROM ' . C_DB_TABLE_PREFIX . 'interaction_comments_rates AS cr' . 
                            ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'interaction_comments AS c ON cr.CommentId=c.Id' . 
@@ -296,8 +295,8 @@ class Statistic
         
         $ret = array();
         
-        //обновление статистики за все время
-        //обновление статистики для периодов
+        //РѕР±РЅРѕРІР»РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё Р·Р° РІСЃРµ РІСЂРµРјСЏ
+        //РѕР±РЅРѕРІР»РµРЅРёРµ СЃС‚Р°С‚РёСЃС‚РёРєРё РґР»СЏ РїРµСЂРёРѕРґРѕРІ
         foreach ($stats as $periodId => $stat) {
             $sql = 'SELECT Id FROM ' . C_DB_TABLE_PREFIX . 'interaction_stat_users' . 
                    ' WHERE UserId=' . $userId . 
@@ -371,7 +370,7 @@ class Statistic
             $ret[$periodId] = $this->db->query($sql);
         }
         
-        //возвращаем значение (ищем была ли ошибка, если нет возвращается true иначе false)
+        //РІРѕР·РІСЂР°С‰Р°РµРј Р·РЅР°С‡РµРЅРёРµ (РёС‰РµРј Р±С‹Р»Р° Р»Рё РѕС€РёР±РєР°, РµСЃР»Рё РЅРµС‚ РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ true РёРЅР°С‡Рµ false)
         return (false === array_search(false, $ret));
     }
 }

@@ -199,8 +199,26 @@ class Main //implements IController
     {
         $this->db = new Db($this->audit, $this->debug);
         $this->core = new Core($this->config, $this->params, $this->db, $this->debug);
+        
         $this->core->checkXsrf();
-        $this->setModule();
+        
+        if (C_ADMIN_SYS_AUTH && !isset($_SERVER['REMOTE_USER'])) {
+            $this->core->riseError(500, 'System authentication required');
+        }
+        
+        $currentUser = $this->core->getUsers()->getCurrent();
+        
+        //TODO 'adminlogout'
+        if (null === $currentUser || 'adminlogout' == $this->params->action) {
+            $this->setModule('AdminLogin');
+        } else {
+            $this->setModule();
+        }
+        
+        $this->audit->setUser(
+            $currentUser['Id'], 
+            ('' != $currentUser['Login'] ? $currentUser['Login'] : $currentUser['ExtUID'])
+        );
         
         if (!is_null($controller = $this->getController())) {
             $controller->dispatch();
@@ -210,8 +228,13 @@ class Main //implements IController
         $model = $this->getModel();
         
         $action = $this->params->action;
-        if (in_array($action, $this->config->actionsMake) && method_exists($model, $action)) {
+        if (in_array($action, $this->config->actionsMake)) {
+            $module = (0 != $this->module['ModuleId'] ? (int) $this->module['ModuleId'] : (string) $this->module['Module']);
+            $this->core->checkUserAccess($module, $this->params->sectionId, $action);
+            
             $model->$action();
+            
+            $this->core->fixUserAction($model, $action);
         }
         
         $view = $this->getView($model);
@@ -220,21 +243,27 @@ class Main //implements IController
     
     /**
      * Set current section module data by $this->params->sectionId
+     * @param string $moduleName
      */
-    protected function setModule()
+    protected function setModule($moduleName = '')
     {
-        if (!is_null($this->params->coreModule) && in_array($this->params->coreModule, array_keys($this->config->coreModules))) {
-            $moduleName = 'Core' . ucfirst($this->params->coreModule);
-        } else {
-            if (is_null($this->params->sectionId) || 0 == $this->params->sectionId) {
-                $moduleName = 'AdminStart';
+        $moduleId = 0;
+        if ('' == $moduleName) {
+            if (!is_null($this->params->coreModule)) {
+                $moduleName = 'Core' . ucfirst($this->params->coreModule);
             } else {
-                $module = $this->core->getModule();
-                $moduleName = ucfirst(substr($module['madmin'], 4));
-                unset($module);
+                if (is_null($this->params->sectionId) || 0 == $this->params->sectionId) {
+                    $moduleName = 'AdminStart';
+                } else {
+                    $module = $this->core->getModule();
+                    $moduleId = $module['muid'];
+                    $moduleName = ucfirst(substr($module['madmin'], 4));
+                    unset($module);
+                }
             }
         }
         $this->module = array(
+            'ModuleId'      => $moduleId, 
             'Module'        => $moduleName, 
             'Controller'    => '\\Ufocms\\AdminModules\\' . $moduleName . '\\Controller', 
             'Model'         => '\\Ufocms\\AdminModules\\' . $moduleName . '\\Model', 

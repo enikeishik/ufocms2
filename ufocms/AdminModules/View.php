@@ -263,7 +263,30 @@ class View extends DIObject
             $moduleClass = '\\Ufocms\\AdminModules\\AdminWidget';
         }
         if (false === strpos($module, '\\')) {
-            $moduleClass = '\\Ufocms\\AdminModules\\' . $module . '\\AdminWidget';
+            $roles = $this->core->getRoles();
+            $userId = $this->core->getUsers()->getCurrent()['Id'];
+            
+            $admin = false;
+            //TODO: 'Core'
+            if (0 === strpos($module, 'Core')) {
+                $moduleId = strtolower(substr($module, strlen('Core')));
+            } else if (0 !== strpos($module, 'Admin')) {
+                $moduleInfo = $this->core->getModuleByName(strtolower($module), 'Id');
+                if (null !== $moduleInfo) {
+                    $moduleId = (int) $moduleInfo['Id'];
+                } else {
+                    $moduleId = 0;
+                    //throw \Exception
+                }
+            } else {
+                $admin = true;
+            }
+            
+            if (!$admin && !$roles->rolesRestricted($userId, $moduleId)) {
+                $moduleClass = '\\Ufocms\\AdminModules\\' . $module . '\\AdminWidget';
+            } else {
+                $moduleClass = '\\Ufocms\\AdminModules\\AdminWidget';
+            }
         }
         return new $moduleClass($this->config, $this->db, $this->core, $this->debug);
     }

@@ -17,6 +17,12 @@ class Model extends \Ufocms\AdminModules\Model
     protected $groups = array();
     
     /**
+     * User related roles (ids).
+     * @var array
+     */
+    protected $roles = array();
+    
+    /**
      * @see parent
      */
     protected function init()
@@ -45,6 +51,7 @@ class Model extends \Ufocms\AdminModules\Model
             array('Type' => 'text',         'Name' => 'Email',          'Value' => '',                      'Title' => 'Email',             'Filter' => true,   'Show' => true,     'Sort' => true,     'Edit' => true),
             array('Type' => 'bigtext',      'Name' => 'Description',    'Value' => '',                      'Title' => 'Описание',          'Filter' => false,  'Show' => true,     'Sort' => false,    'Edit' => true),
             array('Type' => 'mlist',        'Name' => 'Groups',         'Value' => 'getUserGroupsId',       'Title' => 'Группы',            'Filter' => false,  'Show' => true,     'Sort' => false,    'Edit' => true,     'Items' => 'getGroups', 'External' => true),
+            array('Type' => 'mlist',        'Name' => 'Roles',          'Value' => 'getUserRolesId',        'Title' => 'Роли',              'Filter' => false,  'Show' => true,     'Sort' => false,    'Edit' => true,     'Items' => 'getRoles',  'External' => true),
         );
     }
     
@@ -55,6 +62,20 @@ class Model extends \Ufocms\AdminModules\Model
     {
         $sql =  'SELECT Id AS Value, Title' . 
                 ' FROM ' . C_DB_TABLE_PREFIX . 'users_groups' . 
+                ' ORDER BY Title';
+        return array_merge(
+            array(array('Value' => 0, 'Title' => '')), 
+            $this->db->getItems($sql)
+        );
+    }
+    
+    /**
+     * @return array
+     */
+    protected function getRoles()
+    {
+        $sql =  'SELECT Id AS Value, Title' . 
+                ' FROM ' . C_DB_TABLE_PREFIX . 'users_roles' . 
                 ' ORDER BY Title';
         return array_merge(
             array(array('Value' => 0, 'Title' => '')), 
@@ -91,6 +112,31 @@ class Model extends \Ufocms\AdminModules\Model
      * @param int $userId
      * @return array<int>
      */
+    public function getUserRoles($userId)
+    {
+        static $items = null;
+        if (null === $items) {
+            $sql =  'SELECT u.Id, r.Title' . 
+                    ' FROM ' . C_DB_TABLE_PREFIX . 'users AS u' . 
+                    ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'users_roles_relations AS urr ON u.Id=urr.UserId' . 
+                    ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'users_roles AS r ON r.Id=urr.RoleId';
+            $itms = $this->db->getItems($sql);
+            foreach ($itms as $itm) {
+                $items[$itm['Id']][] = $itm['Title'];
+            }
+            unset($itms);
+        }
+        if (isset($items[$userId])) {
+            return $items[$userId];
+        } else {
+            return array();
+        }
+    }
+    
+    /**
+     * @param int $userId
+     * @return array<int>
+     */
     public function getUserGroupsId($userId)
     {
         $sql =  'SELECT GroupId' . 
@@ -100,52 +146,140 @@ class Model extends \Ufocms\AdminModules\Model
     }
     
     /**
+     * @param int $userId
+     * @return array<int>
+     */
+    public function getUserRolesId($userId)
+    {
+        $sql =  'SELECT RoleId' . 
+                ' FROM ' . C_DB_TABLE_PREFIX . 'users_roles_relations' . 
+                ' WHERE UserId=' . $userId;
+        return $this->db->getValues($sql, 'RoleId');
+    }
+    
+    /**
+     * Создание списка групп пользователя.
+     * @param int $userId
+     * @param array $groupsNew
+     */
+    protected function addUserGroups(array $groupsNew)
+    {
+        $sql =  'INSERT INTO ' . C_DB_TABLE_PREFIX . 'users_groups_relations' . 
+                ' (UserId,GroupId) VALUES ';
+        $s = '';
+        foreach ($groupsNew as $n) {
+            $s .= ',(' . $this->lastInsertedId . ',' . $n . ')';
+        }
+        $sql .= substr($s, 1);
+        $this->db->query($sql);
+    }
+    
+    /**
+     * Обновление списка групп пользователя.
+     * @param int $userId
+     * @param array $groupsNew
+     */
+    protected function updateUserGroups($userId, array $groupsNew)
+    {
+        $groupsExists = $this->getUserGroupsId($userId);
+        $groupsDelete = array();
+        foreach ($groupsExists as $e) {
+            if (!in_array($e, $groupsNew)) {
+                $groupsDelete[] = $e;
+            }
+        }
+        if (0 < count($groupsDelete)) {
+            $sql =  'DELETE FROM ' . C_DB_TABLE_PREFIX . 'users_groups_relations' . 
+                    ' WHERE UserId=' . $userId . 
+                    ' AND GroupId IN(' . implode(',', $groupsDelete) . ')';
+            $this->db->query($sql);
+        }
+        
+        $groupsInsert = array();
+        foreach ($groupsNew as $n) {
+            if (!in_array($n, $groupsExists)) {
+                $groupsInsert[] = $n;
+            }
+        }
+        if (0 < count($groupsInsert)) {
+            $sql =  'INSERT INTO ' . C_DB_TABLE_PREFIX . 'users_groups_relations' . 
+                    ' (UserId,GroupId) VALUES ';
+            $s = '';
+            foreach ($groupsInsert as $n) {
+                $s .= ',(' . $userId . ',' . $n . ')';
+            }
+            $sql .= substr($s, 1);
+            $this->db->query($sql);
+        }
+    }
+    
+    /**
+     * Создание списка групп пользователя.
+     * @param int $userId
+     * @param array $rolesNew
+     */
+    protected function addUserRoles(array $rolesNew)
+    {
+        $sql =  'INSERT INTO ' . C_DB_TABLE_PREFIX . 'users_roles_relations' . 
+                ' (UserId,RoleId) VALUES ';
+        $s = '';
+        foreach ($rolesNew as $n) {
+            $s .= ',(' . $this->lastInsertedId . ',' . $n . ')';
+        }
+        $sql .= substr($s, 1);
+        $this->db->query($sql);
+    }
+    
+    /**
+     * Обновление списка групп пользователя.
+     * @param int $userId
+     * @param array $rolesNew
+     */
+    protected function updateUserRoles($userId, array $rolesNew)
+    {
+        $rolesExists = $this->getUserRolesId($userId);
+        $rolesDelete = array();
+        foreach ($rolesExists as $e) {
+            if (!in_array($e, $rolesNew)) {
+                $rolesDelete[] = $e;
+            }
+        }
+        if (0 < count($rolesDelete)) {
+            $sql =  'DELETE FROM ' . C_DB_TABLE_PREFIX . 'users_roles_relations' . 
+                    ' WHERE UserId=' . $userId . 
+                    ' AND RoleId IN(' . implode(',', $rolesDelete) . ')';
+            $this->db->query($sql);
+        }
+        
+        $rolesInsert = array();
+        foreach ($rolesNew as $n) {
+            if (!in_array($n, $rolesExists)) {
+                $rolesInsert[] = $n;
+            }
+        }
+        if (0 < count($rolesInsert)) {
+            $sql =  'INSERT INTO ' . C_DB_TABLE_PREFIX . 'users_roles_relations' . 
+                    ' (UserId,RoleId) VALUES ';
+            $s = '';
+            foreach ($rolesInsert as $n) {
+                $s .= ',(' . $userId . ',' . $n . ')';
+            }
+            $sql .= substr($s, 1);
+            $this->db->query($sql);
+        }
+    }
+    
+    /**
      * Update user relations (groups).
      */
     protected function updateRelations()
     {
-        $groupsNew = $this->groups;
-        
         if (0 != $this->params->itemId) {
-            $groupsExists = $this->getUserGroupsId($this->params->itemId);
-            $groupsDelete = array();
-            foreach ($groupsExists as $e) {
-                if (!in_array($e, $groupsNew)) {
-                    $groupsDelete[] = $e;
-                }
-            }
-            if (0 < count($groupsDelete)) {
-                $sql =  'DELETE FROM ' . C_DB_TABLE_PREFIX . 'users_groups_relations' . 
-                        ' WHERE UserId=' . $this->params->itemId . 
-                        ' AND GroupId IN(' . implode(',', $groupsDelete) . ')';
-                $this->db->query($sql);
-            }
-            
-            $groupsInsert = array();
-            foreach ($groupsNew as $n) {
-                if (!in_array($n, $groupsExists)) {
-                    $groupsInsert[] = $n;
-                }
-            }
-            if (0 < count($groupsInsert)) {
-                $sql =  'INSERT INTO ' . C_DB_TABLE_PREFIX . 'users_groups_relations' . 
-                        ' (UserId,GroupId) VALUES ';
-                $s = '';
-                foreach ($groupsInsert as $n) {
-                    $s .= ',(' . $this->params->itemId . ',' . $n . ')';
-                }
-                $sql .= substr($s, 1);
-                $this->db->query($sql);
-            }
+            $this->updateUserGroups($this->params->itemId, $this->groups);
+            $this->updateUserRoles($this->params->itemId, $this->roles);
         } else {
-            $sql =  'INSERT INTO ' . C_DB_TABLE_PREFIX . 'users_groups_relations' . 
-                    ' (UserId,GroupId) VALUES ';
-            $s = '';
-            foreach ($groupsNew as $n) {
-                $s .= ',(' . $this->lastInsertedId . ',' . $n . ')';
-            }
-            $sql .= substr($s, 1);
-            $this->db->query($sql);
+            $this->addUserGroups($this->params->itemId, $this->groups);
+            $this->addUserRoles($this->params->itemId, $this->roles);
         }
     }
     
@@ -156,7 +290,9 @@ class Model extends \Ufocms\AdminModules\Model
     {
         $data = parent::collectFormData($fields, $update);
         $this->groups = $data['Groups']['Value'];
+        $this->roles = $data['Roles']['Value'];
         unset($data['Groups']);
+        unset($data['Roles']);
         return $data;
     }
     
@@ -183,6 +319,12 @@ class Model extends \Ufocms\AdminModules\Model
     {
         $sql =  'DELETE FROM ' . C_DB_TABLE_PREFIX . 'users_groups_relations' . 
                 ' WHERE UserId=' . $this->params->itemId;
-        return $this->db->query($sql);
+        $this->db->query($sql);
+        
+        $sql =  'DELETE FROM ' . C_DB_TABLE_PREFIX . 'users_roles_relations' . 
+                ' WHERE UserId=' . $this->params->itemId;
+        $this->db->query($sql);
+        
+        return true;
     }
 }

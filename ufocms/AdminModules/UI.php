@@ -417,6 +417,13 @@ class UI extends DIObject
      */
     protected function getItemFuncHtml(array $item, $func)
     {
+        $roles = $this->core->getRoles();
+        $userId = $this->core->getUsers()->getCurrent()['Id'];
+        $module = (0 != $this->module['ModuleId'] ? (int) $this->module['ModuleId'] : (string) $this->module['Module']);
+        if (!$roles->rolesPermittedAction($userId, $module, $func)) {
+            return '';
+        }
+        
         switch ($func) {
             case 'open':
                 if (array_key_exists('path', $item)) {
@@ -1404,15 +1411,15 @@ class UI extends DIObject
     
     /**
      * Формирование окончания формы.
-     * @param array $submitAttributes
+     * @param array $submitAttributes = null
      * @param array $cancelAttributes = null
      * @return string
      */
-    protected function formEnd(array $submitAttributes, array $cancelAttributes = null)
+    protected function formEnd(array $submitAttributes = null, array $cancelAttributes = null)
     {
         $s =    '<tr><td colspan="2" align="center">' . 
                 (null !== $cancelAttributes ? $this->formCancelElement($cancelAttributes) . '&nbsp;' : '') . 
-                $this->formSubmitElement($submitAttributes) . 
+                (null !== $submitAttributes ? $this->formSubmitElement($submitAttributes) . '&nbsp;' : '') . 
                 '</td></tr>' . 
                 '</table></form>';
         return $s;
@@ -1472,15 +1479,35 @@ class UI extends DIObject
      */
     public function form()
     {
+        $roles = $this->core->getRoles();
+        $userId = $this->core->getUsers()->getCurrent()['Id'];
+        $module = (0 != $this->module['ModuleId'] ? (int) $this->module['ModuleId'] : (string) $this->module['Module']);
+        //TODO 'edit'
+        $formDisabled = true;
+        if ($roles->rolesPermittedAction($userId, $module, 'edit')) {
+            $formDisabled = false;
+        }
+        
         $fields = $this->model->getFields();
         $item = $this->model->getItem();
         if (!isset($item['itemid'])) {
             $item['itemid'] = 0;
         }
         
-        $s = $this->formBegin($this->formElementAttributes($this->formHandler($item)));
+        if (!$formDisabled) {
+            $s = $this->formBegin($this->formElementAttributes($this->formHandler($item)));
+        } else {
+            $s = $this->formBegin([]);
+        }
+        
         $s .= $this->formFields($fields, $item);
-        $s .= $this->formEnd($this->formSubmitElementAttributes(), $this->formCancelElementAttributes());
+        
+        if (!$formDisabled) {
+            $s .= $this->formEnd($this->formSubmitElementAttributes(), $this->formCancelElementAttributes());
+        } else {
+            $s .= $this->formEnd(null, $this->formCancelElementAttributes());
+        }
+        
         return $s;
     }
     

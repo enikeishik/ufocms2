@@ -15,12 +15,18 @@ span.info { margin-left: 5px; line-height: 10px; font-size: 10px; font-weight: n
 .close { float: right; display: inline-block; width: 15px; height: 15px; border: solid #999 1px; border-radius: 10px; font-family: Tahoma; font-size: 11px; text-align: center; cursor: pointer; }
 
 #frameleft { position: absolute; top: 0; bottom: 0; left: 0; width: 215px; overflow: auto; background-color: #ccc; }
-#frameleft .framewrap { margin: 5px 0px 5px 0px; }
+#frameleft .framewrap { margin: 0px 0px 5px 0px; }
 #clop { position: absolute; top: 0; bottom: 0; left: 215px; z-index: 9; width: 15px; background-color: #ccc; }
 #clop a { display: block; position: absolute; top: 0; bottom: 0; width: 15px; /*height: 80%;*/ padding-top: 61px; font-size: 18px; font-family: 'Courier New'; cursor: default; }
 #clop a:hover { background-color: #eee; }
 #framemain { position: fixed; top: 0; left: 230px; right: 0; bottom: 0; overflow: auto; }
-#framemain .framewrap { margin: 5px 10px 5px 10px; }
+#framemain .framewrap { margin: 0px 10px 5px 10px; }
+
+#lefttop { border-bottom: dashed #999 1px; margin-bottom: 5px; }
+#lefttop>div { display: inline-block; width: 49%; }
+#lefttop a { display: block; line-height: 20px; font-size: 11px; width: 100%; height: 20px; text-align: center; color: #333; text-decoration: none; }
+#lefttop a:hover { background-color: #eee; }
+#logout { float: right; }
 
 .hclop { height: 5px; cursor: pointer; padding-top: 5px; }
 .hclop:hover { background-color: #eee; }
