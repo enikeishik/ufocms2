@@ -268,7 +268,7 @@ class View extends DIObject
             
             $admin = false;
             //TODO: 'Core'
-            if (0 === strpos($module, 'Core')) {
+            if (0 === strpos($module, 'Core') || 0 === strpos($module, 'Admin')) {
                 $moduleId = strtolower(substr($module, strlen('Core')));
             } else if (0 !== strpos($module, 'Admin')) {
                 $moduleInfo = $this->core->getModuleByName(strtolower($module), 'Id');
