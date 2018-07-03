@@ -137,7 +137,8 @@ table.form input[size="50"], .form textarea, .form select { width: 99%; }
 table.form tr.type-image>td>input[type="text"] { width: 84%; }
 table.form tr.type-rlist>td>div { padding-top: 5px; border-bottom: dashed #666 1px; padding-bottom: 5px; }
 table.form tr.type-rlist>td>div:hover { background-color: #fff; }
-table.form tr.type-rlist>td>div>label>span { margin-left: 10px; border: none; color: #666; }
+table.form tr.type-rlist>td>div>label { display: block; width: 100%; cursor: pointer; }
+table.form tr.type-rlist>td>div>label>span { margin-left: 10px; border: none; color: #666; cursor: pointer; }
 table.form tr.type-rlist>td>div:last-child { border-bottom: none; }
 table.form tr.type-rlist>td>div>div { margin-left: 21px; margin-top: 5px; color: #666; }
 table.form .note { font-size: 11px; color: #999; }
