@@ -21,6 +21,21 @@ class UI extends \Ufocms\AdminModules\UI
     /**
      * @see parent
      */
+    protected function filterByType(array $field, $basePathFields)
+    {
+        if ('TrgSections' == $field['Name']) {
+            $items = array_merge(
+                array(array('Value' => 0, 'Title' => 'Все разделы')),
+                $this->model->getFieldItems($field)
+            );
+            return $this->filterByFieldItems($field, $items, $basePathFields);
+        }
+        return parent::filterByType($field, $basePathFields);
+    }
+    
+    /**
+     * @see parent
+     */
     protected function listItemsHeaderField(array $field)
     {
         if ('Description' == $field['Name']) {

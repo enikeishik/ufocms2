@@ -27,7 +27,7 @@ class Model extends \Ufocms\AdminModules\Model
     {
         $this->fields = array(
             array('Type' => 'int',          'Name' => 'Id',             'Value' => 0,           'Title' => 'id',                    'Filter' => false,  'Show' => true,     'Sort' => true,     'Edit' => false),
-            array('Type' => 'mlist',        'Name' => 'TrgSections',    'Value' => array(0),    'Title' => 'Разделы отображения',   'Filter' => false,  'Show' => true,     'Sort' => false,    'Edit' => true,     'Items' => 'getTrgSections',    'External' => true,     'Class' => 'small'),
+            array('Type' => 'mlist',        'Name' => 'TrgSections',    'Value' => array(0),    'Title' => 'Разделы отображения',   'Filter' => true,   'Show' => true,     'Sort' => false,    'Edit' => true,     'Items' => 'getTrgSections',    'External' => true,     'Class' => 'small'),
             array('Type' => 'rlist',        'Name' => 'TypeId',         'Value' => 0,           'Title' => 'Тип',                   'Filter' => true,   'Show' => true,     'Sort' => true,     'Edit' => true,     'Items' => 'getTypes',          'Required' => true,     'Class' => 'small',     'Unchange' => true),
             array('Type' => 'combo',        'Name' => 'PlaceId',        'Value' => 0,           'Title' => 'Позиция',               'Filter' => true,   'Show' => true,     'Sort' => true,     'Edit' => true,     'Items' => 'getPlaces'),
             array('Type' => 'int',          'Name' => 'OrderId',        'Value' => 0,           'Title' => 'Порядок',               'Filter' => false,  'Show' => true,     'Sort' => true,     'Edit' => true),
@@ -42,6 +42,9 @@ class Model extends \Ufocms\AdminModules\Model
         );
     }
     
+    /**
+     * @return array
+     */
     public function getTrgSections()
     {
         $items = array_merge(
@@ -83,6 +86,9 @@ class Model extends \Ufocms\AdminModules\Model
         }
     }
     
+    /**
+     * @return array
+     */
     public function getTypes()
     {
         $sql =  'SELECT wt.Id, wt.Title, wt.Description, m.mname' . 
@@ -171,6 +177,9 @@ class Model extends \Ufocms\AdminModules\Model
         return $name;
     }
     
+    /**
+     * set $this->widget
+     */
     protected function setWidget()
     {
         if (null !== $this->widget) {
@@ -273,6 +282,29 @@ class Model extends \Ufocms\AdminModules\Model
         return $this->widget->getSourceDepends();
     }
     
+    /**
+     * @see parent
+     */
+    protected function getItemsSqlCondition($table = '')
+    {
+        if (!is_null($this->params->filterName) && 'TrgSections' == $this->params->filterName
+        && !is_null($this->params->filterValue) && '' != $this->params->filterValue) {
+            $sql =  ' WHERE ' . 
+                    ('' != $this->primaryFilter ? $this->primaryFilter . ' AND ' : '') . 
+                    'EXISTS (' . 
+                        'SELECT * FROM ' . C_DB_TABLE_PREFIX . 'widgets_targets' . 
+                        ' WHERE WidgetId=' . C_DB_TABLE_PREFIX . 'widgets.Id' . 
+                        ' AND ' . $this->getSqlConditionInt('SectionId', $this->params->filterValue) . 
+                    ')';
+            return $sql;
+        }
+        
+        return parent::getItemsSqlCondition($table);
+    }
+    
+    /**
+     * @see parent
+     */
     public function getItem()
     {
         static $item = null;
@@ -315,6 +347,9 @@ class Model extends \Ufocms\AdminModules\Model
             || ('Content' == $field['Name'] && !$this->getWidgetUseContent());
     }
     
+    /**
+     * @see parent
+     */
     public function update()
     {
         if (null === $this->params->itemId) {
