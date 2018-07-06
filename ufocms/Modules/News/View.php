@@ -52,6 +52,9 @@ class View extends \Ufocms\Modules\View //implements IView
         }
     }
     
+    /**
+     * @see parent
+     */
     protected function getLayout()
     {
         if ($this->moduleParams['isRss']) {
@@ -61,13 +64,13 @@ class View extends \Ufocms\Modules\View //implements IView
                 '/rss.php'
             );
         } else if ($this->moduleParams['isYandex']) {
-            return  $this->findTemplate(
+            return $this->findTemplate(
                 $this->templatePath, 
                 $this->module['Name'], 
                 '/yandex.php'
             );
         } else if ($this->moduleParams['isYaDzen']) {
-            return  $this->findTemplate(
+            return $this->findTemplate(
                 $this->templatePath, 
                 $this->module['Name'], 
                 '/yadzen.php'
@@ -79,20 +82,31 @@ class View extends \Ufocms\Modules\View //implements IView
                 '/yaturbo.php'
             );
         } else if ($this->moduleParams['isRambler']) {
-            return  $this->findTemplate(
+            return $this->findTemplate(
                 $this->templatePath, 
                 $this->module['Name'], 
                 '/rambler.php'
+            );
+        } else if ($this->moduleParams['isAMP']) {
+            return $this->findTemplate(
+                $this->templatePath, 
+                $this->module['Name'], 
+                '/itemamp.php'
             );
         } else {
             return parent::getLayout();
         }
     }
     
-    protected function renderHead()
+    /**
+     * @see parent
+     */
+    protected function renderHead($entry = null)
     {
         if (0 == $this->params->itemId) {
             parent::renderHead();
+        } else {
+            parent::renderHead('/itemhead.php');
         }
     }
 }

@@ -10,6 +10,9 @@ namespace Ufocms\Modules\Faq;
  */
 class View extends \Ufocms\Modules\View //implements IView
 {
+    /**
+     * @see parent
+     */
     protected function getLayout()
     {
         if ($this->moduleParams['isRss']) {
@@ -23,7 +26,10 @@ class View extends \Ufocms\Modules\View //implements IView
         }
     }
     
-    protected function renderHead()
+    /**
+     * @see parent
+     */
+    protected function renderHead($entry = null)
     {
         if (0 == $this->params->itemId) {
             parent::renderHead();

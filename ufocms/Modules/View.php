@@ -675,8 +675,9 @@ class View extends DIObject
     
     /**
      * Генерация HTML кода для заголовочной части (HEAD).
+     * @param string $entry
      */
-    protected function renderHead()
+    protected function renderHead($entry = null)
     {
         extract(
             $this->context, 
@@ -685,7 +686,7 @@ class View extends DIObject
         $template = $this->findTemplate(
             $this->templatePath, 
             '/' . strtolower($this->module['Name']), 
-            $this->config->templatesHeadEntry
+            (null === $entry ? $this->config->templatesHeadEntry : $entry)
         );
         if (file_exists($template)) {
             include $template;

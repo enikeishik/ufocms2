@@ -10,6 +10,9 @@ namespace Ufocms\Modules\News;
  */
 class Controller extends \Ufocms\Modules\Controller //implements IController
 {
+    /**
+     * @see parent
+     */
     protected function setModuleParamsStruct()
     {
         parent::setModuleParamsStruct();
@@ -19,6 +22,7 @@ class Controller extends \Ufocms\Modules\Controller //implements IController
                 'isYaDzen'  => ['type' => 'bool',   'from' => 'path',   'prefix' => 'yadzen',   'additional' => false,  'value' => null, 'default' => false], 
                 'isYaTurbo' => ['type' => 'bool',   'from' => 'path',   'prefix' => 'yaturbo',  'additional' => false,  'value' => null, 'default' => false], 
                 'isRambler' => ['type' => 'bool',   'from' => 'path',   'prefix' => 'rambler',  'additional' => false,  'value' => null, 'default' => false], 
+                'isAMP'     => ['type' => 'bool',   'from' => 'path',   'prefix' => 'amp',      'additional' => true,   'value' => null, 'default' => false], 
                 'author'    => ['type' => 'string', 'from' => 'get',    'prefix' => 'author',   'additional' => false,  'value' => null, 'default' => ''], 
             )
         );

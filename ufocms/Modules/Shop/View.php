@@ -107,7 +107,7 @@ class View extends \Ufocms\Modules\View //implements IView
     /**
      * @see parent
      */
-    protected function renderHead()
+    protected function renderHead($entry = null)
     {
         if (0 == $this->params->itemId) {
             parent::renderHead();

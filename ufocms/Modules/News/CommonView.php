@@ -43,35 +43,35 @@ class CommonView extends \Ufocms\Modules\View //implements IView
         if (0 != $this->params->itemId) {
              //not used, riseError 301 in init()
             return array(
-                'settings'      => null, 
+                'settings'      => $this->model->getSettings(), 
                 'item'          => $this->model->getItem(), 
                 'items'         => null, 
                 'itemsCount'    => $this->model->getItemsCount(), 
             );
         } else if (null !== $this->moduleParams['date']) {
             return array(
-                'settings'      => null, 
+                'settings'      => $this->model->getSettings(), 
                 'item'          => null, 
                 'items'         => $this->model->getItemsByDate(), 
                 'itemsCount'    => $this->model->getItemsCount(), 
             );
         } else if (null !== $this->moduleParams['authors']) {
             return array(
-                'settings'      => null, 
+                'settings'      => $this->model->getSettings(), 
                 'item'          => null, 
                 'items'         => $this->model->getAuthors(), 
                 'itemsCount'    => $this->model->getItemsCount(), 
             );
         } else if (null !== $this->moduleParams['author']) {
             return array(
-                'settings'      => null, 
+                'settings'      => $this->model->getSettings(), 
                 'item'          => null, 
                 'items'         => $this->model->getItemsByAuthor(), 
                 'itemsCount'    => $this->model->getItemsCount(), 
             );
         } else {
             return array(
-                'settings'      => null, 
+                'settings'      => $this->model->getSettings(), 
                 'item'          => null, 
                 'items'         => $this->model->getItems(), 
                 'itemsCount'    => $this->model->getItemsCount(), 
@@ -102,6 +102,12 @@ class CommonView extends \Ufocms\Modules\View //implements IView
                 $this->module['Name'], 
                 '/yadzen.php'
             );
+        } else if ($this->moduleParams['isYaTurbo']) {
+            return  $this->findTemplate(
+                $this->templatePath, 
+                $this->module['Name'], 
+                '/yaturbo.php'
+            );
         } else if ($this->moduleParams['isRambler']) {
             return $this->findTemplate(
                 $this->templatePath, 
@@ -131,7 +137,7 @@ class CommonView extends \Ufocms\Modules\View //implements IView
     /**
      * @see parent
      */
-    protected function renderHead()
+    protected function renderHead($entry = null)
     {
         if (0 == $this->params->itemId) {
             parent::renderHead();
