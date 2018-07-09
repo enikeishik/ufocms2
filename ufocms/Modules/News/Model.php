@@ -10,6 +10,9 @@ namespace Ufocms\Modules\News;
  */
 class Model extends \Ufocms\Modules\Model //implements IModel
 {
+    /**
+     * @see parent
+     */
     public function getSettings()
     {
         if (null !== $this->settings) {
@@ -24,6 +27,18 @@ class Model extends \Ufocms\Modules\Model //implements IModel
     }
     
     /**
+     * @return bool
+     */
+    protected function isFeed()
+    {
+        return $this->moduleParams['isRss'] 
+            || $this->moduleParams['isYandex'] 
+            || $this->moduleParams['isYaDzen'] 
+            || $this->moduleParams['isRambler'] 
+            || $this->moduleParams['isYaTurbo'];
+    }
+    
+    /**
      * @return array|null
      */
     public function getItems()
@@ -35,14 +50,14 @@ class Model extends \Ufocms\Modules\Model //implements IModel
         $sqlBase =  ' FROM ' . C_DB_TABLE_PREFIX . 'news' . 
                     ' WHERE SectionId=' . $this->params->sectionId . 
                     " AND IsHidden=0 AND DateCreate<='" . $now . "'";
-        if ($this->moduleParams['isRss'] || $this->moduleParams['isYandex'] || $this->moduleParams['isYaDzen']) {
+        if ($this->isFeed()) {
             $sqlBase .= ' AND IsRss=1' . 
                         " AND DateCreate>DATE_ADD('" . $now . "', INTERVAL - " . $this->settings['RssExpireOffset'] . ' MINUTE)';
         }
         $sqlOrder = 'DateCreate DESC';
         $sql =  'SELECT *' . 
                 $sqlBase;
-        if ($this->moduleParams['isRss'] || $this->moduleParams['isYandex'] || $this->moduleParams['isYaDzen']) {
+        if ($this->isFeed()) {
             $sql .= ' ORDER BY DateCreate DESC' . 
                     ' LIMIT ' . ($this->params->pageSize * 2);
         } else {
