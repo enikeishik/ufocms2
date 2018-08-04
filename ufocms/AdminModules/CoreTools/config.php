@@ -26,4 +26,16 @@ return [
     'repositoryUrl' => 'https://github.com/enikeishik/ufocms2', 
     
     'repositoryApiUrl' => 'https://api.github.com/repos/enikeishik/ufocms2/commits', 
+    
+    'moduleStruct' => [
+        'dir' => [
+            '/admin/templates/', 
+            '/templates/default/', 
+            '/ufocms/AdminModules/', 
+            '/ufocms/Modules/', 
+        ], 
+        'sql'   => '/*.sql', 
+    ], 
+    
+    'installedDirMode' => 0777, 
 ];

@@ -22,5 +22,7 @@ class UIBackup extends UI
         $this->appendMainTab('Backup', $tab);
         $tab = '<a href="?' . $this->config->paramsNames['coreModule'] . '=' . $this->params->coreModule . '&' . $this->config->paramsNames['subModule'] . '=update" title="обновление системы">обновление</a>';
         $this->appendMainTab('Update', $tab);
+        $tab = '<a href="?' . $this->config->paramsNames['coreModule'] . '=' . $this->params->coreModule . '&' . $this->config->paramsNames['subModule'] . '=install" title="установка модуля">установка</a>';
+        $this->appendMainTab('Install', $tab);
     }
 }

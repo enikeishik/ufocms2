@@ -8,7 +8,7 @@ namespace Ufocms\AdminModules\CoreTools;
 /**
  * Module level UI
  */
-class UIUpdate extends UI
+class UIInstall extends UI
 {
     /**
      * @see parent
@@ -20,9 +20,9 @@ class UIUpdate extends UI
         $this->appendMainTab('Index', $tab);
         $tab = '<a href="?' . $this->config->paramsNames['coreModule'] . '=' . $this->params->coreModule . '&' . $this->config->paramsNames['subModule'] . '=backup" title="резервные копии системы">резерв.копии</a>';
         $this->appendMainTab('Backup', $tab);
-        $tab = '<a href="?' . $this->config->paramsNames['coreModule'] . '=' . $this->params->coreModule . '&' . $this->config->paramsNames['subModule'] . '=update" class="current" title="обновление системы">обновление</a>';
+        $tab = '<a href="?' . $this->config->paramsNames['coreModule'] . '=' . $this->params->coreModule . '&' . $this->config->paramsNames['subModule'] . '=update" title="обновление системы">обновление</a>';
         $this->appendMainTab('Update', $tab);
-        $tab = '<a href="?' . $this->config->paramsNames['coreModule'] . '=' . $this->params->coreModule . '&' . $this->config->paramsNames['subModule'] . '=install" title="установка модуля">установка</a>';
+        $tab = '<a href="?' . $this->config->paramsNames['coreModule'] . '=' . $this->params->coreModule . '&' . $this->config->paramsNames['subModule'] . '=install" class="current" title="установка модуля">установка</a>';
         $this->appendMainTab('Install', $tab);
     }
 }
