@@ -146,7 +146,7 @@ table.form .selector { margin-bottom: 5px; }
 table.form .selector label { margin-right: 20px; }
 table.form .selector label input { vertical-align: text-bottom; }
 
-.result { height: 20px; overflow: auto; margin-bottom: 10px; padding: 5px; text-align: center; border: dashed #999 1px; background-color: #eee; }
+.result { overflow: auto; margin-bottom: 10px; padding: 5px; text-align: center; border: dashed #999 1px; background-color: #eee; }
 
 .debug { margin-top: 20px; border: solid 1px #933; background-color: #fee; }
 .debug div { margin-bottom: 10px; padding: 5px; }
