@@ -1671,6 +1671,7 @@ function addImageAdjuster(id)
     };
 }
 </script>
+
 EOD;
             }
         

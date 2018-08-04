@@ -113,4 +113,30 @@ class UIAdd1 extends UI
             'value' => 'Далее'
         );
     }
+    
+    /**
+     * @see parent
+     */
+    public function headCode()
+    {
+        
+$s = <<<'EOD'
+<script type="text/javascript">
+window.addEventListener("load", function() {
+    var elms = document.getElementsByTagName("label");
+    for (var i = 0; i < elms.length; i++) {
+        elms[i].addEventListener(
+            "dblclick", 
+            function() {
+                this.form.submit();
+            }, 
+            false
+        );
+    }
+});
+</script>
+
+EOD;
+        return $s;
+    }
 }
