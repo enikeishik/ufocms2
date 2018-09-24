@@ -93,7 +93,8 @@ class ModulesDocumentsViewTest extends ModulesAbstractViewTest
     public function testRender()
     {
         $this->params->sectionId = 0;
-        $content = $this->getRenderContent();
+        //remove travis-ci VM id from var_dump
+        $content = preg_replace('/ \/tmp\/tmp.+\n/', ' ', $this->getRenderContent());
         $this->assertTrue(false !== strpos($content, 'test view template begin'));
         $this->assertTrue(false !== strpos($content, '$item NULL'));
         $this->assertTrue(false !== strpos($content, '$items NULL'));
@@ -116,7 +117,8 @@ class ModulesDocumentsViewTest extends ModulesAbstractViewTest
             ]
         );
         $this->params->sectionId = 1014;
-        $content = $this->getRenderContent();
+        //remove travis-ci VM id from var_dump
+        $content = preg_replace('/ \/tmp\/tmp.+\n/', ' ', $this->getRenderContent());
         $this->assertTrue(false !== strpos($content, 'test view template begin'));
         $this->assertTrue(false !== strpos($content, '$item array(4)'));
         $this->assertTrue(false !== strpos($content, '1014'));
