@@ -15,7 +15,7 @@ use Ufocms\Frontend\Menu;
 /**
  * Module level view base class
  */
-class View extends DIObject
+class View extends DIObject implements ViewInterface
 {
     /**
      * @var array
@@ -219,11 +219,15 @@ class View extends DIObject
      */
     public function setTheme($theme = null)
     {
-        if (null === $theme && null === $this->templateUrl) {
+        if (null === $theme && null !== $this->templateUrl) {
+            return;
+        }
+        if (null === $theme) {
             $this->templateUrl = $this->config->templatesDir . $this->config->themeDefault;
-        } else if (null !== $theme) {
+        } else {
             $this->templateUrl = $this->config->templatesDir . '/' . $theme;
         }
+        
         $this->templatePath = $this->config->rootPath . $this->templateUrl;
         $this->loadThemeConfig();
         $this->setThemeStyle();
@@ -482,6 +486,7 @@ class View extends DIObject
     /**
      * Генерация вставок.
      * @param array $options = null
+     * @deprecated
      */
     protected function renderInsertions(array $options = null)
     {
@@ -505,6 +510,7 @@ class View extends DIObject
      * Получение объектов вставок.
      * @param array $options = null
      * @return array<\Ufocms\Modules\Insertion>
+     * @deprecated
      */
     protected function getInsertions(array $options = null)
     {

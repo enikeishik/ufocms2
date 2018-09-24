@@ -44,8 +44,8 @@ class CurrencyCbrf extends \Ufocms\Modules\Widget
     {
         $items = ['Currency' => ['Name' => '', 'Value' => '']];
         
-        $dom = new \DOMDocument;
-        if (!$dom->load($dataFile)) {
+        $dom = new \DOMDocument();
+        if (!@$dom->load($dataFile)) {
             return $items;
         }
         if (!$dom) {

@@ -12,7 +12,7 @@ namespace Ufocms\AdminModules;
 /**
  * Base model class
  */
-class Model extends Schema
+class Model extends Schema implements ModelInterface
 {
     /**
      * @var \Ufocms\Frontend\Debug
@@ -104,6 +104,11 @@ class Model extends Schema
     /**
      * @var array
      */
+    protected $item = null;
+    
+    /**
+     * @var array
+     */
     protected $sections = null;
     
     /**
@@ -186,7 +191,7 @@ class Model extends Schema
     
     /**
      * Get model of master (when this model is slave).
-     * @return Model
+     * @return Model|null
      */
     public function getMaster()
     {
@@ -346,6 +351,19 @@ class Model extends Schema
             $sql =  ' WHERE ' . 
                     ('' != $this->primaryFilter ? $this->primaryFilter . ' AND ' : '') . 
                     $this->getSqlFieldPrefix($table);
+            /* TODO: implement filter for external fields (make some attribute or method to get relation and field for filter condition
+            if (array_key_exists('External', $field) && $field['External']) {
+                if ('' != $this->params->filterValue) {
+                    //example for widgets, field TrgSections
+                    $sql .= 'EXISTS (' . 
+                                'SELECT * FROM ' . C_DB_TABLE_PREFIX . 'widgets_targets' . 
+                                ' WHERE WidgetId=' . C_DB_TABLE_PREFIX . 'widgets.Id' . 
+                                ' AND SectionId=' . $this->params->filterValue . 
+                            ')';
+                    return $sql;
+                }
+            }
+            */
             switch ($field['Type']) {
                 case 'int':
                 case 'list':
@@ -494,8 +512,7 @@ class Model extends Schema
      */
     public function getItem()
     {
-        static $item = null;
-        if (null === $item) {
+        if (null === $this->item) {
             if (0 != $this->params->itemId) {
                 $fields = array_keys($this->getFieldsValues());
                 if (0 == count($fields)) {
@@ -511,15 +528,15 @@ class Model extends Schema
                 $sql =  'SELECT `' . implode('`,`', $fields) . '`' . $fieldsExtra . 
                         ' FROM `' . C_DB_TABLE_PREFIX . $this->itemsTable . '`' . 
                         ' WHERE `' . $this->itemIdField . '`=' . $this->params->itemId;
-                $item = $this->db->getItem($sql);
-                if (null === $item) {
-                    $item = $this->getEmptyItem();
+                $this->item = $this->db->getItem($sql);
+                if (null === $this->item) {
+                    $this->item = $this->getEmptyItem();
                 }
             } else {
-                $item = $this->getEmptyItem();
+                $this->item = $this->getEmptyItem();
             }
         }
-        return $item;
+        return $this->item;
     }
    
     /**

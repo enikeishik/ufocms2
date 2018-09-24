@@ -299,12 +299,14 @@ class Config extends Struct
     /**
      * Точка входа шаблона для отображения списка вставок
      * @var string
+     * @deprecated
      */
     public $templatesInsertionsEntry = '/insertions.php';
     
     /**
      * Точка входа шаблона для отображения вставки
      * @var string
+     * @deprecated
      */
     public $templatesInsertionEntry = '/insertion.php';
     

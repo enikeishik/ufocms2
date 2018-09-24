@@ -14,7 +14,7 @@ use Ufocms\Frontend\DIObject;
 /**
  * Base stateless model class
  */
-abstract class StatelessModel extends DIObject
+abstract class StatelessModel extends DIObject implements StatelessModelInterface
 {
     /**
      * @var \Ufocms\Frontend\Debug

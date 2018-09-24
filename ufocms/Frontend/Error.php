@@ -109,6 +109,7 @@ class Error extends DIObject
      * @param int $errNum
      * @param string $errMsg = null
      * @param mixed $options = null
+     * @todo replace exit with exception
      */
     public function rise($errNum, $errMsg = null, $options = null)
     {

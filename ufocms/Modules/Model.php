@@ -14,7 +14,7 @@ use Ufocms\Frontend\DIObject;
 /**
  * Module level model base class
  */
-abstract class Model extends DIObject
+abstract class Model extends DIObject implements ModelInterface
 {
     /**
      * @var array
@@ -77,6 +77,11 @@ abstract class Model extends DIObject
      * @var array
      */
     protected $settings = null;
+    
+    /**
+     * @var array
+     */
+    protected $sections = null;
     
     /**
      * @var mixed
@@ -166,17 +171,16 @@ abstract class Model extends DIObject
      */
     public function getSections($nc = false)
     {
-        static $sections = null;
-        if (!$nc && !is_null($sections)) {
-            return $sections;
+        if (!$nc && !is_null($this->sections)) {
+            return $this->sections;
         }
         $section = $this->core->getSection($this->params->sectionId, 'moduleid');
         $items = $this->core->getModuleSections($section['moduleid']);
         foreach ($items as &$item) {
             $item = array('Value' => $item['id'], 'Title' => $item['indic']);
         }
-        $sections = $items;
-        return $sections;
+        $this->sections = $items;
+        return $this->sections;
     }
     
     /**

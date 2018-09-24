@@ -15,7 +15,7 @@ use Ufocms\Frontend\Tools;
 /**
  * Module level controller base class
  */
-class Controller extends DIObject //implements IController
+class Controller extends DIObject implements ControllerInterface
 {
     /**
      * @var array
@@ -274,10 +274,10 @@ class Controller extends DIObject //implements IController
             if (class_exists($class)) {
                 return new $class($container);
             } else {
-                return new \Ufocms\Modules\View($container);
+                return new View($container);
             }
         } else {
-            return new \Ufocms\Modules\View($container);
+            return new View($container);
         }
     }
     

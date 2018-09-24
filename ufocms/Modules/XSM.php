@@ -14,7 +14,7 @@ use Ufocms\Frontend\DIObject;
 /**
  * Module level XmlSitemap generate base class
  */
-abstract class XSM extends DIObject
+abstract class XSM extends DIObject implements XSMInterface
 {
     /**
      * @var \Ufocms\Frontend\Debug

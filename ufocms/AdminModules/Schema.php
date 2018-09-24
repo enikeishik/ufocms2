@@ -14,7 +14,7 @@ use Ufocms\Frontend\DIObject;
 /**
  * Base class for structured data, have property $fields - array of some configurable fields and methods for work with it.
  */
-abstract class Schema extends DIObject
+abstract class Schema extends DIObject implements SchemaInterface
 {
     /**
      * @var array
@@ -56,7 +56,7 @@ abstract class Schema extends DIObject
     /**
      * Получение ссылки на поле по полю или его имени.
      * @param string|array $field
-     * @return &array|&null
+     * @return array|null
      */
     public function &getFieldRef($field)
     {
@@ -110,10 +110,10 @@ abstract class Schema extends DIObject
      * @param mixed $argument = null
      * @return mixed
      */
-    public function getFieldMethodResult($field, $attribute, $argument = null)
+    protected function getFieldMethodResult($field, $attribute, $argument = null)
     {
         $field = $this->getField($field);
-        if (!array_key_exists($attribute, $field)) {
+        if (is_null($field) || !array_key_exists($attribute, $field)) {
             return null;
         }
         $method = $field[$attribute];
@@ -135,7 +135,7 @@ abstract class Schema extends DIObject
      * @param mixed $argument = null
      * @return mixed
      */
-    public function getFieldMethodStoredResult($field, $attribute, $argument = null)
+    protected function getFieldMethodStoredResult($field, $attribute, $argument = null)
     {
         $field =& $this->getFieldRef($field);
         if (is_null($field) || !array_key_exists($attribute, $field)) {

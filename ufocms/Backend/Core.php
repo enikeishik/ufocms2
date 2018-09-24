@@ -18,9 +18,30 @@ use Ufocms\AdminModules\Model;
 class Core extends \Ufocms\Frontend\Core
 {
     /**
+     * @var Config
+     */
+    protected $config = null;
+    
+    /**
+     * @var Db
+     */
+    protected $db = null;
+    
+    /**
      * @var Roles
      */
     protected $roles = null;
+    
+    /**
+     * @param Config &$config
+     * @param Params &$params
+     * @param Db &$db
+     * @param Debug &$debug = null
+     */
+    public function __construct(Config &$config, Params &$params, Db &$db, Debug &$debug = null)
+    {
+        parent::__construct($config, $params, $db, $debug);
+    }
     
     /**
      * Get common site settings
@@ -50,13 +71,8 @@ class Core extends \Ufocms\Frontend\Core
      */
     public function getSection($sectionId = null, $fields = null)
     {
-        if (is_null($fields)) {
-            $fields = '*';
-        } else if (is_array($fields)) {
-            $fields = implode(',', $fields);
-        }
         if (!is_null($sectionId)) {
-            $sql =  'SELECT ' . $fields . 
+            $sql =  'SELECT ' . $this->getFieldsSql($fields) . 
                     ' FROM ' . C_DB_TABLE_PREFIX . 'sections' . 
                     ' WHERE id=' . $sectionId;
             return $this->db->getItem($sql);
@@ -64,7 +80,7 @@ class Core extends \Ufocms\Frontend\Core
         if (is_null($this->section) 
         && !is_null($this->params->sectionId) 
         && 0 != $this->params->sectionId) {
-            $sql =  'SELECT ' . $fields . 
+            $sql =  'SELECT ' . $this->getFieldsSql($fields) . 
                     ' FROM ' . C_DB_TABLE_PREFIX . 'sections' . 
                     ' WHERE id=' . $this->params->sectionId;
             $this->section = $this->db->getItem($sql);
@@ -79,14 +95,9 @@ class Core extends \Ufocms\Frontend\Core
      */
     public function getModule($fields = null)
     {
-        if (is_null($fields)) {
-            $fields = '*';
-        } else if (is_array($fields)) {
-            $fields = implode(',', $fields);
-        }
         if (is_null($this->module)) {
             $section = $this->getSection();
-            $sql =  'SELECT ' . $fields .
+            $sql =  'SELECT ' . $this->getFieldsSql($fields) .
                     ' FROM ' . C_DB_TABLE_PREFIX . 'modules' .
                     ' WHERE isenabled<>0 AND muid=' . $section['moduleid'];
             $this->module = $this->db->getItem($sql);
@@ -108,13 +119,7 @@ class Core extends \Ufocms\Frontend\Core
             return $module;
         }
         
-        if (is_null($fields)) {
-            $fields = '*';
-        } else if (is_array($fields)) {
-            $fields = implode(',', $fields);
-        }
-        
-        $sql =  'SELECT ' . $fields .
+        $sql =  'SELECT ' . $this->getFieldsSql($fields) .
                 ' FROM ' . C_DB_TABLE_PREFIX . 'modules' .
                 " WHERE isenabled<>0 AND madmin='mod_" . $this->db->addEscape(strtolower($moduleName)) . "'";
         $module = $this->db->getItem($sql);
@@ -124,16 +129,16 @@ class Core extends \Ufocms\Frontend\Core
     
     /**
      * Get sections for building js treeview
-     * @param int $sectionId
+     * @param int $parentId
      * @return array
      */
-    public function getSectionChildren($sectionId)
+    public function getSectionChildren($parentId)
     {
         $sql =  'SELECT s.id,s.levelid,s.isparent,s.path,s.indic,m.mname,m.madmin' . 
                 ' FROM ' . C_DB_TABLE_PREFIX . 'sections AS s' . 
                 ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'modules AS m' . 
                 ' ON m.id = s.moduleid' . 
-                ' WHERE s.parentid=' . $sectionId . 
+                ' WHERE s.parentid=' . $parentId . 
                 ' ORDER BY s.orderid';
         return $this->db->getItems($sql, 'id');
     }

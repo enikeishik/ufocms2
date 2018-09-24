@@ -14,7 +14,7 @@ use Ufocms\Frontend\DIObject;
 /**
  * Base view class
  */
-class View extends DIObject
+class View extends DIObject implements ViewInterface
 {
     /**
      * @var \Ufocms\Frontend\Debug
@@ -261,8 +261,7 @@ class View extends DIObject
     {
         if ('' == $module) {
             $moduleClass = '\\Ufocms\\AdminModules\\AdminWidget';
-        }
-        if (false === strpos($module, '\\')) {
+        } elseif (false === strpos($module, '\\')) {
             $roles = $this->core->getRoles();
             $userId = $this->core->getUsers()->getCurrent()['Id'];
             
@@ -287,6 +286,8 @@ class View extends DIObject
             } else {
                 $moduleClass = '\\Ufocms\\AdminModules\\AdminWidget';
             }
+        } else {
+            $moduleClass = $module;
         }
         return new $moduleClass($this->config, $this->db, $this->core, $this->debug);
     }

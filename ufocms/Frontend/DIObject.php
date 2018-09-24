@@ -12,7 +12,7 @@ namespace Ufocms\Frontend;
 /**
  * Dependency injection object
  */
-abstract class DIObject
+abstract class DIObject implements DIObjectInterface
 {
     /**
      * Ссылка на объект-контейнер ссылок на объекты.
@@ -22,9 +22,9 @@ abstract class DIObject
     
     /**
      * Конструктор.
-     * @param Container &$container    ссылка на объект-контейнер ссылок на объекты
+     * @param ContainerInterface &$container    ссылка на объект-контейнер ссылок на объекты
      */
-    public function __construct(Container &$container)
+    public function __construct(ContainerInterface &$container)
     {
         $this->container =& $container;
         $this->unpackContainer();

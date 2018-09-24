@@ -15,7 +15,7 @@ use Ufocms\Frontend\Tools;
 /**
  * Module level controller base class
  */
-abstract class Controller extends DIObject //implements IController
+abstract class Controller extends DIObject implements ControllerInterface
 {
     /**
      * @var \Ufocms\Frontend\Debug
@@ -236,7 +236,9 @@ abstract class Controller extends DIObject //implements IController
         
         $this->model->$action();
         
-        $this->core->fixUserAction($this->model, $action);
+        if ($this->model instanceof Model) {
+            $this->core->fixUserAction($this->model, $action);
+        }
     }
     
     /**

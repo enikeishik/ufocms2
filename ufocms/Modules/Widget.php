@@ -14,7 +14,7 @@ use Ufocms\Frontend\DIObject;
 /**
  * Widget base class
  */
-abstract class Widget extends DIObject
+abstract class Widget extends DIObject implements WidgetInterface
 {
     /**
      * @var \Ufocms\Frontend\Debug

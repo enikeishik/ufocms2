@@ -76,6 +76,9 @@ class Widget extends \Ufocms\Modules\Widget
         //different SQLs because JOIN required TEMP table
         if (false === strpos($this->srcSections, ',')) {
             $section = $this->core->getSection((int) $this->srcSections, 'path,indic');
+            if (null === $section) {
+                return null;
+            }
             $sql =  'SELECT Id, DateCreate, Title, Author, Icon, Announce, Body, ViewedCnt, ' . 
                     "'" . $section['path'] . "' AS path, '" . $this->db->addEscape($section['indic']) . "' AS indic" . 
                     ' FROM ' . C_DB_TABLE_PREFIX . 'news AS i' . 

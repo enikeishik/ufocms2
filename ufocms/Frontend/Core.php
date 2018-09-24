@@ -75,12 +75,27 @@ class Core
     protected $interactionManage = null;
     
     /**
+     * @var array
+     */
+    protected $sectionById = array();
+    
+    /**
+     * @var array
+     */
+    protected $widgetsData = null;
+    
+    /**
+     * @var array
+     */
+    protected $insertionsData = null;
+    
+    /**
      * @param Config &$config
      * @param Params &$params
      * @param Db &$db
      * @param Debug &$debug = null
      */
-    public function __construct(&$config, &$params, &$db, &$debug = null)
+    public function __construct(Config &$config, Params &$params, Db &$db, Debug &$debug = null)
     {
         $this->debug =& $debug;
         $this->config =& $config;
@@ -159,6 +174,21 @@ class Core
     }
     
     /**
+     * Get SQL expression for fields
+     * @param string|array|null $fields = null
+     * @return string
+     */
+    protected function getFieldsSql($fields = null)
+    {
+        if (is_null($fields)) {
+            return '*';
+        } else if (is_array($fields)) {
+            return implode(',', $fields);
+        }
+        return (string) $fields;
+    }
+    
+    /**
      * Get (current) section information
      * @param int|string|null $section = null
      * @param string|array|null $fields = null
@@ -166,36 +196,30 @@ class Core
      */
     public function getSection($section = null, $fields = null)
     {
-        if (is_null($fields)) {
-            $fields = '*';
-        } else if (is_array($fields)) {
-            $fields = implode(',', $fields);
-        }
         if (is_string($section)) {
-            $sql =  'SELECT ' . $fields . 
+            $sql =  'SELECT ' . $this->getFieldsSql($fields) . 
                     ' FROM ' . C_DB_TABLE_PREFIX . 'sections' . 
                     " WHERE path='" . $section . "'";
             return $this->db->getItem($sql);
         } else if (is_int($section)) {
-            static $itemById = null;
-            if (isset($itemById[$section])) {
-                return $itemById[$section];
+            if (isset($this->sectionById[$section])) {
+                return $this->sectionById[$section];
             }
-            $sql =  'SELECT ' . $fields . 
+            $sql =  'SELECT ' . $this->getFieldsSql($fields) . 
                     ' FROM ' . C_DB_TABLE_PREFIX . 'sections' . 
                     ' WHERE id=' . $section;
-            $itemById[$section] = $this->db->getItem($sql);
-            return $itemById[$section];
+            $this->sectionById[$section] = $this->db->getItem($sql);
+            return $this->sectionById[$section];
         } else if (is_null($this->section)) {
             if (!is_null($this->params->sectionPath) 
             && '' != $this->params->sectionPath) {
-                $sql =  'SELECT ' . $fields . 
+                $sql =  'SELECT ' . $this->getFieldsSql($fields) . 
                         ' FROM ' . C_DB_TABLE_PREFIX . 'sections' . 
                         " WHERE path='" . $this->params->sectionPath . "'";
                 return $this->db->getItem($sql);
             } else if (!is_null($this->params->sectionId)
             && 0 != $this->params->sectionId) {
-                $sql =  'SELECT ' . $fields . 
+                $sql =  'SELECT ' . $this->getFieldsSql($fields) . 
                         ' FROM ' . C_DB_TABLE_PREFIX . 'sections' . 
                         ' WHERE id=' . $this->params->sectionId;
                 return $this->db->getItem($sql);
@@ -207,22 +231,16 @@ class Core
     /**
      * Get section module information
      * @param string|array|null $fields = null
-     * @return array
+     * @return array|null
      */
     public function getModule($fields = null)
     {
-        if (null === $fields) {
-            $fields = '*';
-        } else if (is_array($fields)) {
-            $fields = implode(',', $fields);
-        }
         if (null === $this->module) {
-            if (null !== $this->section) {
-                $section = $this->section;
-            } else {
-                $section = $this->getSection(null, 'moduleid');
+            $section = (null !== $this->section ? $this->section : $this->getSection(null, 'moduleid'));
+            if (null === $section) {
+                return null;
             }
-            $sql =  'SELECT ' . $fields .
+            $sql =  'SELECT ' . $this->getFieldsSql($fields) .
                     ' FROM ' . C_DB_TABLE_PREFIX . 'modules' .
                     ' WHERE muid=' . $section['moduleid'];
             $this->module = $this->db->getItem($sql);
@@ -238,12 +256,7 @@ class Core
      */
     public function getSections($fields = null, $filter = null)
     {
-        if (is_null($fields)) {
-            $fields = '*';
-        } else if (is_array($fields)) {
-            $fields = implode(',', $fields);
-        }
-        $sql =  'SELECT ' . $fields .
+        $sql =  'SELECT ' . $this->getFieldsSql($fields) .
                 ' FROM ' . C_DB_TABLE_PREFIX . 'sections' . 
                 ' WHERE id!=-1 AND isenabled!=0' . 
                 (null === $filter ? '' : ' AND ' . $filter) . 
@@ -262,7 +275,8 @@ class Core
                 ' FROM ' . C_DB_TABLE_PREFIX . 'sections' . 
                 ' WHERE moduleid=' . $moduleId . ' AND isenabled!=0' . 
                 ' ORDER BY mask';
-        return $this->db->getItems($sql);
+        $items = $this->db->getItems($sql);
+        return null !== $items ? $items : array();
     }
     
     /**
@@ -301,17 +315,12 @@ class Core
         } else if (1 > $this->section['levelid']) {
             return null;
         }
-        if (null === $fields) {
-            $fields = '*';
-        } else if (is_array($fields)) {
-            $fields = implode(',', $fields);
-        }
         $cpl = $this->config->maskCharsPerLevel;
         $masks = array();
         for ($i = 0, $end = $this->section['levelid'] + 1; $i < $end; $i++) {
             $masks[] = (0 < $i ? $masks[$i - 1] : '') . substr($this->section['mask'], $i * $cpl, $cpl);
         }
-        $sql =  'SELECT ' . $fields . 
+        $sql =  'SELECT ' . $this->getFieldsSql($fields) . 
                 ' FROM ' . C_DB_TABLE_PREFIX . 'sections' . 
                 " WHERE mask IN('" . implode("','", $masks) . "')" . 
                 ' ORDER BY mask';
@@ -328,8 +337,7 @@ class Core
      */
     public function getWidgetsData($targetId, $placeId, $offset = 0, $limit = 0)
     {
-        static $widgetsData = null;
-        if (null === $widgetsData) {
+        if (null === $this->widgetsData) {
             $sql =  'SELECT w.PlaceId, w.OrderId, ' . 
                         'w.ShowTitle, w.SrcSections, w.SrcItems, w.Title, w.Content, w.Params, ' . 
                         'wt.ModuleId, wt.Name, m.madmin' . 
@@ -349,16 +357,16 @@ class Core
                     return ($a['OrderId'] < $b['OrderId']) ? -1 : 1;
                 }
             );
-            $widgetsData = array();
+            $this->widgetsData = array();
             foreach ($items as $item) {
-                $widgetsData[$item['PlaceId']][] = $item;
+                $this->widgetsData[$item['PlaceId']][] = $item;
             }
             unset($items);
         }
-        if (!isset($widgetsData[$placeId])) {
+        if (!isset($this->widgetsData[$placeId])) {
             return array();
         }
-        $data = $widgetsData[$placeId];
+        $data = $this->widgetsData[$placeId];
         if (0 != $offset && 0 != $limit) {
             return array_slice($data, $offset, $limit);
         } else if (0 != $limit) {
@@ -374,11 +382,11 @@ class Core
      * @param int $offset = 0    выбирать элементы начиная с $offset
      * @param int $limit = 0     выбрать всего $limit элементов (если $limit > 0)
      * @return array|null
+     * @deprecated
      */
     public function getInsertionsData($targetId, $placeId, $offset = 0, $limit = 0)
     {
-        static $insertionsData = null;
-        if (null === $insertionsData) {
+        if (null === $this->insertionsData) {
             $sql =  'SELECT i.Id, i.TargetId, i.PlaceId, i.OrderId, i.SourceId, i.SourcesIds, ' . 
                     'i.Title, i.ItemsIds, i.ItemsStart, i.ItemsCount, i.ItemsLength, ' . 
                     'i.ItemsStartMark, i.ItemsStopMark, i.ItemsOptions, ' . 
@@ -393,25 +401,25 @@ class Core
                 $items2[$item['TargetId']][] = $item;
             }
             unset($items);
-            $insertionsData = array();
+            $this->insertionsData = array();
             foreach ($items2 as $key => $val) {
                 foreach ($val as $v) {
-                    $insertionsData[$key][$v['PlaceId']][] = $v;
+                    $this->insertionsData[$key][$v['PlaceId']][] = $v;
                 }
             }
             unset($items2);
         }
-        $tgtSet = 0 != $targetId ? isset($insertionsData[$targetId][$placeId]) : false;
-        $allSet = isset($insertionsData[0][$placeId]);
+        $tgtSet = 0 != $targetId ? isset($this->insertionsData[$targetId][$placeId]) : false;
+        $allSet = isset($this->insertionsData[0][$placeId]);
         if ($tgtSet && $allSet) {
             $data = array_merge(
-                $insertionsData[$targetId][$placeId], 
-                $insertionsData[0][$placeId]
+                $this->insertionsData[$targetId][$placeId], 
+                $this->insertionsData[0][$placeId]
             );
         } else if ($tgtSet) {
-            $data = $insertionsData[$targetId][$placeId];
+            $data = $this->insertionsData[$targetId][$placeId];
         } else if ($allSet) {
-            $data = $insertionsData[0][$placeId];
+            $data = $this->insertionsData[0][$placeId];
         } else {
             return array();
         }
@@ -421,35 +429,6 @@ class Core
             return array_slice($data, 0, $limit);
         }
         return $data;
-    }
-
-    /**
-     * Получение данных вставки. Старая версия, делающая SQL запрос на каждый вызов.
-     * @param int $targetId      идентификатор раздела в котором выводится вставка
-     * @param int $placeId       идентификатор места в котором выводится вставка
-     * @param int $offset = 0    выбирать элементы начиная с $offset
-     * @param int $limit = 0     выбрать всего $limit элементов (если $limit > 0)
-     * @return array|null
-     */
-    public function getInsertionsDataOld($targetId, $placeId, $offset = 0, $limit = 0)
-    {
-        $sql =  'SELECT i.Id, i.TargetId, i.PlaceId, i.OrderId, i.SourceId, i.SourcesIds, ' . 
-                'i.Title, i.ItemsIds, i.ItemsStart, i.ItemsCount, i.ItemsLength, ' . 
-                'i.ItemsStartMark, i.ItemsStopMark, i.ItemsOptions, ' . 
-                's.path, m.madmin' . 
-                ' FROM ' . C_DB_TABLE_PREFIX . 'insertions AS i' . 
-                ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'sections AS s ON s.id=i.SourceId' . 
-                ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'modules AS m ON m.muid=s.moduleid' . 
-                ' WHERE (i.TargetId=' . $targetId . ' OR i.TargetId=0)' . 
-                ' AND i.PlaceId=' . $placeId . 
-                ' AND s.isenabled!=0 AND m.isenabled!=0' . 
-                ' ORDER BY i.OrderId';
-        if (0 != $offset && 0 != $limit) {
-            $sql .= ' LIMIT ' . $offset . ', ' . $limit;
-        } else if (0 != $limit) {
-            $sql .= ' LIMIT ' . $limit;
-        }
-        return $this->db->getItems($sql);
     }
     
     /**

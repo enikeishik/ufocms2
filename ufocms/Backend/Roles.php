@@ -9,6 +9,8 @@
 
 namespace Ufocms\Backend;
 
+use Ufocms\Frontend\Debug;
+
 /**
  * Users roles functionality
  */

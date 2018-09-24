@@ -62,16 +62,13 @@ class Main //implements IController
      */
     public function dispatch()
     {
+        $idx = 0;
+        if (null !== $this->debug) {
+            $idx = $this->debug->trace('Core execution');
+        }
+        
         if ('' != $this->config->rootPath) {
-            ob_start(
-                function ($buffer) { 
-                    return preg_replace(
-                        '/(href=|src=|bachground=)(["\']*)(\/)/i', 
-                        '$1$2' . $this->config->rootUrl . '$3', 
-                        $buffer
-                    ); 
-                }
-            );
+            $this->addRootUrlPrefix();
         }
         
         $this->setPathRaw();
@@ -108,6 +105,9 @@ class Main //implements IController
         if (trim($this->params->sectionPath, '/') != trim($this->params->pathRaw, '/')) {
             $this->params->sectionParams = explode('/', trim(substr($this->params->pathRaw, strlen($this->params->sectionPath)), '/'));
         }
+        if (null !== $this->debug) {
+            $this->debug->trace($idx);
+        }
         if (null !== $controller = $this->getController()) {
             $controller->dispatch();
             if (null !== $cache && $this->canUseCache()/* && null === this->debug*/) {
@@ -116,6 +116,22 @@ class Main //implements IController
         } else {
             $this->core->riseError(404, 'Controller not exists'); //exit('404-controller'); //throw new Exception
         }
+    }
+    
+    /**
+     * Добавляем префикс корня сайта к URL.
+     */
+    protected function addRootUrlPrefix()
+    {
+        ob_start(
+            function ($buffer) { 
+                return preg_replace(
+                    '/(href=|src=|bachground=)(["\']*)(\/)/i', 
+                    '$1$2' . $this->config->rootUrl . '$3', 
+                    $buffer
+                ); 
+            }
+        );
     }
     
     /**

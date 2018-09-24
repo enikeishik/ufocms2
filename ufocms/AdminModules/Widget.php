@@ -12,7 +12,7 @@ namespace Ufocms\AdminModules;
 /**
  * Base Widget class
  */
-class Widget extends Schema
+class Widget extends Schema implements WidgetInterface
 {
     /**
      * @var \Ufocms\Frontend\Debug

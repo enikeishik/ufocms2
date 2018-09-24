@@ -16,9 +16,9 @@
 
 <?php if (is_array($items) && 0 != count($items)) { ?>
     
-    <?=$items['GBP']['Name']?> – <?=round($items['GBP']['Value'], 2)?><br>
-    <?=$items['USD']['Name']?> – <?=round($items['USD']['Value'], 2)?><br>
-    <?=$items['EUR']['Name']?> – <?=round($items['EUR']['Value'], 2)?><br>
+    <?php if (isset($items['GBP'])) { ?><?=$items['GBP']['Name']?> – <?=round($items['GBP']['Value'], 2)?><br><?php } ?>
+    <?php if (isset($items['USD'])) { ?><?=$items['USD']['Name']?> – <?=round($items['USD']['Value'], 2)?><br><?php } ?>
+    <?php if (isset($items['EUR'])) { ?><?=$items['EUR']['Name']?> – <?=round($items['EUR']['Value'], 2)?><br><?php } ?>
     
 <?php } else { ?>
     

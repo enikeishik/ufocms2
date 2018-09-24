@@ -14,7 +14,7 @@ use Ufocms\Frontend\DIObject;
 /**
  * Base UI constructs
  */
-class UI extends DIObject
+class UI extends DIObject implements UIInterface
 {
     /**
      * @var \Ufocms\Frontend\Debug

@@ -13,8 +13,9 @@ use Ufocms\Frontend\DIObject;
 
 /**
  * Module level Insertion base class
+ * @deprecated
  */
-abstract class Insertion extends DIObject
+abstract class Insertion extends DIObject implements InsertionInterface
 {
     /**
      * @var string
