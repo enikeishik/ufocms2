@@ -95,8 +95,8 @@ class ModulesDocumentsViewTest extends ModulesAbstractViewTest
         $this->params->sectionId = 0;
         $content = $this->getRenderContent();
         $this->assertTrue(false !== strpos($content, 'test view template begin'));
-        $this->assertTrue(false !== stripos($content, '$item NULL'));
-        $this->assertTrue(false !== stripos($content, '$items NULL'));
+        $this->assertTrue(false !== strpos($content, '$item NULL'));
+        $this->assertTrue(false !== strpos($content, '$items NULL'));
         $this->assertTrue(false !== strpos($content, 'test view template end'));
         
         $this->tester->haveInDatabase(

@@ -36,7 +36,7 @@ class ModulesDocumentsWidgetTest extends ModulesAbstractWidgetTest
     {
         $content = $this->getRenderContent();
         $this->assertTrue(false !== strpos($content, 'test widget template begin'));
-        $this->assertTrue(false !== stripos($content, '$showTitle bool(true)'));
+        $this->assertTrue(false !== strpos($content, '$showTitle bool(true)'));
         $this->assertTrue(false !== strpos($content, '$title string(17) "test widget title"'));
         $this->assertTrue(false !== strpos($content, '$content string(19) "test widget content"'));
         $this->assertTrue(false !== strpos($content, '$items array(0)'));

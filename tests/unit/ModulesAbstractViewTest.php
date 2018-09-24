@@ -156,10 +156,9 @@ EOD;
     
     public function testRender()
     {
-        $content = $this->getRenderContent();
+        $content = preg_replace('/ \/tmp\/tmp.+\n/', '', $this->getRenderContent());
         $this->assertTrue(false !== strpos($content, 'test view template begin'));
-        var_dump($content); exit();
-        $this->assertTrue(false !== stripos($content, '$item NULL'));
+        $this->assertTrue(false !== strpos($content, '$item NULL'));
         $this->assertTrue(false !== strpos($content, '$items array(0)'));
         $this->assertTrue(false !== strpos($content, 'test view template end'));
     }
