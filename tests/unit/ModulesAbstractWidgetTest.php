@@ -124,7 +124,7 @@ EOD;
     // tests
     public function testRender()
     {
-        $content = preg_replace('/ \/tmp\/tmp.+\n/', '', $this->getRenderContent());
+        $content = preg_replace('/ \/tmp\/tmp.+\n/', ' ', $this->getRenderContent());
         $this->assertTrue(false !== strpos($content, 'test widget template begin'));
         $this->assertTrue(false !== strpos($content, '$showTitle bool(false)'));
         $this->assertTrue(false !== strpos($content, '$title string(0) ""'));
