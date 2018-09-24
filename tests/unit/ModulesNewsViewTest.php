@@ -576,7 +576,8 @@ EOD;
     
     public function testRender()
     {
-        $content = $this->getRenderContent();
+        //remove travis-ci VM id from var_dump
+        $content = preg_replace('/ \/tmp\/tmp.+\n/', ' ', $this->getRenderContent());
         $this->assertTrue(false !== strpos($content, 'test view template begin'));
         $this->assertTrue(false !== strpos($content, '$item NULL'));
         $this->assertTrue(false !== strpos($content, '$items array(0)'));
@@ -659,7 +660,8 @@ EOD;
         $this->params->page = 1;
         $this->params->pageSize = 10;
         $this->params->sectionId = 2091;
-        $content = $this->getRenderContent();
+        //remove travis-ci VM id from var_dump
+        $content = preg_replace('/ \/tmp\/tmp.+\n/', ' ', $this->getRenderContent());
         $this->assertTrue(false !== strpos($content, 'test view template begin'));
         $this->assertTrue(false !== strpos($content, '$item NULL'));
         $this->assertTrue(false !== strpos($content, '$items array(1)'));

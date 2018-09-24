@@ -33,7 +33,8 @@ class ModulesNewsWidgetTest extends ModulesAbstractWidgetTest
     // tests
     public function testRender()
     {
-        $content = $this->getRenderContent();
+        //remove travis-ci VM id from var_dump
+        $content = preg_replace('/ \/tmp\/tmp.+\n/', ' ', $this->getRenderContent());
         $this->assertTrue(false !== strpos($content, 'test widget template begin'));
         $this->assertTrue(false !== strpos($content, '$showTitle bool(true)'));
         $this->assertTrue(false !== strpos($content, '$title string(17) "test widget title"'));
@@ -166,7 +167,8 @@ class ModulesNewsWidgetTest extends ModulesAbstractWidgetTest
             ]
         );
         $this->data = $this->getData(20011, ['ItemsCount' => 2, 'ItemsStart' => 1, 'DaysLimit' => 0, 'Author' => '', 'SortOrder' => 0]);
-        $content = $this->getRenderContent();
+        //remove travis-ci VM id from var_dump
+        $content = preg_replace('/ \/tmp\/tmp.+\n/', ' ', $this->getRenderContent());
         $this->assertTrue(false !== strpos($content, 'test widget template begin'));
         $this->assertTrue(false !== strpos($content, '$showTitle bool(true)'));
         $this->assertTrue(false !== strpos($content, '$title string(17) "test widget title"'));
