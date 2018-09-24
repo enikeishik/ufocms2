@@ -16,32 +16,45 @@ class ModulesDocumentsModelTest extends ModulesAbstractModelTest
      */
     protected $params;
     
+    /**
+     * @var Db
+     */
+    protected $db;
+    
     protected function _before()
     {
         $this->params = new Params();
+        $this->db = new Db();
         $this->model = $this->getModel();
+    }
+    
+    protected function _after()
+    {
+        if (null !== $this->db) {
+            $this->db->close();
+            $this->db = null;
+        }
     }
     
     protected function getModel($withCore = false)
     {
-        $db = new Db();
         $core = null;
         if ($withCore) {
-            $core = $this->getCore($db);
+            $core = $this->getCore();
         }
         $container = new Container([
-            'db'        => &$db, 
+            'db'        => &$this->db, 
             'core'      => &$core, 
             'params'    => &$this->params,
         ]);
         return new Model($container);
     }
     
-    protected function getCore(&$db)
+    protected function getCore()
     {
         $config = $this->makeEmpty(new Config());
         $params = new Params();
-        return new Core($config, $params, $db);
+        return new Core($config, $params, $this->db);
     }
     
     // tests

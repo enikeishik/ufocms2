@@ -28,6 +28,11 @@ class ModulesAbstractWidgetTest extends \Codeception\Test\Unit
     protected $params;
     
     /**
+     * @var Db
+     */
+    protected $db;
+    
+    /**
      * @var array
      */
     protected $data;
@@ -46,6 +51,10 @@ class ModulesAbstractWidgetTest extends \Codeception\Test\Unit
 
     protected function _after()
     {
+        if (null !== $this->db) {
+            $this->db->close();
+            $this->db = null;
+        }
     }
     
     protected function getData($srcSections = null, array $params = null)

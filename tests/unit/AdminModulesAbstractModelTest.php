@@ -15,21 +15,6 @@ use \Ufocms\AdminModules\Model;
 class AdminModulesAbstractModelTest extends AdminModulesAbstractSchemaTest
 {
     /**
-     * @var \UnitTester
-     */
-    protected $tester;
-    
-    /**
-     * @var Config
-     */
-    protected $config;
-    
-    /**
-     * @var Params
-     */
-    protected $params;
-    
-    /**
      * @var Model
      */
     protected $model;
@@ -61,18 +46,12 @@ class AdminModulesAbstractModelTest extends AdminModulesAbstractSchemaTest
     
     protected function getContainer(array $moduleParams = [])
     {
-        $audit = new class($this->config) extends Audit {
-            public function record($data)
-            {
-            }
-        };
-        $db = new Db($audit);
-        $core = new Core($this->config, $this->params, $db);
-        $tools = new Tools($this->config, $this->params, $db);
+        $core = new Core($this->config, $this->params, $this->db);
+        $tools = new Tools($this->config, $this->params, $this->db);
         return new Container([
             'config'        => &$this->config, 
             'params'        => &$this->params, 
-            'db'            => &$db, 
+            'db'            => &$this->db, 
             'core'          => &$core, 
             'tools'         => &$tools, 
             'module'        => &$this->module, 

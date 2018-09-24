@@ -28,6 +28,11 @@ class ModulesAbstractViewTest extends \Codeception\Test\Unit
     protected $params;
     
     /**
+     * @var Db
+     */
+    protected $db;
+    
+    /**
      * @var View
      */
     protected $view;
@@ -40,6 +45,10 @@ class ModulesAbstractViewTest extends \Codeception\Test\Unit
 
     protected function _after()
     {
+        if (null !== $this->db) {
+            $this->db->close();
+            $this->db = null;
+        }
     }
     
     /**

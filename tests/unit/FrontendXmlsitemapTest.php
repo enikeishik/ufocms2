@@ -13,13 +13,27 @@ class FrontendXmlsitemapTest extends \Codeception\Test\Unit
     protected $tester;
     
     /**
+     * @var Db
+     */
+    protected $db;
+    
+    /**
      * @var XmlSitemap
      */
     protected $xmlSitemap;
     
     protected function _before()
     {
+        $this->db = new Db();
         $this->xmlSitemap = $this->getXmlSitemap();
+    }
+    
+    protected function _after()
+    {
+        if (null !== $this->db) {
+            $this->db->close();
+            $this->db = null;
+        }
     }
     
     protected function getXmlSitemap()
@@ -28,10 +42,9 @@ class FrontendXmlsitemapTest extends \Codeception\Test\Unit
         $_SERVER['HTTP_REFERER'] = 'test';
         $_SERVER['HTTP_HOST'] = 'test';
         $config = new Config();
-        $db = new Db();
         $config->rootPath = '';
         $config->xmlSitemapPath = 'php://memory';
-        return new class($config, $db) extends XmlSitemap {
+        return new class($config, $this->db) extends XmlSitemap {
             public function getBuffer()
             {
                 return $this->buffer;
@@ -41,10 +54,6 @@ class FrontendXmlsitemapTest extends \Codeception\Test\Unit
                 return $this->itemsCounter;
             }
         };
-    }
-
-    protected function _after()
-    {
     }
 
     // tests

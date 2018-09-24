@@ -27,6 +27,11 @@ class BackendCoreTest extends \Codeception\Test\Unit
     protected $params;
     
     /**
+     * @var Db
+     */
+    protected $db;
+    
+    /**
      * @var Core
      */
     protected $core;
@@ -35,27 +40,31 @@ class BackendCoreTest extends \Codeception\Test\Unit
     {
         $this->config = new Config();
         $this->params = new Params();
+        $audit = $this->make(
+            new Audit($this->config), 
+            ['record' => function($record) { }]
+        );
+        $this->db = new Db($audit);
         $this->core = $this->getCore();
     }
     
     protected function _after()
     {
+        if (null !== $this->db) {
+            $this->db->close();
+            $this->db = null;
+        }
     }
     
     protected function getCore()
     {
-        $audit = $this->make(
-            new Audit($this->config), 
-            ['record' => function($record) { }]
-        );
         $debug = new class extends Debug {
             public static function varDump($var, $dump = true, $exit = true, $float = false)
             {
                 echo $var;
             }
         };
-        $db = new Db($audit);
-        return new class($this->config, $this->params, $db, $debug) extends Core {
+        return new class($this->config, $this->params, $this->db, $debug) extends Core {
             public function riseError($errNum, $errMsg = null, $options = null)
             {
                 throw new \Exception($errNum . ': ' . $errMsg);

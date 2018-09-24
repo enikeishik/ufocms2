@@ -22,6 +22,10 @@ class FrontendDbTest extends \Codeception\Test\Unit
 
     protected function _after()
     {
+        if (null !== $this->db) {
+            $this->db->close();
+            $this->db = null;
+        }
     }
 
     // tests

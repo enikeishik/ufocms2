@@ -28,6 +28,11 @@ class FrontendCoreTest extends \Codeception\Test\Unit
     protected $params;
     
     /**
+     * @var Db
+     */
+    protected $db;
+    
+    /**
      * @var Core
      */
     protected $core;
@@ -36,17 +41,21 @@ class FrontendCoreTest extends \Codeception\Test\Unit
     {
         $this->config = new Config();
         $this->params = new Params();
+        $this->db = new Db();
         $this->core = $this->getCore();
     }
     
     protected function _after()
     {
+        if (null !== $this->db) {
+            $this->db->close();
+            $this->db = null;
+        }
     }
     
     protected function getCore()
     {
-        $db = new Db();
-        return new Core($this->config, $this->params, $db);
+        return new Core($this->config, $this->params, $this->db);
     }
     
     protected function testGetObject($objectType)

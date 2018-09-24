@@ -27,6 +27,11 @@ class AdminModulesAbstractSchemaTest extends \Codeception\Test\Unit
     protected $params;
     
     /**
+     * @var Db
+     */
+    protected $db;
+    
+    /**
      * @var Schema
      */
     protected $schema;
@@ -35,11 +40,21 @@ class AdminModulesAbstractSchemaTest extends \Codeception\Test\Unit
     {
         $this->config = new Config();
         $this->params = new Params();
+        $audit = new class($this->config) extends Audit {
+            public function record($data)
+            {
+            }
+        };
+        $this->db = new Db($audit);
         $this->schema  = $this->getSchema($this->getContainer());
     }
 
     protected function _after()
     {
+        if (null !== $this->db) {
+            $this->db->close();
+            $this->db = null;
+        }
     }
     
     protected function getContainer(array $moduleParams = [])
@@ -54,7 +69,7 @@ class AdminModulesAbstractSchemaTest extends \Codeception\Test\Unit
         return new Container([
             'config'        => &$this->config, 
             'params'        => &$this->params, 
-            'db'            => &$db, 
+            'db'            => &$this->db, 
             'core'          => &$core, 
             'module'        => &$this->module, 
             'moduleParams'  => $moduleParams, 
