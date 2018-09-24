@@ -48,11 +48,10 @@ class ModulesMainpageViewTest extends ModulesAbstractViewTest
     {
         //remove travis-ci VM id from var_dump
         $content = preg_replace('/ \/tmp\/tmp.+\n/', ' ', $this->getRenderContent());
-        var_dump($content); exit();
         $this->assertTrue(false !== strpos($content, 'test view template begin'));
         $this->assertTrue(false !== strpos($content, '$item array(2)'));
-        $this->assertTrue(false !== strpos($content, '["id"]=>'));
-        $this->assertTrue(false !== strpos($content, '["body"]=>'));
+        $this->assertTrue(false !== strpos($content, 'id'));
+        $this->assertTrue(false !== strpos($content, 'body'));
         $this->assertTrue(false !== strpos($content, '$items NULL'));
         $this->assertTrue(false !== strpos($content, 'test view template end'));
     }
