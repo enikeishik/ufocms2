@@ -12,5 +12,5 @@ script:
   - phpunit --version
   - cd tests; php codecept.phar --version; cd ..
   - cd tests
-  - php codecept.phar run
+  - php codecept.phar run unit
   - cd ..
