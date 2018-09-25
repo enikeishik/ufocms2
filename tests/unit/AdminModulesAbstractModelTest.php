@@ -39,10 +39,6 @@ class AdminModulesAbstractModelTest extends AdminModulesAbstractSchemaTest
         $this->params->itemId = 0;
         $this->model  = $this->getModel($this->getContainer());
     }
-
-    protected function _after()
-    {
-    }
     
     protected function getContainer(array $moduleParams = [])
     {
