@@ -8,5 +8,5 @@ actor: AcceptanceTester
 modules:
     enabled:
         - PhpBrowser:
-            url: http://ufo/
+            url: http://localhost/
         - \Helper\Acceptance
