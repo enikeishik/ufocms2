@@ -23,14 +23,16 @@ before_script:
   - sudo cp -f .travis-apache.conf /etc/apache2/sites-available/000-default.conf
   - sudo sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/000-default.conf
   - sudo service apache2 restart
-  - pwd
+  # - pwd
   - cp -f ./tests/config-cctests.php ./config.php
-  - cat ./config.php
+  # - cat ./config.php
 script:
   - php -v
   - phpunit --version
   - cd tests; php codecept.phar --version; cd ..
   - cd tests
-  - php codecept.phar run
+  # - php codecept.phar run
+  - php codecept.phar run unit
+  # - php codecept.phar run acceptance
   - cd ..
-  - sudo cat /var/log/apache2/error.log
+  # - sudo cat /var/log/apache2/error.log
