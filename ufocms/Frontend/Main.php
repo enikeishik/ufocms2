@@ -95,26 +95,28 @@ class Main //implements IController
         
         $this->setCurrentSection();
         if (0 == $this->core->getCurrentSection()['isenabled']) {
-            $this->core->riseError(403, 'Section disabled'); //exit('403-section-disabled'); //throw new Exception
+            $this->core->riseError(403, 'Section disabled');
         }
         if ($this->module['Disabled']) {
-            $this->core->riseError(403, 'Module disabled'); //exit('403-module-disabled'); //throw new Exception
+            $this->core->riseError(403, 'Module disabled');
         }
         
         //set sectionParams before create controller, it used in controller::init
         if (trim($this->params->sectionPath, '/') != trim($this->params->pathRaw, '/')) {
             $this->params->sectionParams = explode('/', trim(substr($this->params->pathRaw, strlen($this->params->sectionPath)), '/'));
         }
+        
         if (null !== $this->debug) {
             $this->debug->trace($idx);
         }
-        if (null !== $controller = $this->getController()) {
-            $controller->dispatch();
-            if (null !== $cache && $this->canUseCache()/* && null === this->debug*/) {
-                $cache->save(ob_get_contents());
-            }
-        } else {
-            $this->core->riseError(404, 'Controller not exists'); //exit('404-controller'); //throw new Exception
+        
+        $controller = $this->getController();
+        if (null === $controller) {
+            $this->core->riseError(404, 'Controller not exists');
+        }
+        $controller->dispatch();
+        if (null !== $cache && $this->canUseCache()/* && null === this->debug*/) {
+            $cache->save(ob_get_contents());
         }
     }
     
@@ -177,15 +179,15 @@ class Main //implements IController
                     if (false === strpos($this->params->pathRaw, '.')) {
                         $this->params->pathRaw = substr($this->params->pathRaw, 0, -1);
                     } else {
-                        $this->riseError(404, 'File not exists'); //exit('404-is-file'); //throw new Exception
+                        $this->riseError(404, 'File not exists');
                     }
                 }
             } else {
-                $this->riseError(404, 'Path not correct'); //exit('404-bad-path'); //throw new Exception
+                $this->riseError(404, 'Path not correct');
             }
         //ErrorDocument в .htaccess
         } else if (isset($_GET['error'])) {
-            $this->riseError((int) $_GET['error'], 'External (non CMS) error'); //exit((int) $_GET['error']); //$this->generateError((int) $_GET['error'], 'External error');
+            $this->riseError((int) $_GET['error'], 'External (non CMS) error');
         //иначе это главная страница
         } else {
             $this->params->pathRaw = '/';
@@ -223,11 +225,11 @@ class Main //implements IController
             $this->core->setCurrentSection();
             $module = $this->core->getModule('madmin,isenabled');
             if (null === $module) {
-                $this->core->riseError(500, 'Module not present'); //exit('500-module-request'); //throw new Exception
+                $this->core->riseError(500, 'Module not present');
             }
             $moduleDisabled = 0 == $module['isenabled'];
             if (4 > strlen($module['madmin'])) {
-                $this->core->riseError(500, 'Module name wrong'); //exit('500-module-name'); //throw new Exception
+                $this->core->riseError(500, 'Module name wrong');
             }
             $moduleName = ucfirst(substr($module['madmin'], 4));
             $this->params->moduleName = $moduleName;
@@ -272,7 +274,7 @@ class Main //implements IController
             //если вложенность больше допустимой, выходим
             if ($this->config->pathNestingLimit < $pathPartsCount) {
                 //вызываем ошибку 404
-                $this->core->riseError(404, 'Path too nested'); //exit('404-too-deep'); //throw new Exception
+                $this->core->riseError(404, 'Path too nested');
             }
             
             //собираем массив вложенных путей
@@ -285,7 +287,7 @@ class Main //implements IController
             array_shift($paths);
             
             if (!$this->params->sectionPath = $this->core->getMaxExistingPath($paths)) {
-                $this->core->riseError(404, 'Section not exists'); //exit('404-section-not-exists'); //throw new Exception
+                $this->core->riseError(404, 'Section not exists');
             }
         }
     }
