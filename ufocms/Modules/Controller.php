@@ -158,13 +158,7 @@ class Controller extends DIObject implements ControllerInterface
         $this->setGetParams();
         
         //set unidentified bool-type params to its default values
-        foreach ($this->moduleParamsStruct as $paramName => $paramSet) {
-            if ('bool' == $paramSet['type'] && null === $paramSet['value']) {
-                $this->moduleParamsStruct[$paramName]['value'] = $paramSet['default'];
-            } else if ('isRoot' != $paramName && null !== $paramSet['value']) {
-                $this->moduleParamsStruct['isRoot']['value'] = false;
-            }
-        }
+        $this->setUnidentifiedBoolParams();
         
         //get plain array from array of structs
         $this->moduleParams = $this->getModuleParams();
@@ -402,4 +396,17 @@ class Controller extends DIObject implements ControllerInterface
         }
     }
     
+    /**
+     * Установка не заданным булевым параметрам значений по умолчанию.
+     */
+    protected function setUnidentifiedBoolParams()
+    {
+        foreach ($this->moduleParamsStruct as $paramName => $paramSet) {
+            if ('bool' == $paramSet['type'] && null === $paramSet['value']) {
+                $this->moduleParamsStruct[$paramName]['value'] = $paramSet['default'];
+            } else if ('isRoot' != $paramName && null !== $paramSet['value']) {
+                $this->moduleParamsStruct['isRoot']['value'] = false;
+            }
+        }
+    }
 }
