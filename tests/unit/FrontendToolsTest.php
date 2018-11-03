@@ -206,4 +206,53 @@ class FrontendToolsTest extends \Codeception\Test\Unit
         $arr = $this->tools->getArrayOfIntegersFromString($val, $sep);
         $this->assertEquals($this->fixPhp70($expected), $arr);
     }
+    
+    public function isEmailDataProvider()
+    {
+        return [
+            ['aa@aa.aa', true], 
+            ['aa-aa@aa.aa', true], 
+            ['aa@aa-aa.aa', true], 
+            ['aa@aa.aaaaaa', true], 
+            ['a.a@aa.aa', true], 
+            ['aa@a.a.aa', true], 
+            ['aaaaaaaaaaaaaaaaaaaaaaaaaaaa@aaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaa', true], 
+            ['aa@aa.aa', true], 
+            ['aaaa.aa', false], 
+        ];
+    }
+    
+    /**
+     * @dataProvider isEmailDataProvider
+     */
+    public function testIsEmail($val, $expected)
+    {
+        $this->assertEquals($expected, $this->tools->isEmail($val));
+    }
+    
+    public function getSafeJsStringDataProvider()
+    {
+        return [
+            ['', true, ''], 
+            ['', false, ''], 
+            ['<br>', true, '<br>'], 
+            ['<br>', false, '&lt;br&gt;'], 
+            ['var jsVar = "var value<br>";', true, 'var jsVar = \"var value<br>\";'], 
+            ['var jsVar = "var value<br>";', false, 'var jsVar = \"var value&lt;br&gt;\";'], 
+            ['var jsVar = "var value<br>";', true, 'var jsVar = \"var value<br>\";'], 
+            ['var jsVar = "var ' . "\'expression <script> \'" . '";', false, 'var jsVar = \"var ' . "\\\\\'expression &lt;script&gt; \\\\\'" . '\";'], 
+            ['var jsVar = "var ' . "\'expression <script> \'" . '";', true, 'var jsVar = \"var ' . "\\\\\'expression <script> \\\\\'" . '\";'], 
+            ["\n", false, '\n'], 
+            ["\r", false, '\r'], 
+            ["\t", false, '\t'], 
+        ];
+    }
+    
+    /**
+     * @dataProvider getSafeJsStringDataProvider
+     */
+    public function testGetSafeJsString($val, $rawHtml, $expected)
+    {
+        $this->assertEquals($expected, $this->tools->getSafeJsString($val, $rawHtml));
+    }
 }
