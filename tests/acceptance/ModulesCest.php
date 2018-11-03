@@ -3,7 +3,7 @@
 
 class ModulesCest
 {
-    protected const MODULES_ENTRY = '/modules';
+    const MODULES_ENTRY = '/modules';
     
     public function _before(AcceptanceTester $I)
     {
