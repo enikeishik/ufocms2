@@ -15,6 +15,10 @@ class MainpageCest
     public function mainpageWorks(AcceptanceTester $I)
     {
         $I->amOnPage('/');
+        $I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::INTERNAL_SERVER_ERROR);
+        $I->dontSeeInSource('Fatal error');
+        $I->dontSeeInSource('Warning');
+        $I->dontSeeInSource('Notice');
         $I->see('Главная');
         $I->seeElement('#header');
         $I->seeElement('#content');
@@ -40,6 +44,9 @@ class MainpageCest
             $I->amGoingTo('Testing page ' . $href); 
             $I->amOnPage($href);
             $I->dontSeeResponseCodeIs(\Codeception\Util\HttpCode::INTERNAL_SERVER_ERROR);
+            $I->dontSeeInSource('Fatal error');
+            $I->dontSeeInSource('Warning');
+            $I->dontSeeInSource('Notice');
         }
     }
 }
