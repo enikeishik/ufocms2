@@ -16,9 +16,10 @@ trait ModulesViewTrait
     {
         $this->testContent = $content;
     }
-    protected function getLayout()
+    public function render()
     {
         file_put_contents($this->tmpfname, $this->testContent);
-        return $this->tmpfname;
+        $this->layout = $this->tmpfname;
+        parent::render();
     }
 }

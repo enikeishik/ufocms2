@@ -1,9 +1,10 @@
 <?php
 require_once __DIR__  . DIRECTORY_SEPARATOR . '_presets.php';
 require_once 'ModulesAbstractViewTest.php';
+require_once 'ModulesViewTrait.php';
 
 use \Ufocms\Modules\Documents\Model;
-use \Ufocms\Modules\Documents\View;
+use \Ufocms\Modules\View;
 
 class ModulesDocumentsViewTest extends ModulesAbstractViewTest
 {
@@ -12,84 +13,26 @@ class ModulesDocumentsViewTest extends ModulesAbstractViewTest
         return new Model($container);
     }
     
+    protected function getModuleContext()
+    {
+        $model = $this->getModel($this->getContainerForModel());
+        return [
+            'item' => $model->getItem(), 
+            'items' => null, 
+            'itemsCount' => null, 
+        ];
+    }
+    
     protected function getView($container)
     {
         $view = new class($container) extends View {
-            protected $tmpfname;
-            protected $testContent;
-            protected function init()
-            {
-                parent::init();
-                $this->tmpfname = tempnam(sys_get_temp_dir(), 'tmp');
-            }
-            public function __destruct()
-            {
-                unlink($this->tmpfname);
-            }
-            public function setTestContent($content)
-            {
-                $this->testContent = $content;
-            }
-            protected function getLayout()
-            {
-                file_put_contents($this->tmpfname, $this->testContent);
-                return $this->tmpfname;
-            }
+            use ModulesViewTrait;
         };
         $view->setTestContent($this->getTemplateContent());
         return $view;
     }
     
     // tests
-    public function testGetModuleContext()
-    {
-        $this->params->sectionId = 0;
-        $container = $this->getContainer();
-        $view = new class($container) extends View {
-            public function getGetModuleContext()
-            {
-                return $this->getModuleContext();
-            }
-        };
-        $context = $view->getGetModuleContext();
-        $this->assertNotNull($context);
-        $this->assertTrue(is_array($context));
-        $this->assertTrue(array_key_exists('item', $context));
-        $this->assertNull($context['item']);
-        
-        $this->tester->haveInDatabase(
-            'documents', 
-            [
-                'Id'        => 1011, 
-                'SectionId' => 1011, 
-                'Body'      => 'Module Document Test 1'
-            ]
-        );
-        $this->tester->haveInDatabase(
-            'documents', 
-            [
-                'Id'        => 1012, 
-                'SectionId' => 1012, 
-                'Body'      => 'Module Document Test 2'
-            ]
-        );
-        $this->params->sectionId = 1012;
-        $container = $this->getContainer();
-        $view = new class($container) extends View {
-            public function getGetModuleContext()
-            {
-                return $this->getModuleContext();
-            }
-        };
-        $context = $view->getGetModuleContext();
-        $this->assertNotNull($context);
-        $this->assertTrue(is_array($context));
-        $this->assertTrue(array_key_exists('item', $context));
-        $this->assertTrue(is_array($context['item']));
-        $this->assertTrue(array_key_exists('Body', $context['item']));
-        $this->assertEquals('Module Document Test 2', $context['item']['Body']);
-    }
-    
     public function testRender()
     {
         $this->params->sectionId = 0;

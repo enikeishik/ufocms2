@@ -33,6 +33,11 @@ class ModulesAbstractViewTest extends \Codeception\Test\Unit
     protected $db;
     
     /**
+     * @var Core
+     */
+    protected $core;
+    
+    /**
      * @var View
      */
     protected $view;
@@ -40,6 +45,7 @@ class ModulesAbstractViewTest extends \Codeception\Test\Unit
     protected function _before()
     {
         $this->config = new Config();
+        $this->config->rootPath = dirname(dirname(__DIR__));
         $this->params = new Params();
     }
 
@@ -62,38 +68,63 @@ class ModulesAbstractViewTest extends \Codeception\Test\Unit
     }
     
     /**
-     * Gets container with initialized model in it.
+     * Gets container.
      * @return Container
      */
-    protected function getContainer(array $params = [])
+    protected function getContainerForModel(array $params = [])
     {
-        $db = new Db();
-        $core = new class($this->config, $this->params, $db) extends Core {
+        $this->db = new Db();
+        $this->core = new class($this->config, $this->params, $this->db) extends Core {
             public function riseError($errNum, $errMsg = null, $options = null)
             {
                 throw new \Exception($errNum . ': ' . $errMsg);
             }
         };
-        $container = new Container(array_merge(
-            [
-                'config'    => &$this->config, 
-                'params'    => &$this->params,
-                'db'        => &$db, 
-                'core'      => &$core, 
-            ], 
-            $params
-        ));
-        $model = $this->getModel($container);
         return new Container(array_merge(
             [
                 'config'    => &$this->config, 
                 'params'    => &$this->params,
-                'db'        => &$db, 
-                'core'      => &$core, 
-                'model'     => &$model,
+                'db'        => &$this->db, 
+                'core'      => &$this->core, 
             ], 
             $params
         ));
+    }
+    
+    /**
+     * Gets container with initialized model in it.
+     * @param array $params = []
+     * @return Container
+     */
+    protected function getContainer(array $params = [])
+    {
+        $model = $this->getModel($this->getContainerForModel($params));
+        return new Container(array_merge(
+            [
+                'config'    => &$this->config, 
+                'params'    => &$this->params,
+                'db'        => &$this->db, 
+                'core'      => &$this->core, 
+                'model'     => &$model, 
+                'context'   => $this->getModuleContext(), 
+                'layout'    => $this->getLayout(), 
+            ], 
+            $params
+        ));
+    }
+    
+    protected function getModuleContext()
+    {
+        return [
+            'item' => null, 
+            'items' => [], 
+            'itemsCount' => 0, 
+        ];
+    }
+    
+    protected function getLayout()
+    {
+        return $this->config->templatesEntry;
     }
     
     protected function getTemplateContent()
@@ -132,9 +163,7 @@ EOD;
     // tests
     public function testSetTheme()
     {
-        $container = new Container([
-            'config' => &$this->config, 
-        ]);
+        $container = $this->getContainer();
         $view = new class($container) extends View {
             public function getTemplateUrl()
             {
@@ -143,11 +172,7 @@ EOD;
         };
         
         $theme = $view->getTemplateUrl();
-        $this->assertNull($theme);
-        
-        $view->setTheme();
-        $theme = $view->getTemplateUrl();
-        $this->assertTrue(($this->config->templatesDir . $this->config->themeDefault) == $theme);
+        $this->assertEquals($this->config->templatesDir . $this->config->themeDefault, $theme);
         
         $view->setTheme('test-theme');
         $theme = $view->getTemplateUrl();
