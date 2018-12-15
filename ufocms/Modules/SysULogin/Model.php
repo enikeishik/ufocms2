@@ -36,7 +36,6 @@ class Model extends \Ufocms\Modules\Model //implements IModel
     protected function init()
     {
         parent::init();
-        $this->users = $this->core->getUsers();
         $this->from = '/';
         $this->error = '';
         $this->actionResult = array(

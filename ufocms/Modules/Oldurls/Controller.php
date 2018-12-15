@@ -5,10 +5,12 @@
 
 namespace Ufocms\Modules\Oldurls;
 
+use \Ufocms\Modules\ModelInterface;
+
 /**
  * Module level controller
  */
-class Controller extends \Ufocms\Modules\Controller //implements IController
+class Controller extends \Ufocms\Modules\Controller //implements ControllerInterface
 {
     protected function setModuleParamsStruct()
     {
@@ -38,5 +40,33 @@ class Controller extends \Ufocms\Modules\Controller //implements IController
     protected function setGetParams()
     {
         //disable parent method
+    }
+    
+    /**
+     * @see parent
+     */
+    protected function getModuleContext(ModelInterface &$model)
+    {
+        if (0 != $this->params->itemId) {
+            $item = $model->getItem();
+            if (null === $item) {
+                $this->core->riseError(404, 'Item not exists');
+            } else if (isset($item['Target']) && '' != $item['Target']) {
+                $this->core->riseError(301, 'Move to current URL', $item['Target']);
+            }
+            return array(
+                'settings'      => $model->getSettings(), 
+                'item'          => $item, 
+                'items'         => null, 
+                'itemsCount'    => $model->getItemsCount(), 
+            );
+        } else {
+            return array(
+                'settings'      => $model->getSettings(), 
+                'item'          => null, 
+                'items'         => $model->getItems(), 
+                'itemsCount'    => $model->getItemsCount(), 
+            );
+        }
     }
 }

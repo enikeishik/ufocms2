@@ -6,37 +6,10 @@
 namespace Ufocms\Modules\Auctions;
 
 /**
- * Main module model
+ * Main module view
  */
-class View extends \Ufocms\Modules\View //implements IView
+class View extends \Ufocms\Modules\View //implements ViewInterface
 {
-    protected function getModuleContext()
-    {
-        if ('login' == $this->moduleParams['requestType']) {
-            return array(
-                'settings'      => null, 
-                'item'          => null, 
-                'items'         => null, 
-            );
-        }
-        return array_merge(
-            parent::getModuleContext(), 
-            array('currentUser' => $this->core->getUsers()->getCurrent())
-        );
-    }
-    
-    protected function getLayout()
-    {
-        switch ($this->moduleParams['requestType']) {
-            case 'xhr':
-                return $this->findTemplate($this->templatePath, $this->module['Name'], '/json.php');
-            case 'iframe':
-                return $this->findTemplate($this->templatePath, $this->module['Name'], '/iframe.php');
-            default:
-                return parent::getLayout();
-        }
-    }
-    
     protected function getModuleTemplateEntry()
     {
         if ('login' == $this->moduleParams['requestType']) {

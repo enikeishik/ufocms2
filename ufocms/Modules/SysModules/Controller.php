@@ -8,7 +8,7 @@ namespace Ufocms\Modules\SysModules;
 /**
  * Module level controller
  */
-class Controller extends \Ufocms\Modules\Controller //implements IController
+class Controller extends \Ufocms\Modules\Controller //implements ControllerInterface
 {
     /**
      * @see parent
@@ -56,7 +56,7 @@ class Controller extends \Ufocms\Modules\Controller //implements IController
         }
         $this->modelAction($model);
         
-        $view = $this->getView($model);
+        $view = $this->getView($model, $this->getModuleContext($model), $this->getLayout());
         $view->render();
     }
     

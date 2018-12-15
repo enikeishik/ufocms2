@@ -347,7 +347,7 @@ class Installer
                 if (!@mkdir($dstItm, $this->config->installedDirMode, true)) {
                     throw new \Exception(__METHOD__ . ': mkdir failed');
                 }
-                xcopy($srcItm, $dstItm);
+                $this->xcopy($srcItm, $dstItm);
             } else {
                 if (!@copy($srcItm, $dstItm)) {
                     throw new \Exception(__METHOD__ . ': copy failed');

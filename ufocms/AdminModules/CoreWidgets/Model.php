@@ -11,7 +11,7 @@ namespace Ufocms\AdminModules\CoreWidgets;
 class Model extends \Ufocms\AdminModules\Model
 {
     /**
-     * @var Widget
+     * @var \Ufocms\AdminModules\Widget
      */
     protected $widget = null;
     
@@ -238,7 +238,7 @@ class Model extends \Ufocms\AdminModules\Model
     }
     
     /**
-     * @return Widget
+     * @return \Ufocms\AdminModules\Widget
      */
     public function getWidget()
     {
@@ -386,7 +386,7 @@ class Model extends \Ufocms\AdminModules\Model
      */
     protected function updateTargets($widgetId, array $targets)
     {
-        $targetsExists = $this->getTargets($widgetId);
+        $targetsExists = $this->getTargets();
         
         $targetsRemoved = array();
         foreach ($targetsExists as $te) {

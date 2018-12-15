@@ -397,6 +397,6 @@ class ModelOrder extends DIObject
      */
     public function badActionRequest($action, array $options = null)
     {
-        $this->setActionResult($action, null, null, $options);
+        $this->setActionResult($action, null, $options);
     }
 }

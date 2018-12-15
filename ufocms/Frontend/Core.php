@@ -348,6 +348,7 @@ class Core
                     ' WHERE w.IsDisabled=0' . 
                     ' AND (wtrg.SectionId=' . $targetId . ' OR wtrg.SectionId=0)';
             $items = $this->db->getItems($sql);
+            $items = $items ?? [];
             usort(
                 $items, 
                 function ($a, $b) {
@@ -396,6 +397,7 @@ class Core
                     ' INNER JOIN ' . C_DB_TABLE_PREFIX . 'modules AS m ON m.muid=s.moduleid' . 
                     ' WHERE s.isenabled!=0 AND m.isenabled!=0';
             $items = $this->db->getItems($sql);
+            $items = $items ?? [];
             $items2 = array();
             foreach ($items as $item) {
                 $items2[$item['TargetId']][] = $item;

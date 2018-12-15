@@ -89,19 +89,27 @@ class View extends DIObject implements ViewInterface
     protected $context = null;
     
     /**
+     * Текущий макет.
+     * @var string
+     */
+    protected $layout = null;
+    
+    /**
      * Распаковка контейнера.
      */
     protected function unpackContainer()
     {
-        $this->module =& $this->container->getRef('module');
-        $this->debug =& $this->container->getRef('debug');
-        $this->params =& $this->container->getRef('params');
-        $this->db =& $this->container->getRef('db');
-        $this->core =& $this->container->getRef('core');
-        $this->config =& $this->container->getRef('config');
-        $this->tools =& $this->container->getRef('tools');
+        $this->module       =& $this->container->getRef('module');
+        $this->debug        =& $this->container->getRef('debug');
+        $this->params       =& $this->container->getRef('params');
+        $this->db           =& $this->container->getRef('db');
+        $this->core         =& $this->container->getRef('core');
+        $this->config       =& $this->container->getRef('config');
+        $this->tools        =& $this->container->getRef('tools');
         $this->moduleParams =& $this->container->getRef('moduleParams');
-        $this->model =& $this->container->getRef('model');
+        $this->model        =& $this->container->getRef('model');
+        $this->context      =  $this->container->get('context');
+        $this->layout       =  $this->container->get('layout');
     }
     
     /**
@@ -109,11 +117,25 @@ class View extends DIObject implements ViewInterface
      */
     protected function init()
     {
+        $this->context = array_merge(
+            $this->getApplicationContext(), 
+            $this->context
+        );
         
+        if (defined('C_THEME') && '' != C_THEME) {
+            $this->setTheme(C_THEME);
+        } else {
+            $this->setTheme();
+        }
+        if (0 === strpos($this->layout, '/')) {
+            $this->layout = $this->findTemplate($this->templatePath, null, $this->layout);
+        } else {
+            $this->layout = $this->findTemplate($this->templatePath, $this->module['Name'], '/' . $this->layout);
+        }
     }
     
     /**
-     * Установка контекста приложения.
+     * Получение контекста приложения.
      * @return array
      */
     protected function getApplicationContext()
@@ -127,59 +149,6 @@ class View extends DIObject implements ViewInterface
             'site'          => $this->core->getSite(), 
             'section'       => $this->core->getCurrentSection(), 
         );
-    }
-    
-    /**
-     * Установка контекста текущего модуля.
-     * @return array
-     */
-    protected function getModuleContext()
-    {
-        if (null !== $this->params->actionId 
-        || null !== $this->params->action) {
-            return array(
-                'settings'      => $this->model->getSettings(), 
-                'item'          => null, 
-                'items'         => null, 
-                'itemsCount'    => null, 
-                'actionResult'  => $this->model->getActionResult(), 
-            );
-        }
-        if (0 == $this->params->itemId) {
-            return array(
-                'settings'      => $this->model->getSettings(), 
-                'item'          => null, 
-                'items'         => $this->model->getItems(), 
-                'itemsCount'    => $this->model->getItemsCount(), 
-            );
-        } else {
-            $item = $this->model->getItem();
-            if (null === $item) {
-                $this->core->riseError(404, 'Item not exists');
-            }
-            return array(
-                'settings'      => $this->model->getSettings(), 
-                'item'          => $item, 
-                'items'         => null, 
-                'itemsCount'    => $this->model->getItemsCount(), 
-            );
-        }
-    }
-    
-    /**
-     * Установка текущего контекста.
-     * @param array $context = null
-     */
-    protected function setContext(array $context = null)
-    {
-        if (null === $context && null === $this->context) {
-            $this->context = array_merge(
-                $this->getApplicationContext(), 
-                $this->getModuleContext()
-            );
-        } else {
-            $this->context = $context;
-        }
     }
     
     /**
@@ -252,19 +221,6 @@ class View extends DIObject implements ViewInterface
                 $this->themeStyle = $style;
             }
         }
-    }
-    
-    /**
-     * Получение пути к макету страницы.
-     * @return string
-     */
-    protected function getLayout()
-    {
-        return $this->findTemplate(
-            $this->templatePath, 
-            null, 
-            $this->config->templatesEntry
-        );
     }
     
     /**
@@ -353,21 +309,15 @@ class View extends DIObject implements ViewInterface
         if (null !== $this->debug) {
             $idx = $this->debug->trace('Render preparation');
         }
-        if (defined('C_THEME') && '' != C_THEME) {
-            $this->setTheme(C_THEME);
-        } else {
-            $this->setTheme();
-        }
-        $this->setContext();
         extract(
             array_merge(
-                array('menu' => $this->getMenu()), 
-                $this->context, 
                 array(
-                    'headTitle'     => $this->getHeadTitle(), 
-                    'metaDesc'      => $this->getMetaDesc(), 
-                    'metaKeys'      => $this->getMetaKeys(), 
-                )
+                    'menu'      => $this->getMenu(), 
+                    'headTitle' => $this->getHeadTitle(), 
+                    'metaDesc'  => $this->getMetaDesc(), 
+                    'metaKeys'  => $this->getMetaKeys(), 
+                ), 
+                $this->context
             ), 
             EXTR_PREFIX_SAME, 'model'
         );
@@ -375,7 +325,7 @@ class View extends DIObject implements ViewInterface
             $this->debug->trace($idx);
             $idx = $this->debug->trace('Render');
         }
-        require_once $this->getLayout();
+        require_once $this->layout;
     }
     
     /**
@@ -797,7 +747,7 @@ class View extends DIObject implements ViewInterface
         extract(
             array_merge(
                 $this->getApplicationContext(), 
-                $this->getCommentsContext()
+                $this->getCommentsContext($options)
             )
         );
         if (null === $this->moduleParams['commentsAdd']) {
@@ -891,7 +841,7 @@ class View extends DIObject implements ViewInterface
         extract(
             array_merge(
                 $this->getApplicationContext(), 
-                $this->getInteractionContext()
+                $this->getInteractionContext($options)
             )
         );
         if (null === $this->moduleParams['commentsAdd']) {

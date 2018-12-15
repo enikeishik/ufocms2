@@ -17,7 +17,7 @@ class Widget extends \Ufocms\Modules\Widget
     {
         parent::setContext();
         
-        $items = array();
+        $item = array();
         if (is_array($this->params)) {
             $item = $this->getItem();
         }
@@ -33,26 +33,14 @@ class Widget extends \Ufocms\Modules\Widget
             'moduleParams'  => &$this->moduleParams, 
         ]);
         $model = new Model($container);
-        $container = $this->core->getContainer([
-            'module'        => null, 
-            'params'        => null, 
-            'db'            => &$this->db, 
-            'core'          => &$this->core, 
-            'debug'         => &$this->debug, 
-            'config'        => &$this->config, 
-            'tools'         => &$this->tools, 
-            'moduleParams'  => &$this->moduleParams, 
-            'model'         => &$model, 
-        ]);
-        $view = new View($container);
         
         $this->context = array_merge(
             $this->context, 
             array(
                 'item'          => $item, 
                 'ticket'        => $model->getTicket(), 
-                'showForm'      => $view->isShowForm($item, ['results' => false]), 
-                'showResults'   => $view->isShowResults($item, ['results' => false]), 
+                'showForm'      => $model->isShowForm($item, ['results' => false]), 
+                'showResults'   => $model->isShowResults($item, ['results' => false]), 
             )
         );
     }

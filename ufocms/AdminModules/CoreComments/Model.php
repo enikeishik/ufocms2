@@ -94,7 +94,7 @@ class Model extends \Ufocms\AdminModules\Model
     {
         $sql =  'SELECT url,ip FROM ' . C_DB_TABLE_PREFIX . 'comments' . 
                 ' WHERE id=' . $this->params->itemId;
-        $item = $this->getItem($sql);
+        $item = $this->db->getItem($sql);
         if (!is_null($item)) {
             $sql = 'INSERT INTO ' . C_DB_TABLE_PREFIX . 'comments_blacklist' . 
                    ' (url, ip)' . 
@@ -116,8 +116,8 @@ class Model extends \Ufocms\AdminModules\Model
     {
         $sql =  'SELECT ip FROM ' . C_DB_TABLE_PREFIX . 'comments' . 
                 ' WHERE id=' . $this->params->itemId;
-        $ip = $this->getValue($sql, 'ip');
-        if (!is_null($item)) {
+        $ip = $this->db->getValue($sql, 'ip');
+        if (!is_null($ip)) {
             $sql = 'INSERT INTO ' . C_DB_TABLE_PREFIX . 'comments_blacklist' . 
                    ' (url, ip)' . 
                    " VALUES('*', '" . $this->db->addEscape($ip) . "')";

@@ -166,7 +166,7 @@ class ModelCategories extends \Ufocms\AdminModules\Model
     protected function getLevel($mask)
     {
         if (0 != strlen($mask) % self::MASK_SPL) {
-            throw new Exception(self::ERR_MASK_WRONG);
+            throw new \Exception(self::ERR_MASK_WRONG);
         }
         return strlen($mask) / self::MASK_SPL;
     }
@@ -200,13 +200,13 @@ class ModelCategories extends \Ufocms\AdminModules\Model
     {
         $siblingsCount = $this->getChildrenCount($parentId);
         if ($siblingsCount >= $this->getMaxItemsPerLevel()) {
-            throw new Exception(self::ERR_MASK_LIMIT_EXCEEDS);
+            throw new \Exception(self::ERR_MASK_LIMIT_EXCEEDS);
         }
         
         $mask = $this->getMask($parentId) . 
                 str_pad(++$siblingsCount, self::MASK_SPL, '0', STR_PAD_LEFT);
         if ($this->getLevel($mask) > self::MASK_ML) {
-            throw new Exception(self::ERR_MASK_LIMIT_EXCEEDS);
+            throw new \Exception(self::ERR_MASK_LIMIT_EXCEEDS);
         }
         
         return $mask;

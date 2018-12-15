@@ -41,7 +41,7 @@ class Model extends \Ufocms\Modules\Model //implements IModel
             if (null === $itemCategoryAlias) {
                 $this->core->riseError(404, 'Item category not exists');
             }
-            $this->core->riseError(301, 'Use alias', $this->params->$sectionPath . $itemCategoryAlias . '/' . $itemAlias);
+            $this->core->riseError(301, 'Use alias', $this->params->sectionPath . $itemCategoryAlias . '/' . $itemAlias);
         }
         if (null !== $this->moduleParams['catAlias']) { // /cat/
             if (null !== $this->moduleParams['goodsAlias']) { // /cat/itm/

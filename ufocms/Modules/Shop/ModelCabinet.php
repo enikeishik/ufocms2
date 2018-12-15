@@ -36,7 +36,7 @@ class ModelCabinet extends \Ufocms\Modules\Model //implements IModel
             $users = $this->core->getUsers();
             $user = $users->getCurrent();
             if (null === $user) {
-                $this->core->riseError(301, 'Must login', $this->params->$sectionPath . '?cabinet=login');
+                $this->core->riseError(301, 'Must login', $this->params->sectionPath . '?cabinet=login');
             }
             $this->userId = (int) $user['Id'];
             unset($user);

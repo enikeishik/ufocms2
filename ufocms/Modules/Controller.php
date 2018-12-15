@@ -110,7 +110,7 @@ class Controller extends DIObject implements ControllerInterface
         }
         $this->modelAction($model);
         
-        $view = $this->getView($model);
+        $view = $this->getView($model, $this->getModuleContext($model), $this->getLayout());
         $view->render();
     }
     
@@ -120,6 +120,14 @@ class Controller extends DIObject implements ControllerInterface
     protected function setModuleParamsStruct()
     {
         //BOOKMARK: DateTime format
+        /*
+         * type         bool|int|date|string|user defined
+         * from         none - some internal flags, path - gets from path, get - gets from $_GET
+         * prefix       parameter prefix for from-path, or name for from-get
+         * additional   false - must be only one (no other params, except additional), true - can be with other params
+         * value        initial value
+         * default      default value
+         */
         $this->moduleParamsStruct = array(
             'isRoot'        => ['type' => 'bool',   'from' => 'none',   'prefix' => '',             'additional' => false,  'value' => null, 'default' => true], 
             'isRss'         => ['type' => 'bool',   'from' => 'path',   'prefix' => 'rss',          'additional' => false,  'value' => null, 'default' => false], 
@@ -133,17 +141,6 @@ class Controller extends DIObject implements ControllerInterface
             'commentsAdd'   => ['type' => 'int',    'from' => 'get',    'prefix' => 'commentsadd',  'additional' => true,   'value' => null, 'default' => 0], 
             'interaction'   => ['type' => 'int',    'from' => 'get',    'prefix' => 'interaction',  'additional' => true,   'value' => null, 'default' => 0], 
         );
-    }
-    
-    /**
-     * Установка параметров приложения.
-     * @param string $name
-     * @param mixed $value
-     * @param mixed $default = null
-     */
-    protected function setAppParam($name, $value, $default = null)
-    {
-        $this->params->$name = $value ?? $default;
     }
     
     /**
@@ -183,109 +180,18 @@ class Controller extends DIObject implements ControllerInterface
     }
     
     /**
-     * Вызов действий уровня приложения.
+     * Установка значений параметров переданных в пути.
      */
-    final protected function applicationAction()
+    protected function setPathParams()
     {
-        if (null !== $this->moduleParamsStruct['commentsAdd']['value']) {
-            $this->core->getComments()->add();
+        if (!is_array($this->params->sectionParams)) {
+            return;
         }
-        if (null !== $this->moduleParamsStruct['interaction']['value']) {
-            switch ($this->moduleParamsStruct['interaction']['value']) {
-                case 1:
-                    $this->core->getInteractionManage()->addComment();
-                    break;
-                case 2:
-                    $this->core->getInteractionManage()->addRate();
-                    break;
-                case 3:
-                    $this->core->getInteractionManage()->addCommentRate();
-                    break;
+        foreach ($this->params->sectionParams as $param) {
+            if (!$this->setParam($param)) {
+                $this->core->riseError(404, 'Module parameter unknown'); //exit('404-module-param-unknown'); //throw new Exception
             }
         }
-    }
-    
-    /**
-     * @return \Ufocms\Modules\Model|null
-     */
-    protected function getModel()
-    {
-        if (isset($this->module['Model'])) {
-            $class = $this->module['Model'];
-            if (class_exists($class)) {
-                $container = $this->core->getContainer([
-                    'module'        => &$this->module, 
-                    'params'        => &$this->params, 
-                    'db'            => &$this->db, 
-                    'core'          => &$this->core, 
-                    'debug'         => &$this->debug, 
-                    'config'        => &$this->config, 
-                    'tools'         => &$this->tools, 
-                    'moduleParams'  => &$this->moduleParams, 
-                ]);
-                return new $class($container);
-            } else {
-                return null;
-            }
-        } else {
-            return null;
-        }
-    }
-    
-    /**
-     * Осуществить действие модели, если передан параметро actionId.
-     * @param \Ufocms\Modules\Model &$model
-     */
-    protected function modelAction(&$model)
-    {
-        if (null !== $this->params->action) {
-            $method = $this->params->action;
-            if (method_exists($model, $method)) {
-                $model->$method();
-            }
-        }
-    }
-    
-    /**
-     * @param \Ufocms\Modules\Model &$model
-     * @return \Ufocms\Modules\View
-     */
-    protected function getView(&$model)
-    {
-        $container = $this->core->getContainer([
-            'module'        => &$this->module, 
-            'params'        => &$this->params, 
-            'db'            => &$this->db, 
-            'core'          => &$this->core, 
-            'debug'         => &$this->debug, 
-            'config'        => &$this->config, 
-            'tools'         => &$this->tools, 
-            'moduleParams'  => &$this->moduleParams, 
-            'model'         => &$model, 
-        ]);
-        if (isset($this->module['View'])) {
-            $class = $this->module['View'];
-            if (class_exists($class)) {
-                return new $class($container);
-            } else {
-                return new View($container);
-            }
-        } else {
-            return new View($container);
-        }
-    }
-    
-    /**
-     * Получение простого массива параметров модуля.
-     * @return array
-     */
-    protected function getModuleParams()
-    {
-        $arr = [];
-        foreach ($this->moduleParamsStruct as $k => $v) {
-            $arr[$k] = $v['value'];
-        }
-        return $arr;
     }
     
     /**
@@ -358,21 +264,6 @@ class Controller extends DIObject implements ControllerInterface
     }
     
     /**
-     * Установка значений параметров переданных в пути.
-     */
-    protected function setPathParams()
-    {
-        if (!is_array($this->params->sectionParams)) {
-            return;
-        }
-        foreach ($this->params->sectionParams as $param) {
-            if (!$this->setParam($param)) {
-                $this->core->riseError(404, 'Module parameter unknown'); //exit('404-module-param-unknown'); //throw new Exception
-            }
-        }
-    }
-    
-    /**
      * Установка параметров переданных через GET.
      */
     protected function setGetParams()
@@ -407,6 +298,178 @@ class Controller extends DIObject implements ControllerInterface
             } else if ('isRoot' != $paramName && null !== $paramSet['value']) {
                 $this->moduleParamsStruct['isRoot']['value'] = false;
             }
+        }
+    }
+    
+    /**
+     * Получение простого массива параметров модуля.
+     * @return array
+     */
+    protected function getModuleParams()
+    {
+        $arr = [];
+        foreach ($this->moduleParamsStruct as $k => $v) {
+            $arr[$k] = $v['value'];
+        }
+        return $arr;
+    }
+    
+    /**
+     * Установка параметров приложения.
+     * @param string $name
+     * @param mixed $value
+     * @param mixed $default = null
+     */
+    protected function setAppParam($name, $value, $default = null)
+    {
+        $this->params->$name = $value ?? $default;
+    }
+    
+    /**
+     * Вызов действий уровня приложения.
+     */
+    final protected function applicationAction()
+    {
+        if (null !== $this->moduleParamsStruct['commentsAdd']['value']) {
+            $this->core->getComments()->add();
+        }
+        if (null !== $this->moduleParamsStruct['interaction']['value']) {
+            switch ($this->moduleParamsStruct['interaction']['value']) {
+                case 1:
+                    $this->core->getInteractionManage()->addComment();
+                    break;
+                case 2:
+                    $this->core->getInteractionManage()->addRate();
+                    break;
+                case 3:
+                    $this->core->getInteractionManage()->addCommentRate();
+                    break;
+            }
+        }
+    }
+    
+    /**
+     * @return \Ufocms\Modules\Model|null
+     */
+    protected function getModel()
+    {
+        if (isset($this->module['Model'])) {
+            $class = $this->module['Model'];
+            if (class_exists($class)) {
+                $container = $this->core->getContainer([
+                    'module'        => &$this->module, 
+                    'params'        => &$this->params, 
+                    'db'            => &$this->db, 
+                    'core'          => &$this->core, 
+                    'debug'         => &$this->debug, 
+                    'config'        => &$this->config, 
+                    'tools'         => &$this->tools, 
+                    'moduleParams'  => &$this->moduleParams, 
+                ]);
+                return new $class($container);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * Осуществить действие модели, если передан параметро actionId.
+     * @param \Ufocms\Modules\Model &$model
+     */
+    protected function modelAction(&$model)
+    {
+        if (null !== $this->params->action) {
+            $method = $this->params->action;
+            if (method_exists($model, $method)) {
+                $model->$method();
+            }
+        }
+    }
+    
+    /**
+     * @param \Ufocms\Modules\ModelInterface &$model
+     * @param array $context
+     * @param string $layout
+     * @return \Ufocms\Modules\View
+     */
+    protected function getView(ModelInterface &$model, array $context, string $layout)
+    {
+        $container = $this->core->getContainer([
+            'module'        => &$this->module, 
+            'params'        => &$this->params, 
+            'db'            => &$this->db, 
+            'core'          => &$this->core, 
+            'debug'         => &$this->debug, 
+            'config'        => &$this->config, 
+            'tools'         => &$this->tools, 
+            'moduleParams'  => &$this->moduleParams, 
+            'model'         => &$model, 
+            'context'       => $context, 
+            'layout'        => $layout, 
+        ]);
+        if (isset($this->module['View'])) {
+            $class = $this->module['View'];
+            if (class_exists($class)) {
+                return new $class($container);
+            } else {
+                return new View($container);
+            }
+        } else {
+            return new View($container);
+        }
+    }
+    
+    /**
+     * Получение контекста текущего модуля.
+     * @param ModelInterface &$model
+     * @return array
+     */
+    protected function getModuleContext(ModelInterface &$model)
+    {
+        if (null !== $this->params->actionId 
+        || null !== $this->params->action) {
+            return array(
+                'settings'      => $model->getSettings(), 
+                'item'          => null, 
+                'items'         => null, 
+                'itemsCount'    => null, 
+                'actionResult'  => $model->getActionResult(), 
+            );
+        }
+        if (0 == $this->params->itemId) {
+            return array(
+                'settings'      => $model->getSettings(), 
+                'item'          => null, 
+                'items'         => $model->getItems(), 
+                'itemsCount'    => $model->getItemsCount(), 
+            );
+        } else {
+            $item = $model->getItem();
+            if (null === $item) {
+                $this->core->riseError(404, 'Item not exists');
+            }
+            return array(
+                'settings'      => $model->getSettings(), 
+                'item'          => $item, 
+                'items'         => null, 
+                'itemsCount'    => $model->getItemsCount(), 
+            );
+        }
+    }
+    
+    /**
+     * Получение пути к макету страницы.
+     * @return string
+     */
+    protected function getLayout()
+    {
+        if (!$this->moduleParams['isRss']) {
+            return $this->config->templatesEntry;
+        } else {
+            return $this->config->templatesRssEntry;
         }
     }
 }

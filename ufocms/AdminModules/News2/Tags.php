@@ -8,13 +8,13 @@ namespace Ufocms\AdminModules\News2;
 class Tags
 {
     /**
-     * @var Db
+     * @var \Ufocms\Backend\Db
      */
     protected $db = null;
     
     /**
      * Constructor
-     * @param Db &$db
+     * @param \Ufocms\Backend\Db &$db
      */
     public function __construct(&$db)
     {

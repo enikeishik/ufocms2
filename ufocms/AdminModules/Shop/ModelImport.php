@@ -27,6 +27,11 @@ class ModelImport extends \Ufocms\AdminModules\Model
     protected $categoryId = null;
     
     /**
+     * @var int
+     */
+    protected $relatedInfoId = null;
+    
+    /**
      * @var string
      */
     protected $fileName = null;
@@ -70,6 +75,7 @@ class ModelImport extends \Ufocms\AdminModules\Model
         if (0 == $this->categoryId) {
             throw new \Exception(self::ERR_CATEGORY);
         }
+        $this->relatedInfoId = 0;
         $this->primaryFilter .= ' AND CategoryId=' . $this->categoryId;
         $this->config->registerAction('import');
         $this->config->registerMakeAction('import');

@@ -6,9 +6,9 @@
 namespace Ufocms\Modules\SysUsers;
 
 /**
- * Main module model
+ * Main module view
  */
-class View extends \Ufocms\Modules\View //implements IView
+class View extends \Ufocms\Modules\View //implements ViewInterface
 {
     protected function getModuleTemplateEntry()
     {
@@ -21,19 +21,5 @@ class View extends \Ufocms\Modules\View //implements IView
             }
         }
         return parent::getModuleTemplateEntry();
-    }
-    
-    /**
-     * @return array
-     */
-    protected function getModuleContext()
-    {
-        return array_merge(
-            parent::getModuleContext(), 
-            array(
-                'error' => $this->model->getError(), 
-                'from'  => $this->model->getFrom(), 
-            )
-        );
     }
 }

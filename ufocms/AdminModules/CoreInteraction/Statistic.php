@@ -11,17 +11,17 @@ namespace Ufocms\AdminModules\CoreInteraction;
 class Statistic
 {
     /**
-     * @var Debug
+     * @var \Ufocms\Frontend\Debug
      */
     protected $debug = null;
     
     /**
-     * @var Db
+     * @var \Ufocms\Frontend\Db
      */
     protected $db = null;
     
     /**
-     * @var Core
+     * @var \Ufocms\Frontend\Core
      */
     protected $core = null;
     

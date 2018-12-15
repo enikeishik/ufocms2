@@ -26,7 +26,7 @@ class Model extends \Ufocms\Modules\Model //implements IModel
         if ('login' != $this->moduleParams['requestType']) {
             $this->currentUser = $this->core->getUsers()->getCurrent();
             if (null === $this->currentUser) {
-                $this->core->riseError(301, 'Must login', $this->params->$sectionPath . '?type=login');
+                $this->core->riseError(301, 'Must login', $this->params->sectionPath . '?type=login');
             }
             //запрещаем кэширование страницы элемента
             //логичнее было бы запретить кэширование информера и действия

@@ -23,7 +23,7 @@ class Model extends \Ufocms\Modules\Model //implements IModel
             if (null === $itemAlias) {
                 $this->core->riseError(404, 'Item not exists');
             }
-            $this->core->riseError(301, 'Use alias', $this->params->$sectionPath . $itemAlias);
+            $this->core->riseError(301, 'Use alias', $this->params->sectionPath . $itemAlias);
         }
         
         if (null !== $this->moduleParams['alias']) {

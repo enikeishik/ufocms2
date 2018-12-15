@@ -6,38 +6,10 @@
 namespace Ufocms\Modules\Oldurls;
 
 /**
- * Main module model
+ * Main module view
  */
-class View extends \Ufocms\Modules\View //implements IView
+class View extends \Ufocms\Modules\View //implements ViewInterface
 {
-    /**
-     * @see parent
-     */
-    protected function getModuleContext()
-    {
-        if (0 != $this->params->itemId) {
-            $item = $this->model->getItem();
-            if (null === $item) {
-                $this->core->riseError(404, 'Item not exists');
-            } else if (isset($item['Target']) && '' != $item['Target']) {
-                $this->core->riseError(301, 'Move to current URL', $item['Target']);
-            }
-            return array(
-                'settings'      => $this->model->getSettings(), 
-                'item'          => $item, 
-                'items'         => null, 
-                'itemsCount'    => $this->model->getItemsCount(), 
-            );
-        } else {
-            return array(
-                'settings'      => $this->model->getSettings(), 
-                'item'          => null, 
-                'items'         => $this->model->getItems(), 
-                'itemsCount'    => $this->model->getItemsCount(), 
-            );
-        }
-    }
-    
     /**
      * @see parent
      */

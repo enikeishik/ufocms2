@@ -135,6 +135,30 @@ class Model extends \Ufocms\Modules\Model //implements IModel
     }
     
     /**
+     * @param array $voting
+     * @param array $moduleParams
+     * @return bool
+     */
+    public function isShowForm(array $voting, array $moduleParams)
+    {
+        return  !$voting['IsClosed'] 
+                && (!$this->isVoted($voting['Id']) && !$moduleParams['results']) 
+                && (time() < strtotime($voting['DateStop']));
+    }
+    
+    /**
+     * @param array $voting
+     * @param array $moduleParams
+     * @return bool
+     */
+    public function isShowResults(array $voting, array $moduleParams)
+    {
+        return  ($moduleParams['results'] && -1 == $voting['ResultsDisplay']) 
+                || ($this->isVoted($voting['Id']) && $voting['ResultsDisplay'] < 1) 
+                || (time() > strtotime($voting['DateStop']));
+    }
+    
+    /**
      * @param int $votingId
      * @return bool
      */

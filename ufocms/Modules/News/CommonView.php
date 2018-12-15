@@ -6,9 +6,9 @@
 namespace Ufocms\Modules\News;
 
 /**
- * Main module model
+ * Module level common (for all sections) view
  */
-class CommonView extends \Ufocms\Modules\View //implements IView
+class CommonView extends \Ufocms\Modules\View //implements ViewInterface
 {
     use Tools;
     
@@ -21,6 +21,7 @@ class CommonView extends \Ufocms\Modules\View //implements IView
             $item = $this->model->getItem();
             $this->core->riseError(301, 'Use section path', $item['path'] . $this->params->itemId);
         }
+        parent::init();
     }
     
     /**
@@ -33,90 +34,6 @@ class CommonView extends \Ufocms\Modules\View //implements IView
         $arr['section']['indic']    = 'Новости';
         $arr['section']['title']    = 'Новости';
         return $arr;
-    }
-    
-    /**
-     * @see parent
-     */
-    protected function getModuleContext()
-    {
-        if (0 != $this->params->itemId) {
-             //not used, riseError 301 in init()
-            return array(
-                'settings'      => $this->model->getSettings(), 
-                'item'          => $this->model->getItem(), 
-                'items'         => null, 
-                'itemsCount'    => $this->model->getItemsCount(), 
-            );
-        } else if (null !== $this->moduleParams['date']) {
-            return array(
-                'settings'      => $this->model->getSettings(), 
-                'item'          => null, 
-                'items'         => $this->model->getItemsByDate(), 
-                'itemsCount'    => $this->model->getItemsCount(), 
-            );
-        } else if (null !== $this->moduleParams['authors']) {
-            return array(
-                'settings'      => $this->model->getSettings(), 
-                'item'          => null, 
-                'items'         => $this->model->getAuthors(), 
-                'itemsCount'    => $this->model->getItemsCount(), 
-            );
-        } else if (null !== $this->moduleParams['author']) {
-            return array(
-                'settings'      => $this->model->getSettings(), 
-                'item'          => null, 
-                'items'         => $this->model->getItemsByAuthor(), 
-                'itemsCount'    => $this->model->getItemsCount(), 
-            );
-        } else {
-            return array(
-                'settings'      => $this->model->getSettings(), 
-                'item'          => null, 
-                'items'         => $this->model->getItems(), 
-                'itemsCount'    => $this->model->getItemsCount(), 
-            );
-        }
-    }
-    
-    /**
-     * @see parent
-     */
-    protected function getLayout()
-    {
-        if ($this->moduleParams['isRss']) {
-            return $this->findTemplate(
-                $this->templatePath, 
-                $this->module['Name'], 
-                '/rss.php'
-            );
-        } else if ($this->moduleParams['isYandex']) {
-            return $this->findTemplate(
-                $this->templatePath, 
-                $this->module['Name'], 
-                '/yandex.php'
-            );
-        } else if ($this->moduleParams['isYaDzen']) {
-            return $this->findTemplate(
-                $this->templatePath, 
-                $this->module['Name'], 
-                '/yadzen.php'
-            );
-        } else if ($this->moduleParams['isYaTurbo']) {
-            return  $this->findTemplate(
-                $this->templatePath, 
-                $this->module['Name'], 
-                '/yaturbo.php'
-            );
-        } else if ($this->moduleParams['isRambler']) {
-            return $this->findTemplate(
-                $this->templatePath, 
-                $this->module['Name'], 
-                '/rambler.php'
-            );
-        } else {
-            return parent::getLayout();
-        }
     }
     
     /**

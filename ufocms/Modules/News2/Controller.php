@@ -5,10 +5,12 @@
 
 namespace Ufocms\Modules\News2;
 
+use \Ufocms\Modules\ModelInterface;
+
 /**
  * Module level controller
  */
-class Controller extends \Ufocms\Modules\Controller //implements IController
+class Controller extends \Ufocms\Modules\Controller //implements ControllerInterface
 {
     protected function setModuleParamsStruct()
     {
@@ -30,6 +32,73 @@ class Controller extends \Ufocms\Modules\Controller //implements IController
         parent::modelAction($model);
         if (2 == $this->params->actionId) {
             $model->add();
+        }
+    }
+    
+    /**
+     * @return array
+     */
+    protected function getModuleContext(ModelInterface &$model)
+    {
+        if (null !== $this->params->actionId) {
+            return array(
+                'settings'      => null, 
+                'item'          => null, 
+                'items'         => null, 
+                'itemsCount'    => null, 
+                'actionResult'  => $model->getActionResult(), 
+            );
+        }
+        if (0 != $this->params->itemId) {
+            $item = $model->getItem();
+            if (null === $item) {
+                $this->core->riseError(404, 'Item not exists');
+            }
+            return array(
+                'settings'      => $model->getSettings(), 
+                'item'          => $item, 
+                'items'         => null, 
+                'itemsCount'    => $model->getItemsCount(), 
+            );
+        } else if (null !== $this->moduleParams['tagId']) {
+            return array(
+                'settings'      => $model->getSettings(), 
+                'item'          => null, 
+                'items'         => $model->getItemsByTag(), 
+                'itemsCount'    => $model->getItemsCount(), 
+            );
+        } else if (null !== $this->moduleParams['date']) {
+            return array(
+                'settings'      => $model->getSettings(), 
+                'item'          => null, 
+                'items'         => $model->getItemsByDate(), 
+                'itemsCount'    => $model->getItemsCount(), 
+            );
+        } else {
+            return array(
+                'settings'      => $model->getSettings(), 
+                'item'          => null, 
+                'items'         => $model->getItems(), 
+                'itemsCount'    => $model->getItemsCount(), 
+            );
+        }
+    }
+    
+    /**
+     * @see parent
+     */
+    protected function getLayout()
+    {
+        if ($this->moduleParams['isYandex']) {
+            return 'yandex.php';
+        } else if ($this->moduleParams['isYaDzen']) {
+            return 'yadzen.php';
+        } else if ($this->moduleParams['isYaTurbo']) {
+            return 'yaturbo.php';
+        } else if ($this->moduleParams['isRambler']) {
+            return 'rambler.php';
+        } else {
+            return parent::getLayout();
         }
     }
 }

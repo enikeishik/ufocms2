@@ -17,7 +17,7 @@ class RssReader
     protected $attempts_count = 5;
     protected $arr_items = array();
     
-    public function __construct($url, $cache_path = '')
+    public function __construct($url)
     {
         $this->url = $url;
         for ($i = 0; $i < $this->attempts_count; $i++) {

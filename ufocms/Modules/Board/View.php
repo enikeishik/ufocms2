@@ -6,26 +6,10 @@
 namespace Ufocms\Modules\Board;
 
 /**
- * Main module model
+ * Main module view
  */
-class View extends \Ufocms\Modules\View //implements IView
+class View extends \Ufocms\Modules\View //implements ViewInterface
 {
-    /**
-     * @see parent
-     */
-    protected function getLayout()
-    {
-        if ($this->moduleParams['isRss']) {
-            return $this->findTemplate(
-                $this->templatePath, 
-                $this->module['Name'], 
-                '/rss.php'
-            );
-        } else {
-            return parent::getLayout();
-        }
-    }
-    
     /**
      * @see parent
      */

@@ -242,12 +242,12 @@ class Main //implements IController
             $this->core->setCurrentSection();
         }
         $this->module = array(
-                            'Disabled'      => $moduleDisabled, 
-                            'Name'          => $moduleName, 
-                            'Controller'    => '\\Ufocms\\Modules\\' . $moduleName . '\\Controller',  
-                            'Model'         => '\\Ufocms\\Modules\\' . $moduleName . '\\Model', 
-                            'View'          => '\\Ufocms\\Modules\\' . $moduleName . '\\View', 
-                            );
+            'Disabled'      => $moduleDisabled, 
+            'Name'          => $moduleName, 
+            'Controller'    => '\\Ufocms\\Modules\\' . $moduleName . '\\Controller',  
+            'Model'         => '\\Ufocms\\Modules\\' . $moduleName . '\\Model', 
+            'View'          => '\\Ufocms\\Modules\\' . $moduleName . '\\View', 
+        );
     }
     
     /**
@@ -264,11 +264,7 @@ class Main //implements IController
         //если нет, разбиваем путь по слэшам, чтобы вычленить параметры в пути
         } else {
             //массив частей пути
-            $pathParts = explode('/', $path);
-            //убираем крайние слэши, чтобы не было лишних элементов в массиве
-            array_shift($pathParts);
-            //BOOKMARK: close slash
-            array_pop($pathParts);
+            $pathParts = explode('/', trim($path, '/'));
             $pathPartsCount = count($pathParts);
         
             //если вложенность больше допустимой, выходим

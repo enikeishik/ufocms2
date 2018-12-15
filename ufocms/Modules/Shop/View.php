@@ -6,9 +6,9 @@
 namespace Ufocms\Modules\Shop;
 
 /**
- * Main module model
+ * Main module view
  */
-class View extends \Ufocms\Modules\View //implements IView
+class View extends \Ufocms\Modules\View //implements ViewInterface
 {
     /**
      * @var array|null
@@ -18,90 +18,10 @@ class View extends \Ufocms\Modules\View //implements IView
     /**
      * @see parent
      */
-    protected function getModuleContext()
+    protected function init()
     {
-        if (null !== $this->moduleParams['order']) {
-            //also see modelAction in Controller
-            switch ($this->moduleParams['order']) {
-                case 'show': //отображение текущего заказа (корзина)
-                    return array(
-                        'settings'      => null, 
-                        'item'          => $this->model->order->getOrder(), 
-                        'items'         => $this->model->order->getItems(), 
-                    );
-                    
-                case 'add': //добавление элемента в заказ
-                case 'remove': //удаление элемента из заказа
-                case 'clear': //очистка и удаление всего заказа
-                case 'form': //форма заказа для заполнения
-                case 'send': //отправка заказа администрации магазина
-                    return array(
-                        'settings'      => null, 
-                        'item'          => null, 
-                        'items'         => null, 
-                        'actionResult'  => $this->model->order->getActionResult(), 
-                    );
-                case 'sended': //заказ отправлен администрации магазина
-                    $this->model->order->setActionResult('sended', true); //поскольку это простой редирект, выставляем флаг результата в true
-                    return array(
-                        'settings'      => null, 
-                        'item'          => null, 
-                        'items'         => null, 
-                        'actionResult'  => $this->model->order->getActionResult(), 
-                    );
-                    
-                case 'confirm': //подтверждение отправки заказа
-                    return array(
-                        'settings'      => null, 
-                        'item'          => $this->model->order->getOrder(), 
-                        'items'         => null, 
-                        'actionResult'  => $this->model->order->getActionResult(), 
-                    );
-                    
-                default:
-                    $this->core->riseError(404, 'Unknown value of `order` parameter');
-            }
-            
-        } else if ($this->moduleParams['isYandex']) {
-            return array(
-                'settings'      => null, 
-                'item'          => null, 
-                'items'         => $this->model->getItems(), 
-                'itemsCount'    => $this->model->getItemsCount(), 
-                'categories'    => $this->model->getCategories(), 
-            );
-            
-        } else {
-            if (0 != $this->moduleParams['categoryId']) {
-                $this->category = $this->model->getCategory($this->moduleParams['categoryId']);
-            }
-            return array_merge(
-                parent::getModuleContext(), 
-                array('category' => $this->category)
-            );
-        }
-    }
-    
-    /**
-     * @see parent
-     */
-    protected function getLayout()
-    {
-        if ($this->moduleParams['isRss']) {
-            return $this->findTemplate(
-                $this->templatePath, 
-                $this->module['Name'], 
-                '/rss.php'
-            );
-        } else if ($this->moduleParams['isYandex']) {
-            return $this->findTemplate(
-                $this->templatePath, 
-                $this->module['Name'], 
-                '/yml.php'
-            );
-        } else {
-            return parent::getLayout();
-        }
+        $this->category = $this->context['category'] ?? null;
+        parent::init();
     }
     
     /**

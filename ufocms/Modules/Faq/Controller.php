@@ -8,7 +8,7 @@ namespace Ufocms\Modules\Faq;
 /**
  * Module level controller
  */
-class Controller extends \Ufocms\Modules\Controller //implements IController
+class Controller extends \Ufocms\Modules\Controller //implements ControllerInterface
 {
     protected function modelAction(&$model)
     {

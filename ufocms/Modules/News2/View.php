@@ -6,60 +6,11 @@
 namespace Ufocms\Modules\News2;
 
 /**
- * Main module model
+ * Main module view
  */
-class View extends \Ufocms\Modules\View //implements IView
+class View extends \Ufocms\Modules\View //implements ViewInterface
 {
     use Tools;
-    
-    /**
-     * @return array
-     */
-    protected function getModuleContext()
-    {
-        if (null !== $this->params->actionId) {
-            return array(
-                'settings'      => null, 
-                'item'          => null, 
-                'items'         => null, 
-                'itemsCount'    => null, 
-                'actionResult'  => $this->model->getActionResult(), 
-            );
-        }
-        if (0 != $this->params->itemId) {
-            $item = $this->model->getItem();
-            if (null === $item) {
-                $this->core->riseError(404, 'Item not exists');
-            }
-            return array(
-                'settings'      => $this->model->getSettings(), 
-                'item'          => $item, 
-                'items'         => null, 
-                'itemsCount'    => $this->model->getItemsCount(), 
-            );
-        } else if (null !== $this->moduleParams['tagId']) {
-            return array(
-                'settings'      => $this->model->getSettings(), 
-                'item'          => null, 
-                'items'         => $this->model->getItemsByTag(), 
-                'itemsCount'    => $this->model->getItemsCount(), 
-            );
-        } else if (null !== $this->moduleParams['date']) {
-            return array(
-                'settings'      => $this->model->getSettings(), 
-                'item'          => null, 
-                'items'         => $this->model->getItemsByDate(), 
-                'itemsCount'    => $this->model->getItemsCount(), 
-            );
-        } else {
-            return array(
-                'settings'      => $this->model->getSettings(), 
-                'item'          => null, 
-                'items'         => $this->model->getItems(), 
-                'itemsCount'    => $this->model->getItemsCount(), 
-            );
-        }
-    }
     
     protected function getModuleTemplateEntry()
     {
@@ -67,43 +18,6 @@ class View extends \Ufocms\Modules\View //implements IView
             return '/form.php';
         }
         return parent::getModuleTemplateEntry();
-    }
-    
-    protected function getLayout()
-    {
-        if ($this->moduleParams['isRss']) {
-            return $this->findTemplate(
-                $this->templatePath, 
-                $this->module['Name'], 
-                '/rss.php'
-            );
-        } else if ($this->moduleParams['isYandex']) {
-            return $this->findTemplate(
-                $this->templatePath, 
-                $this->module['Name'], 
-                '/yandex.php'
-            );
-        } else if ($this->moduleParams['isYaDzen']) {
-            return $this->findTemplate(
-                $this->templatePath, 
-                $this->module['Name'], 
-                '/yadzen.php'
-            );
-        } else if ($this->moduleParams['isYaTurbo']) {
-            return $this->findTemplate(
-                $this->templatePath, 
-                $this->module['Name'], 
-                '/yaturbo.php'
-            );
-        } else if ($this->moduleParams['isRambler']) {
-            return $this->findTemplate(
-                $this->templatePath, 
-                $this->module['Name'], 
-                '/rambler.php'
-            );
-        } else {
-            return parent::getLayout();
-        }
     }
     
     /**

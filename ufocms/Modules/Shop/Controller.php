@@ -5,10 +5,12 @@
 
 namespace Ufocms\Modules\Shop;
 
+use \Ufocms\Modules\ModelInterface;
+
 /**
  * Module level controller
  */
-class Controller extends \Ufocms\Modules\Controller //implements IController
+class Controller extends \Ufocms\Modules\Controller //implements ControllerInterface
 {
     protected function init()
     {
@@ -80,6 +82,86 @@ class Controller extends \Ufocms\Modules\Controller //implements IController
                     $model->order->create();
                     break;
             }
+        }
+    }
+    
+    /**
+     * @see parent
+     */
+    protected function getModuleContext(ModelInterface &$model)
+    {
+        if (null !== $this->moduleParams['order']) {
+            //also see modelAction in Controller
+            switch ($this->moduleParams['order']) {
+                case 'show': //отображение текущего заказа (корзина)
+                    return array(
+                        'settings'      => null, 
+                        'item'          => $model->order->getOrder(), 
+                        'items'         => $model->order->getItems(), 
+                    );
+                    
+                case 'add': //добавление элемента в заказ
+                case 'remove': //удаление элемента из заказа
+                case 'clear': //очистка и удаление всего заказа
+                case 'form': //форма заказа для заполнения
+                case 'send': //отправка заказа администрации магазина
+                    return array(
+                        'settings'      => null, 
+                        'item'          => null, 
+                        'items'         => null, 
+                        'actionResult'  => $model->order->getActionResult(), 
+                    );
+                case 'sended': //заказ отправлен администрации магазина
+                    $model->order->setActionResult('sended', true); //поскольку это простой редирект, выставляем флаг результата в true
+                    return array(
+                        'settings'      => null, 
+                        'item'          => null, 
+                        'items'         => null, 
+                        'actionResult'  => $model->order->getActionResult(), 
+                    );
+                    
+                case 'confirm': //подтверждение отправки заказа
+                    return array(
+                        'settings'      => null, 
+                        'item'          => $model->order->getOrder(), 
+                        'items'         => null, 
+                        'actionResult'  => $model->order->getActionResult(), 
+                    );
+                    
+                default:
+                    $this->core->riseError(404, 'Unknown value of `order` parameter');
+            }
+            
+        } else if ($this->moduleParams['isYandex']) {
+            return array(
+                'settings'      => null, 
+                'item'          => null, 
+                'items'         => $model->getItems(), 
+                'itemsCount'    => $model->getItemsCount(), 
+                'categories'    => $model->getCategories(), 
+            );
+            
+        } else {
+            $category = null;
+            if (0 != $this->moduleParams['categoryId']) {
+                $category = $model->getCategory($this->moduleParams['categoryId']);
+            }
+            return array_merge(
+                parent::getModuleContext($model), 
+                array('category' => $category)
+            );
+        }
+    }
+    
+    /**
+     * @see parent
+     */
+    protected function getLayout()
+    {
+        if ($this->moduleParams['isYandex']) {
+            return 'yml.php';
+        } else {
+            return parent::getLayout();
         }
     }
 }

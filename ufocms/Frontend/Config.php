@@ -219,6 +219,13 @@ class Config extends Struct
     public $templatesEntry = '/index.php';
     
     /**
+     * Точка входа, макет страницы RSS потока
+     * Без лидирующего слеша, каждый модуль должен сам предоставить этот макет
+     * @var string
+     */
+    public $templatesRssEntry = 'rss.php';
+    
+    /**
      * Точка входа шаблона отладки
      * @var string
      */
