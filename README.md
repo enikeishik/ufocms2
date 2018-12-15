@@ -1,5 +1,8 @@
 # UFOCMS v2
 
+[![Software License][ico-license]](LICENSE.txt)
+[![Build Status][ico-travis]][link-travis]
+
 Система управления сайтом UFOCMS v2 позволяет создавать разделы и 
 страницы сайта, редактировать содержимое страниц, размещать новую 
 информацию, модерировать комментарии пользователей и многое другое.
@@ -75,3 +78,8 @@ license.
 
 * PHP >= 7.0
 * MySQL >= 5.5 / MariaDB >= 10
+
+
+[ico-license]: https://img.shields.io/badge/license-GPL-brightgreen.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/enikeishik/ufocms2/master.svg?style=flat-square
+[link-travis]: https://travis-ci.org/enikeishik/ufocms2
